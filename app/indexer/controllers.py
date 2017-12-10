@@ -35,7 +35,7 @@ def index():
             file.save(os.path.join(dir_path, "urls_to_index.txt"))
             return render_template('indexer/progress1.html')
 
-        if request.form['url'] != None:
+        if request.form['url'] != "":
             f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
             url = request.form['url']
             f.write(url+"\n")
