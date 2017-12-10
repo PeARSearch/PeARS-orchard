@@ -22,7 +22,7 @@ The fully distributed version of PeARS will be made of many individual users wit
 
 1. Clone this repo on your machine:
 
-    git clone -b development https://github.com/PeARSearch/PeARS-orchard.git
+    git clone https://github.com/PeARSearch/PeARS-orchard.git
 
 
 2. Setup a virtualenv in your directory (**this step is optional**):
