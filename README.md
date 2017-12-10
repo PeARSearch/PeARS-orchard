@@ -20,17 +20,22 @@ The fully distributed version of PeARS will be made of many individual users wit
 ----
 ## Usage
 
-Clone this repo on your machine:
+1. Clone this repo on your machine:
 
     git clone -b development https://github.com/PeARSearch/PeARS-orchard.git
 
-Install the build dependencies:
+
+2. Setup a virtualenv in your directory (**this step is optional**):
+
+    virtualenv -p python3 env && source env/bin/activate
+
+3. Install the build dependencies:
 
     pip3 install -r requirements.txt
 
-Head over to the app/static/spaces directory and unzip english.dm.zip.
+4. Head over to the app/static/spaces directory and unzip english.dm.zip.
 
-In the root of the repo, run:
+5. In the root of the repo, run:
 
     python3 run.py
 
