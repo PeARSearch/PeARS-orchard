@@ -28,6 +28,8 @@ Install the build dependencies:
 
     pip3 install -r requirements.txt
 
+Head over to the app/static/spaces directory and unzip english.dm.zip.
+
 In the root of the repo, run:
 
     python3 run.py
