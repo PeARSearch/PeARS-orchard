@@ -22,7 +22,7 @@ The fully distributed version of PeARS will be made of many individual users wit
 
 Clone this repo on your machine:
 
-    git clone -b development https://github.com/PeARSearch/orchard-pears.git
+    git clone -b development https://github.com/PeARSearch/PeARS-orchard.git
 
 Install the build dependencies:
 
