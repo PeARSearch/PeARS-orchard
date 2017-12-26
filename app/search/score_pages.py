@@ -2,9 +2,10 @@
 Called by ./mkQueryPage.py
 """
 
-import os, requests, urllib
+import os, requests
 import re
 import sys
+from urllib.parse import urlparse
 from operator import itemgetter
 import math
 import numpy
@@ -45,11 +46,15 @@ def score_docs(query, query_dist, query_freqs):
 
 def bestURLs(doc_scores):
     best_urls = []
+    netlocs_used = [] #Don't return 100 pages from the same site
     c = 0
     for w in sorted(doc_scores, key=doc_scores.get, reverse=True):
+        loc = urlparse(w).netloc
         if c < 50:
-          best_urls.append(w)
-          c += 1
+          if loc not in netlocs_used:
+              best_urls.append(w)
+              netlocs_used.append(loc)
+              c += 1
         else:
             break
     return best_urls
