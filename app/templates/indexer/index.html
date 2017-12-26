@@ -4,10 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-        integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-
-        <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
         <title>PeARS indexer</title>
     </head>
@@ -46,51 +43,83 @@
     </nav>
 
     <div class="container">
+        <b>{{num_entries}} pages recorded</b>
+        <br><br>
 
         <div  class="row">
             <div class="col-md-6">
-            <br><br>
-            <form class="form-inline" action="." method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.index')}}">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:230px">
             <p><b>Index from file</b></p>
             <p>This option requires a .txt file containing the URLs you would like to index, one url per line. Save this file somewhere on your system 
-            and select it below. Warning: indexing takes time, so you probably don't want to index thousands of URLs in one go!</p>
+            and select it below. Warning: indexing takes time, so you probably don't want to index thousands of URLs in one go!</p><br>
 
-                <div class="form-group mx-sm-3">
-                    <input id="file_source" name="file_source" type="file" class="btn btn-default btn-xs">
+            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
+                <div class="input-group">
+                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <span class="input-group-btn">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
+                     </span>
                 </div>
-                <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
+            </form>
+            </div>
+            </div>
+
+            <div class="col-md-6">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:230px">
+            <p><b>Crawl a website</b></p>
+            <p>This option lets you input the URL of your favourite website and index all pages on that website. Warning: as for the 'index from file' option,
+            indexing may take time depending on the size of the website. We recommend not to index very large websites that way.</p><br>
+
+            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_crawl')}}">
+                <div class="input-group">
+                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="text" name='start_url' id='start_url'>
+                     <span class="input-group-btn">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
+                     </span>
+                </div>
+            </form>
+            </div>
+            </div>
+        </div>
+
             <br>
-            <br>
-            <br>
+
+        <div  class="row">
+            <div class="col-md-6">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px">
             <p><b>Index from pod</b></p>
             <p>This option lets you grab indexed URLs from a pod. Select the pod you want to index and go!</p>
 
-                <div class="form-group mx-sm-3">
+            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_pod')}}">
+                <div class="input-group">
                     <!-- <input class="form-control input-lg" title="Enter pod." placeholder="Enter pod" type="text" id='pods' name='pods'> -->
+                    {% for pod in pods %}
+                    <div class="form-check">
+		        <label class="toggle">
+		        <input type="checkbox" name="pods" id="{{pod}}" value="{{pod}}"> <span class="label-text">{{pod}}</span>
+		        </label>
+		    </div>
+                    {% endfor %}<br>
+                    <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
                 </div>
-                {% for pod in pods %}
-                <div class="form-check">
-		    <label class="toggle">
-		    <input type="checkbox" name="pods" id="{{pod}}" value="{{pod}}"> <span class="label-text">{{pod}}</span>
-		    </label>
-		</div>
-                {% endfor %}
-                <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
-            <br>
-            <br>
-            <br>
-            <p><b>Index a single URL</b></p>
-            <p>Think you should index your favourite webpage? Enter its URL here!</p>
-
-                <div class="form-group mx-sm-3">
-                    <input class="form-control input-lg" title="Enter a URL." placeholder="Enter a URL" type="text" name='url' id='url'>
-                </div>
-                <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
             </form>
-            <b>{{num_entries}} pages recorded</b>
             </div>
+            </div>
+
             <div class="col-md-6">
-            <br><br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:170px">
+            <p><b>Index a single URL</b></p>
+            <p>Think you should index your favourite webpage? Enter its URL here!</p><br>
+
+            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_url')}}">
+                <div class="input-group">
+                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="text" name='url' id='url'>
+                     <span class="input-group-btn">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
+                     </span>
+                </div>
+            </form>
+            </div>
             </div>
         </div>
 

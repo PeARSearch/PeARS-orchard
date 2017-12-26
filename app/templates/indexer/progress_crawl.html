@@ -1,0 +1,88 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+        integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script>
+
+	var source = new EventSource("/indexer/progress_crawl");
+	source.onmessage = function(event) {
+		$('.progress-bar-label').text(event.data);
+
+		if(event.data == "Finished!"){
+			source.close()
+		}
+	}
+	</script>
+
+        <title>PeARS indexing right now...</title>
+    </head>
+
+    <body>
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="#">Brand</a> -->
+      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="{{url_for('search.index')}}">Search</a></li>
+        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+      <form class="navbar-form navbar-left" action="{{url_for('pod_finder.return_pods')}}">
+        <div class="form-group">
+          <input id="search-box" name="search-box" type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Find a pod</button>
+      </form>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    </nav>
+
+    <div class="container">
+
+        <div  class="row">
+            <div class="col-md-6">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:230px">
+            <p><b>Crawl a website</b></p>
+            <p>Your crawl is in progress. The PeARS spider is recording all links on your chosen website and indexing them. The progress bar on your right
+            will show you how many page have been indexed so far.</p>
+            <p>Note: the speed of indexing varies as a function of the availability of the page and the speed of your Internet connection.</p>
+            <p>Once the progress bar indicates "Finished", you can leave this page and search the pages you have just indexed.</p>
+            </div>
+            </div>
+            <div class="col-md-6">
+            <br><br>
+            <div class="progress" style="width: 50%; margin: 50px;">
+                <div class="progress progress-striped active">
+                <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+			<span class="progress-bar-label">0</span>
+                </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- /.container -->
+    </body>
+</html>
+
