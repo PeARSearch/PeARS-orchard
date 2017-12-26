@@ -9,6 +9,8 @@ from app.indexer import mk_page_vector
 from app.utils import readUrls
 from werkzeug import secure_filename
 from app.utils_db import url_from_json
+from app.indexer.htmlparser import extract_links
+from urllib.parse import urljoin, urlparse
 import requests
 import os
 
@@ -27,31 +29,74 @@ def index():
     if request.method == "GET":
         return render_template("indexer/index.html", num_entries=num_db_entries, pods=pods_urls)
 
-    if request.method == 'POST':
-        print("FILE:",request.files['file_source'])
-        if request.files['file_source'].filename[-4:] == ".txt":
-            file = request.files['file_source']
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(dir_path, "urls_to_index.txt"))
-            return render_template('indexer/progress1.html')
 
-        if request.form['url'] != "":
-            f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
-            url = request.form['url']
-            f.write(url+"\n")
-            f.close()
-            return render_template('indexer/progress3.html')
+@indexer.route("/from_file", methods=["POST"])
+def from_file():
+    print("FILE:",request.files['file_source'])
+    if request.files['file_source'].filename[-4:] == ".txt":
+        file = request.files['file_source']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(dir_path, "urls_to_index.txt"))
+        return render_template('indexer/progress_file.html')
 
-        if request.form['pods'] != None:
-            f = open(os.path.join(dir_path, "pods_to_index.txt"),'w')
-            pods = [request.form['pods']]
-            for pod in pods:
-                f.write(pod+"api/urls/\n")
-            f.close()
-            return render_template('indexer/progress2.html')
-                    
 
-@indexer.route("/progress1")
+@indexer.route("/from_url", methods=["POST"])
+def from_url():
+    if request.form['url'] != "":
+        f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
+        url = request.form['url']
+        print(url)
+        f.write(url+"\n")
+        f.close()
+        return render_template('indexer/progress_url.html',url=url)
+
+
+@indexer.route("/from_pod", methods=["POST"])
+def from_pod():
+    if request.form['pods'] != None:
+        f = open(os.path.join(dir_path, "pods_to_index.txt"),'w')
+        pods = [request.form['pods']]
+        for pod in pods:
+            f.write(pod+"api/urls/\n")
+        f.close()
+    return render_template('indexer/progress_pod.html')
+
+
+@indexer.route("/from_crawl", methods=["POST"])
+def from_crawl():
+    if request.form['start_url'] != "":
+        print("Now crawling",request.form['start_url'])
+        f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
+        url = request.form['start_url']
+        f.write(url+"\n")
+        f.close()
+        return render_template('indexer/progress_crawl.html')
+
+@indexer.route("/progress_crawl")
+def progress_crawl():
+    print("Running progress crawl")
+    url = readUrls(os.path.join(dir_path, "urls_to_index.txt"))[0]
+    def generate():
+        netloc = urlparse(url).netloc
+        all_links = [url]
+        links = extract_links(url)
+        stack = list(set([link for link in links if urlparse(link).netloc == netloc]))
+        indexed = 0
+        while len(stack) > 0:
+            all_links.append(stack[0])
+            print("Processing",stack[0])
+            new_page = mk_page_vector.compute_vectors(stack[0])
+            new_links = extract_links(stack[0])
+            new_site_links = list(set([link for link in links if urlparse(link).netloc == netloc and link not in all_links and '#' not in link]))
+            stack.pop(0)
+            stack=list(set(stack+new_site_links))
+            if new_page:
+                indexed+=1
+                yield "data:" + str(indexed) + "\n\n"
+        yield "data:" + "Finished!" + "\n\n"
+    return Response(generate(), mimetype= 'text/event-stream')
+
+@indexer.route("/progress_file")
 def progress_file():
     print("Running progress file")
     def generate():
@@ -64,7 +109,7 @@ def progress_file():
     return Response(generate(), mimetype= 'text/event-stream')
 
    
-@indexer.route("/progress2")
+@indexer.route("/progress_pod")
 def progress_pods():
     print("Running progress pod")
     pods = readUrls(os.path.join(dir_path, "pods_to_index.txt"))
@@ -82,6 +127,7 @@ def progress_pods():
             c+=1
             yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
+
 
 @indexer.route("/url", methods=["GET", "POST"])
 def url_index():
