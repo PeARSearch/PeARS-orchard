@@ -2,19 +2,20 @@
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, Response
 
-
-from app.api.models import dm_dict_en, KnownPods, Urls
+from app import db
+from app.api.models import dm_dict_en, Urls, Pods
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector
 from app.utils import readUrls
 from werkzeug import secure_filename
-from app.utils_db import url_from_json
+from app.utils_db import url_from_json, pod_from_json
+from app.utils import get_pod_info
 from app.indexer.htmlparser import extract_links
 from urllib.parse import urljoin, urlparse
 import requests
-import os
+from os.path import dirname,join,realpath,isfile
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = dirname(dirname(dirname(realpath(__file__))))
 
 # Define the blueprint:
 indexer = Blueprint('indexer', __name__, url_prefix='/indexer')
@@ -22,12 +23,9 @@ indexer = Blueprint('indexer', __name__, url_prefix='/indexer')
 # Set the route and accepted methods
 @indexer.route("/", methods=["GET", "POST"])
 def index():
-    known_pods = KnownPods.query.all()
-    pods_urls = [p.url for p in known_pods]
-    print(pods_urls)
     num_db_entries = len(Urls.query.all())
     if request.method == "GET":
-        return render_template("indexer/index.html", num_entries=num_db_entries, pods=pods_urls)
+        return render_template("indexer/index.html", num_entries=num_db_entries)
 
 
 @indexer.route("/from_file", methods=["POST"])
@@ -36,14 +34,14 @@ def from_file():
     if request.files['file_source'].filename[-4:] == ".txt":
         file = request.files['file_source']
         filename = secure_filename(file.filename)
-        file.save(os.path.join(dir_path, "urls_to_index.txt"))
+        file.save(join(dir_path, "urls_to_index.txt"))
         return render_template('indexer/progress_file.html')
 
 
 @indexer.route("/from_url", methods=["POST"])
 def from_url():
     if request.form['url'] != "":
-        f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
+        f = open(join(dir_path, "urls_to_index.txt"),'w')
         url = request.form['url']
         print(url)
         f.write(url+"\n")
@@ -53,11 +51,11 @@ def from_url():
 
 @indexer.route("/from_pod", methods=["POST"])
 def from_pod():
-    if request.form['pods'] != None:
-        f = open(os.path.join(dir_path, "pods_to_index.txt"),'w')
-        pods = [request.form['pods']]
-        for pod in pods:
-            f.write(pod+"api/urls/\n")
+    if request.form['pod'] != None:
+        print("Writing to",join(dir_path,"pods_to_index.txt"))
+        f = open(join(dir_path, "pods_to_index.txt"),'w')
+        pod = request.form['pod']
+        f.write(pod+"\n")
         f.close()
     return render_template('indexer/progress_pod.html')
 
@@ -66,7 +64,7 @@ def from_pod():
 def from_crawl():
     if request.form['start_url'] != "":
         print("Now crawling",request.form['start_url'])
-        f = open(os.path.join(dir_path, "urls_to_index.txt"),'w')
+        f = open(join(dir_path, "urls_to_index.txt"),'w')
         url = request.form['start_url']
         f.write(url+"\n")
         f.close()
@@ -75,7 +73,7 @@ def from_crawl():
 @indexer.route("/progress_crawl")
 def progress_crawl():
     print("Running progress crawl")
-    url = readUrls(os.path.join(dir_path, "urls_to_index.txt"))[0]
+    url = readUrls(join(dir_path, "urls_to_index.txt"))[0]
     def generate():
         netloc = urlparse(url).netloc
         all_links = [url]
@@ -100,7 +98,7 @@ def progress_crawl():
 def progress_file():
     print("Running progress file")
     def generate():
-        urls = readUrls(os.path.join(dir_path, "urls_to_index.txt"))
+        urls = readUrls(join(dir_path, "urls_to_index.txt"))
         c = 0
         for u in urls:
             mk_page_vector.compute_vectors(u)
@@ -112,11 +110,17 @@ def progress_file():
 @indexer.route("/progress_pod")
 def progress_pods():
     print("Running progress pod")
-    pods = readUrls(os.path.join(dir_path, "pods_to_index.txt"))
+    print("Reading",join(dir_path,"pods_to_index.txt"))
+    pods = readUrls(join(dir_path, "pods_to_index.txt"))
     urls = []
-    for pod in pods:
-        print(pod)
-        r = requests.get(pod)
+    for url in pods:
+        print(url)
+        pod = get_pod_info(url)
+        pod_from_json(pod, url)
+        pod_entry=db.session.query(Pods).filter_by(url=url).first()
+        pod_entry.registered = True
+        db.session.commit()
+        r = requests.get(url+"api/urls/")
         print(r)
         for u in r.json()['json_list']:
             urls.append(u)

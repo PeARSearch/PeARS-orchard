@@ -3,6 +3,9 @@ import numpy as np
 from matplotlib import cm
 import pandas as pd
 import logging
+import json
+import requests
+from urllib.parse import urljoin
 
 def readDM(dm_file):
     dm_dict = {}
@@ -113,6 +116,16 @@ def sim_to_matrix_url(url_dict,vec,n):
             break
     return neighbours
 
+def get_pod_info(url):
+    print("Fetching pod", urljoin(url,"api/self/"))
+    pod = None
+    try:
+        r = requests.get(urljoin(url,"api/self/"))
+        if r.status_code == 200:
+           pod = r.json()
+    except:
+        print("Problem fetching pod...")
+    return pod
 
 
 def make_figure(m_2d, labels):

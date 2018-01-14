@@ -38,11 +38,3 @@ app.register_blueprint(pod_finder_module)
 db.create_all()
 
 
-#Record Pod0 in case it is not registered
-from app.api.models import KnownPods
-if KnownPods.query.filter(KnownPods.url == "http://www.openmeaning.org/pod0/").first() == None:
-    p = KnownPods(url="http://www.openmeaning.org/pod0/")
-    p.description = "Pod0, the original English pod."
-    db.session.add(p)
-    db.session.commit()
-    

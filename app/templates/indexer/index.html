@@ -29,11 +29,12 @@
       <ul class="nav navbar-nav">
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
+        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-      <form class="navbar-form navbar-left" action="{{url_for('pod_finder.return_pods')}}">
+      <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
         <div class="form-group">
-          <input id="search-box" name="search-box" type="text" class="form-control" placeholder="Search">
+          <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">
         </div>
         <button type="submit" class="btn btn-default">Find a pod</button>
       </form>
@@ -88,19 +89,15 @@
             <div class="col-md-6">
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px">
             <p><b>Index from pod</b></p>
-            <p>This option lets you grab indexed URLs from a pod. Select the pod you want to index and go!</p>
+            <p>You should register with pods from the pod finder section. In some cases, however, you may want to directly index a pod from its URL.
+            This may be because the pod is very new, or because its owner has not listed it yet on Pod Zero. In that case, enter the pod's URL below to index it.</p>
 
             <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_pod')}}">
                 <div class="input-group">
-                    <!-- <input class="form-control input-lg" title="Enter pod." placeholder="Enter pod" type="text" id='pods' name='pods'> -->
-                    {% for pod in pods %}
-                    <div class="form-check">
-		        <label class="toggle">
-		        <input type="checkbox" name="pods" id="{{pod}}" value="{{pod}}"> <span class="label-text">{{pod}}</span>
-		        </label>
-		    </div>
-                    {% endfor %}<br>
+                    <input class="form-control input-s" title="Enter pod." placeholder="Enter pod" type="text" id='pod' name='pod'>
+                    <span class="input-group-btn">
                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
+                    </span>
                 </div>
             </form>
             </div>

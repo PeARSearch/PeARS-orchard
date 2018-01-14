@@ -8,21 +8,21 @@
         integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script>
 
-	var source = new EventSource("/indexer/progress_crawl");
+	var source = new EventSource("/pod_finder/progress_pod_update");
 	source.onmessage = function(event) {
-		$('.progress-bar-label').text(event.data);
+		$('.progress-bar').css('width', event.data+'%').attr('aria-valuenow', event.data);
+		$('.progress-bar-label').text(event.data+'%');
 
-		if(event.data == "Finished!"){
+		if(event.data == 100){
 			source.close()
 		}
 	}
 	</script>
 
-        <title>PeARS indexing right now...</title>
+        <title>Recording the World Wide Web</title>
     </head>
 
     <body>
@@ -45,7 +45,6 @@
       <ul class="nav navbar-nav">
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
-        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
@@ -63,22 +62,16 @@
 
         <div  class="row">
             <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:230px">
-            <p><b>Crawl a website</b></p>
-            <p>Your crawl is in progress. The PeARS spider is recording all links on your chosen website and indexing them. The progress bar on your right
-            will show you how many page have been indexed so far.</p>
-            <p>Note: the speed of indexing varies as a function of the availability of the page and the speed of your Internet connection.</p>
-            <p>Once the progress bar indicates "Finished", you can leave this page and search the pages you have just indexed.</p>
-            </div>
+            <br><br>
+            <p><b>Retrieving pod information</b></p>
+            <p>Your pear is updating your list of known pods from Pod Zero.</p>
+            <p>Once the progress bar is on 100%, you can return to your pod admin page..</p>
             </div>
             <div class="col-md-6">
             <br><br>
             <div class="progress" style="width: 50%; margin: 50px;">
-                <div class="progress progress-striped active">
-                <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-			<span class="progress-bar-label">0</span>
-                </div>
-                </div>
+		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+			<span class="progress-bar-label">0%</span>
             </div>
 
         </div>

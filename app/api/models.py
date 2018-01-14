@@ -27,14 +27,16 @@ class Urls(Base):
     freqs = db.Column(db.String(7000))
     snippet = db.Column(db.String(1000))
     cc = db.Column(db.Boolean)
+    keywords = db.Column(db.String(1000))
 
-    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False):
+    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, keywords=None):
         self.url = url
         self.title = title
         self.vector = vector
         self.freqs = freqs
         self.snippet = snippet
         self.cc = cc
+        self.keywords = keywords
 
     def __repr__(self):
         return self.url
@@ -48,11 +50,36 @@ class Urls(Base):
             'vector': self.vector,
             'freqs': self.freqs,
             'snippet': self.snippet,
-            'cc': self.cc
+            'cc': self.cc,
+            'keywords': self.keywords
         }
 
-class KnownPods(Base):
+class Pods(Base):
     id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(1000))
     url = db.Column(db.String(1000))
     description = db.Column(db.String(7000))
+    language = db.Column(db.String(1000))
+    DS_vector = db.Column(db.String(7000))
+    word_vector = db.Column(db.String(7000))
+    registered = db.Column(db.Boolean)
 
+    def __init__(self, name=None, url=None, description=None, language=None, DS_vector=None, word_vector=None, registered=False):
+        self.name = name
+        self.url = url
+        self.description = description
+        self.language = language
+    
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'url': self.url,
+            'description': self.description,
+            'language': self.language,
+            'DSvector': self.DS_vector,
+            'wordvector': self.word_vector,
+            'registered': self.registered
+        }
+#db.drop_all()
+#db.create_all()
