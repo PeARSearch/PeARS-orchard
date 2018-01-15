@@ -27,15 +27,17 @@ class Urls(Base):
     freqs = db.Column(db.String(7000))
     snippet = db.Column(db.String(1000))
     cc = db.Column(db.Boolean)
+    pod = db.Column(db.String(1000))
     keywords = db.Column(db.String(1000))
 
-    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, keywords=None):
+    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, pod=None, keywords=None):
         self.url = url
         self.title = title
         self.vector = vector
         self.freqs = freqs
         self.snippet = snippet
         self.cc = cc
+        self.pod = pod
         self.keywords = keywords
 
     def __repr__(self):
@@ -51,6 +53,7 @@ class Urls(Base):
             'freqs': self.freqs,
             'snippet': self.snippet,
             'cc': self.cc,
+            'pod': self.pod,
             'keywords': self.keywords
         }
 

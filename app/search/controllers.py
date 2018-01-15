@@ -44,13 +44,13 @@ def index():
         results = []
         query = query.lower()
         pears = ['0.0.0.0']
-        results = score_pages.run(query, pears)
+        results, pods = score_pages.run(query, pears)
         if not results:
             pears = ['no pear found :(']
             score_pages.ddg_redirect(query)
 
         #results = get_cached_urls(results)
-        return render_template('search/results.html', pears=pears,
+        return render_template('search/results.html', pears=pods,
                                query=query, results=results)
 
 @search.route('/html_cache/<path:filename>')

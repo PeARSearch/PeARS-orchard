@@ -10,7 +10,7 @@ from operator import itemgetter
 import math
 import numpy
 from app.api.models import Urls
-from app.utils_db import get_db_url_snippet, get_db_url_title, get_db_url_cc
+from app.utils_db import get_db_url_snippet, get_db_url_title, get_db_url_cc, get_db_url_pod
 
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
@@ -72,15 +72,16 @@ def ddg_redirect(query):
 
 def output(best_urls):
     results = []
+    pods = []
     # If documents matching the query were found on the pear network...
     if len(best_urls) > 0:
         for u in best_urls:
             results.append([u, get_db_url_title(u), get_db_url_snippet(u), get_db_url_cc(u)])
+            pod = get_db_url_pod(u)
+            if pod not in pods:
+                pods.append(pod)
             #print(results)
-    # Otherwise, open duckduckgo and send the query there
-    else:
-        results = []
-    return results
+    return results, pods
 
 
 def run(query, pears):
@@ -92,6 +93,3 @@ def run(query, pears):
         best_urls = bestURLs(document_scores)
     return output(best_urls)
 
-
-if __name__ == '__main__':
-    run(sys.argv[1], sys.argv[2], sys.argv[3])

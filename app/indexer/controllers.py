@@ -111,23 +111,25 @@ def progress_file():
 def progress_pods():
     print("Running progress pod")
     print("Reading",join(dir_path,"pods_to_index.txt"))
-    pods = readUrls(join(dir_path, "pods_to_index.txt"))
+    pod_urls = readUrls(join(dir_path, "pods_to_index.txt"))
     urls = []
-    for url in pods:
-        print(url)
-        pod = get_pod_info(url)
-        pod_from_json(pod, url)
-        pod_entry=db.session.query(Pods).filter_by(url=url).first()
+    for pod_url in pod_urls:
+        print(pod_url)
+        pod = get_pod_info(pod_url)
+        pod_from_json(pod, pod_url)
+        pod_entry=db.session.query(Pods).filter_by(url=pod_url).first()
         pod_entry.registered = True
         db.session.commit()
-        r = requests.get(url+"api/urls/")
+        r = requests.get(pod_url+"api/urls/")
         print(r)
         for u in r.json()['json_list']:
-            urls.append(u)
+            urls.append([u,pod['name']])
     def generate():
         c = 0
-        for u in urls:
-            url_from_json(u)
+        for pair in urls:
+            u = pair[0]
+            pod = pair[1]
+            url_from_json(u,pod)
             c+=1
             yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')

@@ -22,6 +22,10 @@ def get_db_pod_name(url):
     pod_name = Pods.query.filter(Pods.url == url).first().name
     return pod_name
 
+def get_db_url_pod(url):
+    url_pod = Urls.query.filter(Urls.url == url).first().pod
+    return url_pod
+
 def get_db_pod_description(url):
     pod_description = Pods.query.filter(Pods.url == url).first().description
     return pod_description
@@ -30,7 +34,7 @@ def get_db_pod_language(url):
     pod_language = Pods.query.filter(Pods.url == url).first().language
     return pod_language
 
-def url_from_json(url):
+def url_from_json(url,pod):
     #print(url)
     if not db.session.query(Urls).filter_by(url=url['url']).all():
         u = Urls(url=url['url'])
@@ -39,6 +43,7 @@ def url_from_json(url):
         u.vector = url['vector']
         u.freqs = url['freqs']
         u.snippet = url['snippet']
+        u.pod = pod
         if url['cc']:
             u.cc = True
         db.session.add(u)
