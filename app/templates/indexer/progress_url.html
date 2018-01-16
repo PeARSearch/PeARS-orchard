@@ -47,6 +47,7 @@
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
+        <li><a href="{{url_for('tree.index')}}">My tree</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
@@ -69,15 +70,6 @@
             <p>Your indexing is in progress.</p>
             <p>Note: the speed of indexing varies as a function of the availability of the page and the speed of your Internet connection, but it should be fast!</p>
             <p>Once the progress bar is on 100%, you can leave this page and search the page you have just indexed.</p><br>
-
-            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_url')}}">
-                <div class="input-group">
-                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="text" name='url' id='url'>
-                     <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
-                     </span>
-                </div>
-            </form>
             </div>
             </div>
             <div class="col-md-6">

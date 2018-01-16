@@ -28,9 +28,9 @@ class Urls(Base):
     snippet = db.Column(db.String(1000))
     cc = db.Column(db.Boolean)
     pod = db.Column(db.String(1000))
-    keywords = db.Column(db.String(1000))
+    keyword = db.Column(db.String(1000))
 
-    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, pod=None, keywords=None):
+    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, pod=None, keyword=None):
         self.url = url
         self.title = title
         self.vector = vector
@@ -38,7 +38,7 @@ class Urls(Base):
         self.snippet = snippet
         self.cc = cc
         self.pod = pod
-        self.keywords = keywords
+        self.keyword = keyword
 
     def __repr__(self):
         return self.url
@@ -54,7 +54,7 @@ class Urls(Base):
             'snippet': self.snippet,
             'cc': self.cc,
             'pod': self.pod,
-            'keywords': self.keywords
+            'keyword': self.keyword
         }
 
 class Pods(Base):

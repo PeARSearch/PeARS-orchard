@@ -24,12 +24,23 @@ def readDM(dm_file):
 
 def readUrls(url_file):
     urls = []
+    keywords = []
     f = open(url_file,'r')
     for l in f:
-        l=l.rstrip('\n')
-        urls.append(l)
+        l=l.rstrip('\n').split(';')
+        urls.append(l[0])
+        keywords.append(l[1])
     f.close()
-    return urls
+    return urls, keywords
+
+def readPods(pod_file):
+    pods = []
+    f = open(pod_file,'r')
+    for l in f:
+        l=l.rstrip('\n')
+        pods.append(l)
+    f.close()
+    return pods
 
 def normalise(v):
     norm = np.linalg.norm(v)

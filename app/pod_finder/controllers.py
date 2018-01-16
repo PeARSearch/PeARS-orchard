@@ -24,7 +24,7 @@ def index():
 
 '''Update pod list'''
 
-@pod_finder.route('/update-pod-list/', methods=['POST'])
+@pod_finder.route('/update-pod-list/', methods=['POST','GET'])
 def update_pod_list():
     return render_template('pod_finder/progress_pod_update.html')
 

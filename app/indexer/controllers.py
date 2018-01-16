@@ -6,7 +6,7 @@ from app import db
 from app.api.models import dm_dict_en, Urls, Pods
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector
-from app.utils import readUrls
+from app.utils import readUrls, readPods
 from werkzeug import secure_filename
 from app.utils_db import url_from_json, pod_from_json
 from app.utils import get_pod_info
@@ -43,8 +43,9 @@ def from_url():
     if request.form['url'] != "":
         f = open(join(dir_path, "urls_to_index.txt"),'w')
         url = request.form['url']
-        print(url)
-        f.write(url+"\n")
+        keyword = request.form['url_keyword']
+        print(url,keyword)
+        f.write(url+";"+keyword+"\n")
         f.close()
         return render_template('indexer/progress_url.html',url=url)
 
@@ -62,18 +63,21 @@ def from_pod():
 
 @indexer.route("/from_crawl", methods=["POST"])
 def from_crawl():
-    if request.form['start_url'] != "":
-        print("Now crawling",request.form['start_url'])
+    if request.form['site_url'] != None:
+        print("Now crawling",request.form['site_url'])
         f = open(join(dir_path, "urls_to_index.txt"),'w')
-        url = request.form['start_url']
-        f.write(url+"\n")
+        url = request.form['site_url']
+        keyword = request.form['site_keyword']
+        f.write(url+";"+keyword+"\n")
         f.close()
         return render_template('indexer/progress_crawl.html')
 
 @indexer.route("/progress_crawl")
 def progress_crawl():
     print("Running progress crawl")
-    url = readUrls(join(dir_path, "urls_to_index.txt"))[0]
+    url,keyword = readUrls(join(dir_path, "urls_to_index.txt"))
+    url = url[0]
+    keyword = keyword[0]
     def generate():
         netloc = urlparse(url).netloc
         all_links = [url]
@@ -83,7 +87,7 @@ def progress_crawl():
         while len(stack) > 0:
             all_links.append(stack[0])
             print("Processing",stack[0])
-            new_page = mk_page_vector.compute_vectors(stack[0])
+            new_page = mk_page_vector.compute_vectors(stack[0],keyword)
             new_links = extract_links(stack[0])
             new_site_links = list(set([link for link in links if urlparse(link).netloc == netloc and link not in all_links and '#' not in link]))
             stack.pop(0)
@@ -98,10 +102,9 @@ def progress_crawl():
 def progress_file():
     print("Running progress file")
     def generate():
-        urls = readUrls(join(dir_path, "urls_to_index.txt"))
-        c = 0
-        for u in urls:
-            mk_page_vector.compute_vectors(u)
+        urls, keywords = readUrls(join(dir_path, "urls_to_index.txt"))
+        for c in range(len(urls)):
+            mk_page_vector.compute_vectors(urls[c],keywords[c])
             c+=1
             yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
@@ -111,7 +114,7 @@ def progress_file():
 def progress_pods():
     print("Running progress pod")
     print("Reading",join(dir_path,"pods_to_index.txt"))
-    pod_urls = readUrls(join(dir_path, "pods_to_index.txt"))
+    pod_urls = readPods(join(dir_path, "pods_to_index.txt"))
     urls = []
     for pod_url in pod_urls:
         print(pod_url)

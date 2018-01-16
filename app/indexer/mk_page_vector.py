@@ -37,7 +37,7 @@ def compute_dist_vector(text,dm_dict):
              vbase+=dm_dict[w]
     return vbase
 
-def compute_vectors(target_url):
+def compute_vectors(target_url, keyword):
     if not db.session.query(Urls).filter_by(url=target_url).all():
         u = Urls(url=target_url)
         title, body_str, snippet, cc = extract_from_url(target_url)
@@ -49,6 +49,7 @@ def compute_vectors(target_url):
             u.title = str(title)
             u.vector = convert_to_string(vector)
             u.freqs = convert_dict_to_string(freqs)
+            u.keyword = keyword
             if snippet != "":
                 u.snippet = str(snippet)
             else:

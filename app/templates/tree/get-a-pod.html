@@ -13,7 +13,7 @@
   <![endif]-->
   <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
 </head>
-<body>
+<body style="background-image: url('/static/tree-silhouette.png'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center;">
     <nav class="navbar navbar-default">
     <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -25,7 +25,7 @@
         <span class="icon-bar"></span>
       </button>
       <!-- <a class="navbar-brand" href="#">Brand</a> -->
-      <a href="{{ url_for('search.index')}}" class="navbar-left"></a>
+      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -49,25 +49,13 @@
     </nav>
 
 <div class="container-full">
-
   <div class="row">
-
-    <div class="col-lg-12 text-center v-center">
-
-      <br><br><br>
-      <a href="{{ url_for('.index')}}"><img src="{{ url_for('static', filename='pears-logo-small.png')}}"></a>
-      <br/><br/><br/>
-      <form class="col-lg-12" action="{{url_for('.index')}}">
-        <div class="input-group" style="width:500px;text-align:center;margin:0 auto;">
-          <input class="form-control input-lg" title="Enter your Search Query." placeholder="Enter your Search Query" type="text" name='q'>
-          <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="submit">Search</button></span>
+    <div class="col-lg-5 text-center v-center"></div>
+    <div class="col-lg-4 text-center v-center">
+        <div  style="border: 5px solid #000; border-radius:50%; width:300px; height:300px; background-color:#26aed5">
+        <br><br><b>Congratulations!<br> You've just picked a PeARS pod<br> on {{query}}!</b><br>
+        We have put your pod file at {{location}}. <br><br>Go get it!
         </div>
-      </form>
-    </div>
-    <br><br><br>
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4 text-center">
-    <b>{{internal_message}}</b>
     </div>
   </div> <!-- /row -->
 </div> <!-- /container full -->

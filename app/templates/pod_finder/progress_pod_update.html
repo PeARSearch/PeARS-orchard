@@ -46,6 +46,7 @@
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
+        <li><a href="{{url_for('tree.index')}}">My tree</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
@@ -66,7 +67,7 @@
             <br><br>
             <p><b>Retrieving pod information</b></p>
             <p>Your pear is updating your list of known pods from Pod Zero.</p>
-            <p>Once the progress bar is on 100%, you can return to your pod admin page..</p>
+            <p>Once the progress bar is on 100%, <a href="{{url_for('pod_finder.index')}}">please return to your pod admin page</a>.</p>
             </div>
             <div class="col-md-6">
             <br><br>
