@@ -35,6 +35,8 @@ def progress_pod_update():
     r = requests.get("http://www.openmeaning.org/pod0/api/pods/")
     for pod in r.json()['json_list']:
         pods.append(pod)
+    Pods.query.delete()
+    db.session.commit()
     def generate():
         c = 0
         for pod in pods:
