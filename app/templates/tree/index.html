@@ -56,7 +56,7 @@
     {% for p in pears %}
     <div class="col-lg-1 text-center v-center">
         <div  style="border: 5px solid #000; border-radius:50%; width:100px; height:100px; background-color:#26aed5;">
-        <br><b><a href="{{url_for('tree.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}</a><br>{{p[1]}}</b>
+        <br><b><a href="{{url_for('tree.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b>
         </div>
     </div>
     {% endfor %}

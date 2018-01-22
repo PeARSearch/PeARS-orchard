@@ -31,12 +31,19 @@ def BS_parse(url):
 
 def extract_links(url):
     links = []
+    try:
+        req = requests.head(url)
+        if "text/html" not in req.headers["content-type"]:
+            print("Not a HTML document...")
+            return links
+    except:
+        return links
     bs_obj, req = BS_parse(url)
     if not bs_obj:
         return links
     hrefs = bs_obj.findAll('a', href=True)
     for h in hrefs:
-        if h['href'].startswith('http'):
+        if h['href'].startswith('http') and '#' not in h['href']:
             links.append(h['href'])
         else:
             links.append(urljoin(url,h['href']))
@@ -49,6 +56,13 @@ def extract_from_url(url):
     body_str=""
     snippet=""
     cc=False
+    try:
+        req = requests.head(url)
+        if "text/html" not in req.headers["content-type"]:
+            print("Not a HTML document...")
+            return title, body_str, snippet, cc
+    except:
+        return title, body_str, snippet, cc
     bs_obj, req = BS_parse(url)
     if not bs_obj:
         print("Failed to get BeautifulSoup object...")

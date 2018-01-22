@@ -49,7 +49,10 @@ def compute_vectors(target_url, keyword):
             u.title = str(title)
             u.vector = convert_to_string(vector)
             u.freqs = convert_dict_to_string(freqs)
+            if keyword == "":
+                keyword = "generic"
             u.keyword = keyword
+            u.pod = "Me"
             if snippet != "":
                 u.snippet = str(snippet)
             else:
@@ -59,6 +62,7 @@ def compute_vectors(target_url, keyword):
             #print(u.url,u.title,u.vector,u.snippet,u.cc)
             db.session.add(u)
             db.session.commit()
+            return True
 
 def compute_query_vectors(query):
     """ Make distribution for query """

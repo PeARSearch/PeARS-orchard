@@ -20,12 +20,12 @@ def index():
     print(keywords)
     pears = []
     for keyword in keywords:
-        if keyword:
-            pear_urls = []
-            for u in db.session.query(Urls).filter_by(keyword=keyword).all():
-                pear_urls.append(u)
-            pear = [keyword, len(pear_urls)]
-            pears.append(pear)
+         if keyword:
+             pear_urls = []
+             for u in db.session.query(Urls).filter_by(keyword=keyword).all():
+                 pear_urls.append(u)
+             pear = [keyword, len(pear_urls)]
+             pears.append(pear)
     #for p in sorted(pears, key=lambda p: len(pears[p]), reverse=True):
     #    print(p,len(pears[p]),pears[p][:5])
     return render_template('tree/index.html',pears=pears)

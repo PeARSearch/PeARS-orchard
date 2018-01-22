@@ -82,19 +82,23 @@ def progress_crawl():
         netloc = urlparse(url).netloc
         all_links = [url]
         links = extract_links(url)
-        stack = list(set([link for link in links if urlparse(link).netloc == netloc]))
+        #stack = list(set([link for link in links if urlparse(link).netloc == netloc]))
+        stack = list(set([link for link in links if url in link and '#' not in link]))
         indexed = 0
         while len(stack) > 0:
             all_links.append(stack[0])
             print("Processing",stack[0])
             new_page = mk_page_vector.compute_vectors(stack[0],keyword)
-            new_links = extract_links(stack[0])
-            new_site_links = list(set([link for link in links if urlparse(link).netloc == netloc and link not in all_links and '#' not in link]))
-            stack.pop(0)
-            stack=list(set(stack+new_site_links))
             if new_page:
+                new_links = extract_links(stack[0])
+                #new_site_links = list(set([link for link in links if urlparse(link).netloc == netloc and link not in all_links and '#' not in link]))
+                new_site_links = list(set([link for link in links if url in link and link not in all_links and '#' not in link]))
+                stack.pop(0)
+                stack=list(set(stack+new_site_links))
                 indexed+=1
                 yield "data:" + str(indexed) + "\n\n"
+            else:
+                stack.pop(0)
         yield "data:" + "Finished!" + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
 
