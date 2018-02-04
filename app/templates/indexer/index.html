@@ -31,8 +31,11 @@
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
         <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
+        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
         <div class="form-group">
           <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">
@@ -97,9 +100,9 @@
 
         <div  class="row">
             <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:280px">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:260px">
             <p><b>Index from file</b></p>
-            <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords. Please make sure to follow the right format. Save this file somewhere on your system and select it below. Warning: indexing takes time, so you probably don't want to index thousands of URLs in one go!</p><br>
+            <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords. Please make sure to follow the right format, <a href="{{url_for('pages.return_faq', _anchor='indexfile')}}">as explained here</a>. Warning: indexing takes time, so you probably don't want to index thousands of URLs in one go!</p><br>
 
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
                 <div class="input-group">
@@ -112,22 +115,6 @@
             </div>
             </div>
             
-            <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px">
-            <p><b>Index from pod</b></p>
-            <p>You should register with pods from the pod finder section. In some cases, however, you may want to directly index a pod from its URL.
-            This may be because the pod is very new, or because its owner has not listed it yet on Pod Zero. In that case, enter the pod's URL below to index it.</p>
-
-            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_pod')}}">
-                <div class="input-group">
-                    <input class="form-control input-s" title="Enter pod." placeholder="Enter pod" type="text" id='pod' name='pod'>
-                    <span class="input-group-btn">
-                    <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
-                    </span>
-                </div>
-            </form>
-            </div>
-            </div>
 
         </div>
 

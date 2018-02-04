@@ -33,8 +33,11 @@
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
         <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
+        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
         <div class="form-group">
           <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">

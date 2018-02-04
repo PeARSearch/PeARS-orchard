@@ -15,11 +15,21 @@ def mk_vector(d, dimensions):
             d_vec[i] = int(d[dimensions[i]])
     return d_vec
 
-def run(d1,d2_s):
+def binarise(d):
+    return (d > 0).astype(int) 
+
+def run(q, d1,d2_s):
     d2 = convert_string_to_dict(d2_s)
 
     dimensions = return_keys(d1,d2)
-    d1_vec = normalise(mk_vector(d1,dimensions))
-    d2_vec = normalise(mk_vector(d2,dimensions))
+    v1 = mk_vector(d1,dimensions)
+    v2 = mk_vector(d2,dimensions)
+    v1_bin = binarise(v1)
+    v2_bin = binarise(v2)
+    
+    coverage = sum(v1_bin*v2_bin) / len(q.split())
 
-    return cosine_similarity(d1_vec,d2_vec)
+    d1_vec = normalise(v1)
+    d2_vec = normalise(v2)
+
+    return cosine_similarity(d1_vec,d2_vec), coverage

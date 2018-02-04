@@ -33,8 +33,11 @@
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
         <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
+        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
       <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
         <div class="form-group">
           <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">
@@ -60,9 +63,8 @@
                      </span>
                 </div>
             </form>
-            <br><br>
             <hr>
-            <br><br>
+            <br>
             <p><b>Find a pod</b></p>
             <p>Looking for pods that may interest you? Enter some keywords below and your pear will try to find appropriate pods for you.
             This function is also available from the title bar at the top right of your screen.</p><br>
@@ -70,18 +72,37 @@
                 <div class="input-group">
                      <input class="form-control input-s" title="Enter some keywords" placeholder="Enter some keywords" type="text" name="search-pod" id="search-pod">
                      <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-default" value="Find a pod">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Find a pod">
                      </span>
                 </div>
             </form>
-            <br><br>
             <hr>
-            <br><br>
-            <p><b>Help and create your own pod!</b></p>
-            <p>To make PeARS truly usable, we need volunteers to host new pods. Check out our page on contributing a pod!</p>
-            <br><br>
+            <br>
+            <p><b>Subscribe from URL</b></p>
+            <p>Index a pod directly from its URL.</p>
+
+            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_url')}}">
+                <div class="input-group">
+                    <input class="form-control input-s" title="Enter pod." placeholder="http://www.openmeaning.org/pod0/" type="text" id='pod' name='pod'>
+                    <span class="input-group-btn">
+                    <input id="submit_button" type="submit" class="btn btn-primary" value="Index a pod">
+                    </span>
+                </div>
+            </form>
             <hr>
+            <br>
+            <p><b>Record pod from file</b></p>
+            <p>A friend sent you their pod? Add it to your pear!</p>
+            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_file')}}">
+                <div class="input-group">
+                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <span class="input-group-btn">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Read file">
+                     </span>
+                </div>
+            </form>
             </div>
+            
             <div class="col-md-6">
             <br><br>
             <p><b>Your pods</b></p>

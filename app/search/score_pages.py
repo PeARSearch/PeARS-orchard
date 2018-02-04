@@ -23,24 +23,26 @@ def score(query, query_dist, query_freqs):
     URL_scores = {}
     title_scores = {}
     term_scores = {}
+    coverages = {}
     for u in Urls.query.all():
         DS_scores[u.url] = cosine_similarity(convert_to_array(u.vector), query_dist)
         URL_scores[u.url] = score_url_overlap(query, u.url)
         title_scores[u.url] = generic_overlap(query, u.title)
-        term_scores[u.url] = term_cosine.run(query_freqs, u.freqs)
-    return DS_scores, URL_scores, title_scores, term_scores
+        term_scores[u.url], coverages[u.url] = term_cosine.run(query, query_freqs, u.freqs)
+    return DS_scores, URL_scores, title_scores, term_scores, coverages
 
 
 def score_docs(query, query_dist, query_freqs):
     """ Score documents for a pear """
     document_scores = {}  # Document scores
-    DS_scores, URL_scores, title_scores, term_scores = score(query,query_dist,query_freqs)
+    DS_scores, URL_scores, title_scores, term_scores, coverages = score(query,query_dist,query_freqs)
     for url in list(DS_scores.keys()):
         #print(url,DS_scores[url], title_scores[url], term_scores[url])
-        document_scores[url] = DS_scores[url] + 2* title_scores[url] + term_scores[url]
+        if coverages[url] == 1:
+            print(url,term_scores[url], coverages[url])
+        document_scores[url] = DS_scores[url] + title_scores[url] + term_scores[url] + 2 *coverages[url]
         if math.isnan(document_scores[url]):  # Check for potential NaN -- messes up with sorting in bestURLs.
-          document_scores[url] = 0
-        
+            document_scores[url] = 0
     return document_scores
 
 
@@ -52,6 +54,7 @@ def bestURLs(doc_scores):
         loc = urlparse(w).netloc
         if c < 50:
           if loc not in netlocs_used:
+              print(w,doc_scores[w])
               best_urls.append(w)
               netlocs_used.append(loc)
               c += 1

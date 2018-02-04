@@ -50,16 +50,6 @@ def from_url():
         return render_template('indexer/progress_url.html',url=url)
 
 
-@indexer.route("/from_pod", methods=["POST"])
-def from_pod():
-    if request.form['pod'] != None:
-        print("Writing to",join(dir_path,"pods_to_index.txt"))
-        f = open(join(dir_path, "pods_to_index.txt"),'w')
-        pod = request.form['pod']
-        f.write(pod+"\n")
-        f.close()
-    return render_template('indexer/progress_pod.html')
-
 
 @indexer.route("/from_crawl", methods=["POST"])
 def from_crawl():
@@ -109,34 +99,6 @@ def progress_file():
         urls, keywords = readUrls(join(dir_path, "urls_to_index.txt"))
         for c in range(len(urls)):
             mk_page_vector.compute_vectors(urls[c],keywords[c])
-            c+=1
-            yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
-    return Response(generate(), mimetype= 'text/event-stream')
-
-   
-@indexer.route("/progress_pod")
-def progress_pods():
-    print("Running progress pod")
-    print("Reading",join(dir_path,"pods_to_index.txt"))
-    pod_urls = readPods(join(dir_path, "pods_to_index.txt"))
-    urls = []
-    for pod_url in pod_urls:
-        print(pod_url)
-        pod = get_pod_info(pod_url)
-        pod_from_json(pod, pod_url)
-        pod_entry=db.session.query(Pods).filter_by(url=pod_url).first()
-        pod_entry.registered = True
-        db.session.commit()
-        r = requests.get(pod_url+"api/urls/")
-        print(r)
-        for u in r.json()['json_list']:
-            urls.append([u,pod['name']])
-    def generate():
-        c = 0
-        for pair in urls:
-            u = pair[0]
-            pod = pair[1]
-            url_from_json(u,pod)
             c+=1
             yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')

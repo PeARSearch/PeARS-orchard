@@ -1,9 +1,10 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, jsonify, Response
-from app.api.models import dm_dict_en, Pods
+from app.api.models import dm_dict_en, Pods, Urls
 from app.utils_db import pod_from_json
 from app import db
+from werkzeug import secure_filename
 from app.pod_finder import score_pods
 import requests
 from os.path import dirname,join,realpath,isfile
@@ -45,6 +46,7 @@ def progress_pod_update():
             yield "data:" + str(int(c/len(pods)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
 
+
 '''Find a pod'''
 
 @pod_finder.route('/find-a-pod/')
@@ -63,11 +65,106 @@ def subscribe():
             print(pod)
             f.write(pod+"\n")
         f.close()
-    return render_template('indexer/progress_pod.html')
+    return render_template('pod_finder/progress_pod.html')
+
+
+'''Subscribe from URL'''
+
+@pod_finder.route("/subscribe-from-url", methods=["POST"])
+def subscribe_from_url():
+    if request.form['pod'] != None:
+        print("Writing to",join(dir_path,"pods_to_index.txt"))
+        f = open(join(dir_path, "pods_to_index.txt"),'w')
+        pod = request.form['pod']
+        f.write(pod+"\n")
+        f.close()
+    return render_template('pod_finder/progress_pod.html')
+
+
+
+'''Record pod file'''
+
+@pod_finder.route("/subscribe-from-file", methods=["POST"])
+def subscribe_from_file():
+    print("Running progress for subscribe from file")
+    file = request.files['file_source']
+    filename = secure_filename(file.filename)
+    file.save(join(dir_path, "urls_from_pod.csv"))
+    return render_template('pod_finder/progress_file.html')
+    
+@pod_finder.route("/progress_file")
+def progress_file():
+    def parse_line(l):
+        fields = l.rstrip('\n').split(',')
+        url = fields[1]
+        title = fields[2]
+        snippet = fields[3]
+        vector = fields[4]
+        freqs = fields[5]
+        cc = False
+        if fields[6] == "True":
+            cc = True
+        return url, title, snippet, vector, freqs, cc
+
+    def generate():
+        c = 0
+        urls = []
+        f = open(join(dir_path, "urls_from_pod.csv"),'r')
+        for l in f:
+            url, title, snippet, vector, freqs, cc = parse_line(l)
+            print(url)
+            if not db.session.query(Urls).filter_by(url=url).all():
+                u = Urls(url=url, title=title, snippet=snippet, vector=vector, freqs=freqs, cc=cc)
+                urls.append(u)
+        f.close()
+ 
+        if len(urls) == 0:
+            yield "data:" + "100" + "\n\n"
+        else:
+            for u in urls:
+                db.session.add(u)
+                db.session.commit()
+                c+=1
+                yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
+    return Response(generate(), mimetype= 'text/event-stream')
+
+
+'''Take a file of pod URLs and index all URLs on each pod.'''
+  
+@pod_finder.route("/progress_pod")
+def progress_pods():
+    print("Running progress pod")
+    print("Reading",join(dir_path,"pods_to_index.txt"))
+    pod_urls = readPods(join(dir_path, "pods_to_index.txt"))
+    urls = []
+    for pod_url in pod_urls:
+        print(pod_url)
+        pod = get_pod_info(pod_url)
+        pod_from_json(pod, pod_url)
+        pod_entry=db.session.query(Pods).filter_by(url=pod_url).first()
+        pod_entry.registered = True
+        db.session.commit()
+        r = requests.get(pod_url+"api/urls/")
+        print(r)
+        for u in r.json()['json_list']:
+            urls.append([u,pod['name']])
+    def generate():
+        c = 0
+        for pair in urls:
+            u = pair[0]
+            pod = pair[1]
+            url_from_json(u,pod)
+            c+=1
+            yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
+    return Response(generate(), mimetype= 'text/event-stream')
 
 
 '''Unsubscribe'''
-@pod_finder.route('/unsubscribe/')
+@pod_finder.route('/unsubscribe/', methods=["POST"])
 def unsubscribe():
-    return render_template('pod_finder/index.html',pods=[])
+    if request.form.getlist('pods') != None:
+        unsubscribed_pods = request.form.getlist('pods')
+        for pod in unsubscribed_pods:
+            print("Unsubscribing pod...",pod)
+    return render_template('pod_finder/unsubscribe-success.html',pods=unsubscribed_pods)
 
