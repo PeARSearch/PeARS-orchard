@@ -39,6 +39,6 @@ The fully distributed version of PeARS will be made of many individual users wit
 
     python3 run.py
 
-Now, go to your browser at localhost:8080. You should see the search page for PeARS. You don't have any pages indexed yet, so to give you a headstart, click on 'Indexer' at the top of the page, and go to the 'Index from pod' section. Tick the box next to Pod0 and click 'Go'. This will index the content of Pod0, a general-purpose, English-language pod. Once this is done, head to 'Search' again and try PeARS!
+Now, go to your browser at localhost:8080. You should see the search page for PeARS. You don't have any pages indexed yet, so go to the F.A.Q. page (link at the top of the page) and follow the short instructions to get you going!
 
 
