@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
+  <meta charset="utf-8">
+  <title>PeARS Search - Acknowledgements</title>
+  <meta name="generator" content="Bootply"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="#">Brand</a> -->
+      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="{{url_for('search.index')}}">Search</a></li>
+        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
+        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
+        <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
+        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
+      <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
+        <div class="form-group">
+          <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Find a pod</button>
+      </form>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    </nav>
+
+<div class="container">
+
+  <div class="row">
+       <div class="col-md-6">
+       <h3>F.A.Q.</h3>
+       <p><a href="#firsttime">So I'm here now and I don't have any pages to search. What do I do?</a><br>
+       <a href="#newpods">What is a pod? And how do I find new pods?</a><br>
+       <a href="#fewpods">Why are there so few pods?</a><br>
+       <a href="#createpod">Can I create my own pod?</a><br>
+       <a href="#crawlsite">How do I use 'crawl a website'?</a><br>
+       <a href="#indexfile">How do I use 'index from file'?</a><br>
+       <a href="#mistake">Help! I made a mistake while indexing!</a><br>
+       <a href="#contribute">How do I contribute to the PeARS code?</a></p>
+       <br><br>
+
+       <p id="#firsttime"><b>So I'm here now and I don't have any pages to search. What do I do?</b></p>
+       <p>First, welcome! Really nice to see you here!</p>
+       <p>Now, head over to your <a href="{{url_for('pod_finder.index')}}">Pod management</a> page and click on 'Update known pods'. Wait until the progress bar is on 100%... Once the update is over, you can start subscribing to pods which might be of interest to you... Carry on reading the question below: <i>What is a pod? And how do I find new pods?</i>...</p>
+
+       <br><br>
+       <p id="newpods"><b>What is a pod? And how do I find new pods?</b></p>
+       <p>A PeARS pod is a web page index (like a mini-Google, Bing, Yahoo or DuckDuckGo) that some nice people have made available online for you to use. A pod is usually on a particular topic: for instance, the Opera Pod records Web pages on opera. Some pods might be generalist pods, though: PeARS Zero, a demo pod, has pages indexed on many different topics. Any pod can be subscribed to from your <a href="{{url_for('pod_finder.index')}}">Pod management</a> page. If you already know its URL (for instance, PeARS Zero is at <a href="http://www.openmeaning.org/pod0/">http://www.openmeaning.org/pod0/</a>, you can enter that URL in the 'subscribe from URL' field, and click 'Index a pod' to subscribe to the pod. If you're not sure which pod you might be interested in, you can also enter some keywords in the 'find a pod' search box and be suggested some pods by your pear (the 'find a pod' function is available both from the Pod management page and from your task bar at the top of the screen). Just select the pods you think you might like and click on 'subscribe'. </p>
+       <p>Once  you've subscribed to one or several pods, you're good to go! Go back to the <a href="{{url_for('search.index')}}">PeARS home page</a>, and search!</p>
+
+       <br><br>
+       <p id="fewpods"><b>Why are there so few pods?</b></p>
+       <p>Uh... yeah... PeARS is really, really young, so right now, there are only very few pods available, and they might be about topics you don't care about (opera, anyone?) If you're frustrated, great, this is the right state of mind to create your own pod. Carry on reading...</p>
+
+       <br><br>
+       <p id="createpod"><b>Can I create my own pod?</b></p>
+       <p>Yes! The revolution needs you, and your appetite for Web pages on bungee-jumping, creepy-crawlies, the perfect cup of tea, and extinct languages. Whatever you're into, be your own search engine and start indexing pages like the pros. Your pear includes an <a href="{{url_for('indexer.index')}}">indexing page</a> which helps you with the hard work of converting Web pages into searchable representations. You can index in three ways. The simplest one is to type a single URL in the 'Index a single URL' box -- this will index just that page. If you have a favourite website (or part of a website), you can also type in its address in 'Crawl a website' to get all indexable pages from that site (but first check our <a href="#crawlsite">advice on indexing websites</a>). Finally, you can prepare a file of different URLs you would like to record and feed that in to your pear (see <a href="#indexfile"><i>How do I use 'index from file?'</i></a>). When you index things, it is <b>very important</b> to also provide a keyword describing the page(s) you're indexing. You can choose whatever you like, but make sure it's descriptive for you, and that you will <b>keep using the same keyword</b> when you index more pages on the topic.</p>
+       <p>Once in a while, you can go and check how many pages you've indexed on a particular topic. Head over to <a href="{{url_for('indexer.index')}}">My tree</a>. There, you will find a beautiful tree growing a pod for each keyword you have used in the indexer. Each pod in the making shows you its current size. Once a pod has grown enough, you may want to share it on the Internet. We have a whole set of instructions on how to do this there: . </p>
+
+       <br><br>
+       <p id="crawlsite"><b>How do I use 'crawl a website'?</b></p>
+       <p>Enter a URL. PeARS will index everything it finds <i>under</i> that URL. For instance, if you entered http://www.openmeaning.org/, every URL starting with http://openmeaning.org/ will be indexed. If you entered http://www.openmeaning.org/pod0/, every URL under http://www.openmeaning.org/pod0/ will be indexed, but <i>not</i> the ones one level up, under http://www.openmeaning.org/!</p>
+       <p>Please bear in mind that a) indexing is a rather slow process on your home machine, so don't think it's a good idea to start indexing the whole of Reddit; b) some websites impose restrictions on crawling and might block you if you don't respect their rules. So please don't index entire sections of Wikipedia, for example; you will be using up too much of their bandwidth. Consider alternative solutions like indexing from a Wikipedia dump.</p>
+
+       <br><br>
+       <p id="indexfile"><b>How do I use 'index from file'?</b></p>
+       <p>'Index from file' lets you index a list of URLs from a plain text file. For the sake of example, let's say we want to index two URLs, https://en.wikipedia.org/ and http://flask.pocoo.org/. </p>
+
+       <br><br>
+       <p id="mistake"><b>Help! I made a mistake while indexing!</b></p>
+       <p>Don't panic! You mean, entered the wrong keyword? Indexed a page you didn't want? Head over to your <a href="{{url_for('admin.index')}}">DB Admin</a> page. From this page, you can access records in your pear's database. Click on 'See/modify your URL list'. You will get back a list of all URLs indexed on your pear. There's a search box at the top of the list, which you can use to find the record you wish to modify. Once you've found it, either delete it completely (clicking on the little wastebin on the left) or if the problem is just with the keyword, edit it in the last column of the list. Problem solved!</p>
+
+       <br><br>
+       <p id="contribute"><b>How do I contribute to the PeARS code?</b></p>
+       <p>We'd love to see you on our GitHub repo! This version of PeARS is <a href="">PeARS-Orchard</a>, and its sister project (the code for hosting pods) is at <a href="">PeARS-Pod</a>. Feel free to send us a pull request or contribute to our issues list. If you feel very brave, you can also ping us on the <a href="">main PeARS repo</a> (dev branch) which aims at having a fully distributed version of PeARS.</p>
+
+       </div>
+       <div class="col-md-6">
+       <img src="{{url_for('static', filename='tree-silhouette.png')}}" width='300px'/>
+       </div>
+  </div> <!-- /row -->
+</div> <!-- /container full -->
+<!-- script references -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+</body>
+</html>
