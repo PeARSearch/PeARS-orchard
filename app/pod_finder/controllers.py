@@ -3,10 +3,14 @@ from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, jsonify, Response
 from app.api.models import dm_dict_en, Pods, Urls
 from app.utils_db import pod_from_json
+from app.utils import readUrls, readPods
 from app import db
 from werkzeug import secure_filename
-from app.pod_finder import score_pods
+from app.pod_finder import score_pods, index_pod_file
+from app.utils import get_pod_info
+from app.utils_db import url_from_json, pod_from_json
 import requests
+from os import remove
 from os.path import dirname,join,realpath,isfile
 
 dir_path = dirname(dirname(dirname(realpath(__file__))))
@@ -36,8 +40,6 @@ def progress_pod_update():
     r = requests.get("http://www.openmeaning.org/pod0/api/pods/")
     for pod in r.json()['json_list']:
         pods.append(pod)
-    Pods.query.delete()
-    db.session.commit()
     def generate():
         c = 0
         for pod in pods:
@@ -89,29 +91,23 @@ def subscribe_from_file():
     print("Running progress for subscribe from file")
     file = request.files['file_source']
     filename = secure_filename(file.filename)
-    file.save(join(dir_path, "urls_from_pod.csv"))
+    remove(join(dir_path, "app","static","pods","urls_from_pod.csv"))
+    remove(join(dir_path, "app","static","pods","urls_from_pod.png"))
+    if file[-3:] == "csv":
+        file.save(join(dir_path, "app","static","pods","urls_from_pod.csv"))
+    if file[-3:] == "png":
+        file.save(join(dir_path, "app","static","pods","urls_from_pod.png"))
+        index_pod_file.convert_img_to_csv(join(dir_path, "app","static","pods","urls_from_pod.png"))
     return render_template('pod_finder/progress_file.html')
     
 @pod_finder.route("/progress_file")
 def progress_file():
-    def parse_line(l):
-        fields = l.rstrip('\n').split(',')
-        url = fields[1]
-        title = fields[2]
-        snippet = fields[3]
-        vector = fields[4]
-        freqs = fields[5]
-        cc = False
-        if fields[6] == "True":
-            cc = True
-        return url, title, snippet, vector, freqs, cc
-
     def generate():
         c = 0
         urls = []
-        f = open(join(dir_path, "urls_from_pod.csv"),'r')
+        f = open(join(dir_path, "app","static","pods","urls_from_pod.csv"),'r')
         for l in f:
-            url, title, snippet, vector, freqs, cc = parse_line(l)
+            url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(l)
             print(url)
             if not db.session.query(Urls).filter_by(url=url).all():
                 u = Urls(url=url, title=title, snippet=snippet, vector=vector, freqs=freqs, cc=cc)

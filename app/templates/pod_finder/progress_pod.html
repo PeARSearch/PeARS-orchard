@@ -11,7 +11,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script>
 
-	var source = new EventSource("/indexer/progress_pod");
+	var source = new EventSource("/pod_finder/progress_pod");
 	source.onmessage = function(event) {
 		$('.progress-bar').css('width', event.data+'%').attr('aria-valuenow', event.data);
 		$('.progress-bar-label').text(event.data+'%');

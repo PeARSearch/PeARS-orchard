@@ -16,9 +16,10 @@ def score(query, query_dist, query_freqs):
     """ Get distributional score """
     DS_scores = {}
     term_scores = {}
+    coverages = {}
     for p in db.session.query(Pods).filter_by(registered=False).all():
         DS_scores[p.url] = cosine_similarity(convert_to_array(p.DS_vector), query_dist)
-        term_scores[p.url] = term_cosine.run(query_freqs, p.word_vector)
+        term_scores[p.url], coverages[p.url] = term_cosine.run(query, query_freqs, p.word_vector)
     return DS_scores, term_scores
 
 
