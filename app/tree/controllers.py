@@ -3,11 +3,9 @@ from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for, jsonify, Response
 from app.api.models import dm_dict_en, Urls
 from app import db
-from app.tree.mk_urls_csv import make_pod
+from app.tree.mk_urls_file import make_csv_pod, make_png_pod
 import requests
-from os.path import dirname,join,realpath,isfile
 
-dir_path = dirname(dirname(dirname(realpath(__file__))))
 
 # Define the blueprint:
 tree = Blueprint('tree', __name__, url_prefix='/my-tree')
@@ -33,6 +31,6 @@ def index():
 @tree.route('/get-a-pod', methods=['POST','GET'])
 def get_a_pod():
     query = request.args.get('pod')
-    location = make_pod(query)
-    print(location)
-    return render_template('tree/get-a-pod.html',query=query,location=location)
+    csv_location = make_csv_pod(query)
+    png_location = make_png_pod(query)
+    return render_template('tree/get-a-pod.html',query=query,csv_location=csv_location,png_location=png_location)
