@@ -17,10 +17,10 @@ def parse_line(l):
     return url, title, snippet, vector, freqs, cc
 
 def convert_img_to_csv():
-    image = Image.open(join(dir_path, "urls_from_pod.png"))
+    image = Image.open(join(dir_path, "app","static","pods", "urls_from_pod.png"))
     pixels = list(image.getdata())
 
-    f = open(join(dir_path, "urls_from_pod.csv"),'w')
+    f = open(join(dir_path, "app","static","pods", "urls_from_pod.csv"),'w')
         
     for p in pixels:
         a = 255 - p[0]

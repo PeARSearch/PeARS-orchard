@@ -91,30 +91,32 @@ def subscribe_from_file():
     print("Running progress for subscribe from file")
     file = request.files['file_source']
     filename = secure_filename(file.filename)
-    remove(join(dir_path, "app","static","pods","urls_from_pod.csv"))
-    remove(join(dir_path, "app","static","pods","urls_from_pod.png"))
-    if file[-3:] == "csv":
+    #remove(join(dir_path, "app","static","pods","urls_from_pod.csv"))
+    #remove(join(dir_path, "app","static","pods","urls_from_pod.png"))
+    if filename[-3:] == "csv":
         file.save(join(dir_path, "app","static","pods","urls_from_pod.csv"))
-    if file[-3:] == "png":
+    if filename[-3:] == "png":
         file.save(join(dir_path, "app","static","pods","urls_from_pod.png"))
-        index_pod_file.convert_img_to_csv(join(dir_path, "app","static","pods","urls_from_pod.png"))
+        index_pod_file.convert_img_to_csv()
     return render_template('pod_finder/progress_file.html')
     
 @pod_finder.route("/progress_file")
 def progress_file():
     def generate():
         c = 0
-        urls = []
+        urls = list()
+        print(len(urls))
         f = open(join(dir_path, "app","static","pods","urls_from_pod.csv"),'r')
         for l in f:
-            url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(l)
-            print(url)
-            if not db.session.query(Urls).filter_by(url=url).all():
-                u = Urls(url=url, title=title, snippet=snippet, vector=vector, freqs=freqs, cc=cc)
-                urls.append(u)
+            if len(l.rstrip('\n').split(',')) == 7:
+                url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(l)
+                print(url)
+                if not db.session.query(Urls).filter_by(url=url).all():
+                    u = Urls(url=url, title=title, snippet=snippet, vector=vector, freqs=freqs, cc=cc)
+                    urls.append(u)
         f.close()
- 
         if len(urls) == 0:
+            print("All URLs already known.")
             yield "data:" + "100" + "\n\n"
         else:
             for u in urls:
