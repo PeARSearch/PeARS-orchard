@@ -1,4 +1,4 @@
-from app.api.models import Urls
+from app.api.models import Urls, version
 from app import db
 from os.path import dirname,realpath,join,basename
 from PIL import Image
@@ -11,6 +11,7 @@ def make_csv_pod(keyword):
     file_location = join(dir_path,"static","pods",keyword+"_urls_db.csv")
     f = open(file_location,'w')
     f.write("#Pod name:"+keyword+"\n")
+    f.write("#Space version:"+version+"\n")
     for url in db.session.query(Urls).filter_by(keyword=keyword).all():
         l=str(url.id)+","+url.url+","+url.title.replace(',','-')+","+url.snippet.replace(',','-')+","+url.vector+","+url.freqs+","+str(url.cc)
         f.write(l.replace('\r', '').replace('\n','')+'\n')

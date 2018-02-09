@@ -68,21 +68,12 @@
 
         <div  class="row">
             <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:300px">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:250px">
             <p><b>Index from file</b></p>
             <p>Your indexing is in progress. Go and grab a cup of tea. If you'd like to see what is going on during indexing, switch to a terminal
             window, where helpful log messages are right now being printed.</p>
             <p>Note: the speed of indexing varies as a function of the availability of the page and the speed of your Internet connection.</p>
             <p>Once the progress bar is on 100%, you can leave this page and search the pages you have just indexed.</p>
-
-            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
-                <div class="input-group">
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
-                     <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-primary" value="Go">
-                     </span>
-                </div>
-            </form>
             </div>
             </div>
             <div class="col-md-6">

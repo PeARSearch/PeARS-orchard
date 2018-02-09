@@ -2,7 +2,7 @@ from app.utils import readDM
 from app import db
 
 #Build semantic spaces
-dm_dict_en = readDM("./app/static/spaces/english.dm")
+dm_dict_en, version = readDM("./app/static/spaces/english.dm")
 
 #Record language codes
 language_codes = {}

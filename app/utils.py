@@ -9,18 +9,21 @@ from urllib.parse import urljoin
 
 def readDM(dm_file):
     dm_dict = {}
+    version = ""
     with open(dm_file) as f:
         dmlines=f.readlines()
     f.close()
 
     #Make dictionary with key=row, value=vector
     for l in dmlines:
+        if "#Version:" in l:
+            version = l.rstrip('\n').replace("#Version:","")
         items=l.rstrip().split()
         row=items[0]
         vec=[float(i) for i in items[1:]]
         vec=np.array(vec)
         dm_dict[row]=vec
-    return dm_dict
+    return dm_dict, version
 
 def readUrls(url_file):
     urls = []
@@ -138,33 +141,13 @@ def get_pod_info(url):
         print("Problem fetching pod...")
     return pod
 
+def get_pod0_message():
+    msg = ""
+    try:
+        r = requests.get("http://www.openmeaning.org/pod0/api/message/", timeout=3)
+        if r.status_code == 200:
+           msg = r.json()['message']
+    except:
+        print("Problem contacting pod0...")
+    return msg
 
-def make_figure(m_2d, labels):
-    cmap = cm.get_cmap('nipy_spectral')
-
-    existing_m_2d = pd.DataFrame(m_2d)
-    existing_m_2d.index = labels
-    existing_m_2d.columns = ['PC1','PC2']
-    existing_m_2d.head()
-
-    ax = existing_m_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(10,6), c=range(len(existing_m_2d)), colormap=cmap, linewidth=0, legend=False)
-    ax.set_xlabel("A dimension of meaning")
-    ax.set_ylabel("Another dimension of meaning")
-
-    for i, word in enumerate(existing_m_2d.index):
-        logging.exception(word+" "+str(existing_m_2d.iloc[i].PC2)+" "+str(existing_m_2d.iloc[i].PC1))
-        ax.annotate(
-            word,
-            (existing_m_2d.iloc[i].PC2, existing_m_2d.iloc[i].PC1), color='black', size='large', textcoords='offset points')
-
-    fig = ax.get_figure()
-    cax = fig.get_axes()[1]
-    cax.set_visible(False)
-
-    from io import BytesIO
-    figfile = BytesIO()
-    fig.savefig(figfile, format='png')
-    figfile.seek(0)  # rewind to beginning of file
-    import base64
-    figdata_png = base64.b64encode(figfile.getvalue())
-    return figdata_png
