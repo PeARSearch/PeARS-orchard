@@ -32,5 +32,6 @@ def index():
 def get_a_pod():
     query = request.args.get('pod')
     csv_location = make_csv_pod(query)
-    png_location = make_png_pod(query)
-    return render_template('tree/get-a-pod.html',query=query,csv_location=csv_location,png_location=png_location)
+    png_locations = make_png_pod(query)
+    print(png_locations)
+    return render_template('tree/get-a-pod.html',query=query,csv_location=csv_location,png_locations=png_locations)

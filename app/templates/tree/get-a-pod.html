@@ -51,22 +51,28 @@
     </div><!-- /.container-fluid -->
     </nav>
 
-<div class="container-full">
+<div class="container">
   <div class="row">
-    <div class="col-md-6 text-center v-center"><img src="/static/tree-silhouette.png" width="800px"/></div>
+    <div class="col-md-6 text-center v-center">
+        <br><br>
+        {% for png_location in png_locations %}
+        <img src="/static/pods/{{png_location}}" width="200px" style="border:1px solid #000; padding:1px"/>
+        {% endfor %}
+    </div>
     <div class="col-md-6">
         <br><br>
-        <p><b>Congratulations!<br> You've just picked a PeARS pod on the topic: {{query}}!</b></p>
-        <p>We have put your pod file at the following location on your machine:<br> <i>{{csv_location}}</i>.</p>
+        <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:400px">
+        <p><b>You've just picked a PeARS Pod on the topic: <span style="color:blue">{{query}}</span>!</b></p>
+        <p>Your index is available as one pod file at the following location on your machine:<br> <i>{{csv_location}}</i>.</p>
 
         <br>
-        <p>Alternatively, you can also share the following Snow Pod with your friends. The picture is located at:<br>
-        <i>{{csv_location[:-3]}}png</i>.</p>
+        <p>Alternatively, you can also share the Snow Pod(s) on the left with your friends. The pictures are located at:<br>
+        <i>{{csv_location[:-3]}}1...png</i>.</p>
 
-        <p>You can also right-click on the picture and select 'Save image as...' if you'd like to save it to another location.</p>
+        <p>(You can also right-click on any picture and select 'Save image as...' if you'd like to save it to another location.)</p>
 
-        <img src="/static/pods/{{png_location}}" width="300px" style="border:1px solid #000; padding:1px"/><br>
-        
+        <p>Now, share your pod! Send the csv to your friends, post the pictures on social media, send them to your Grandma on a USB drive... Just share them.</p>
+        </div>
     </div>
   </div> <!-- /row -->
 </div> <!-- /container full -->

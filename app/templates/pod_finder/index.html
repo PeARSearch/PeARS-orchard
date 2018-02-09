@@ -54,6 +54,7 @@
         <div  class="row">
             <div class="col-md-6" style="padding-right:20px; border-right: 1px solid #ccc;">
             <br><br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:180px">
             <p><b>Update known pods</b></p>
             <p>Your pear knows about {{num_pods}} pods. You can update your list of known pods by clicking on the button below. </p><br>
             <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.update_pod_list')}}">
@@ -63,8 +64,9 @@
                      </span>
                 </div>
             </form>
-            <hr>
+            </div>
             <br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:200px">
             <p><b>Find a pod</b></p>
             <p>Looking for pods that may interest you? Enter some keywords below and your pear will try to find appropriate pods for you.
             This function is also available from the title bar at the top right of your screen.</p><br>
@@ -76,8 +78,9 @@
                      </span>
                 </div>
             </form>
-            <hr>
+            </div>
             <br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:140px">
             <p><b>Subscribe from URL</b></p>
             <p>Index a pod directly from its URL.</p>
 
@@ -89,8 +92,9 @@
                     </span>
                 </div>
             </form>
-            <hr>
+            </div>
             <br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:170px">
             <p><b>Record pod from file</b></p>
             <p>A friend sent you their pod? Add it to your pear! The file you input should either be in .csv or .png format.</p>
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_file')}}">
@@ -101,6 +105,7 @@
                      </span>
                 </div>
             </form>
+            </div>
             </div>
             
             <div class="col-md-6" style="padding-left:50px;">

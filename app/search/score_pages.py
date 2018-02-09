@@ -38,8 +38,6 @@ def score_docs(query, query_dist, query_freqs):
     DS_scores, URL_scores, title_scores, term_scores, coverages = score(query,query_dist,query_freqs)
     for url in list(DS_scores.keys()):
         #print(url,DS_scores[url], title_scores[url], term_scores[url])
-        if coverages[url] == 1:
-            print(url,term_scores[url], coverages[url])
         document_scores[url] = DS_scores[url] + title_scores[url] + term_scores[url] + 2 *coverages[url]
         if math.isnan(document_scores[url]):  # Check for potential NaN -- messes up with sorting in bestURLs.
             document_scores[url] = 0
@@ -53,7 +51,7 @@ def bestURLs(doc_scores):
     for w in sorted(doc_scores, key=doc_scores.get, reverse=True):
         loc = urlparse(w).netloc
         if c < 50:
-          if loc not in netlocs_used:
+          if loc not in netlocs_used and doc_scores[w] > 0:
               print(w,doc_scores[w])
               best_urls.append(w)
               netlocs_used.append(loc)

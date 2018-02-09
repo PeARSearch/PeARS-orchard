@@ -1,7 +1,7 @@
 from app.api.models import Urls, version
 from app import db
 from os.path import dirname,realpath,join,basename
-from PIL import Image
+from PIL import Image,ImageDraw
 import math
 
 dir_path = dirname(dirname(realpath(__file__)))
@@ -18,23 +18,60 @@ def make_csv_pod(keyword):
     f.close()
     return file_location
 
-def make_png_pod(keyword):
-    pixels = list()
-    csv_file_location = join(dir_path,"static","pods",keyword+"_urls_db.csv")
-    png_file_location = join(dir_path,"static","pods",keyword+"_urls_db.png")
-    f = open(csv_file_location)
-    for l in f:
-        for char in l:
-            a = int(ord(char) / 3)
-            b = int((ord(char)-a) / 2)
-            c = ord(char) - a - b
-            #print(char,ord(char),a,b,c)
-            color = (255-a,255-b,255-c)
-            pixels.append(color)
-    f.close()
+def draw_image(pixels,keyword,img_num):
+    png_file_location = join(dir_path,"static","pods",keyword+"_urls_db"+str(img_num)+".png")
+    '''This will be the transparency pixel -- super important so that Twitter and co don't convert the png to jpg.'''
+    pixels.append((255,255,255))	
     size = int(math.sqrt(len(pixels))) + 1
     image_out = Image.new("RGB", (size,size))
     image_out.putdata(pixels)
+
+    mask=Image.new('L', image_out.size, color=255)
+    draw=ImageDraw.Draw(mask) 
+    draw.point((size-1,size-1), fill=0)
+    image_out.putalpha(mask)
     image_out.save(png_file_location)
     return basename(png_file_location)
 
+def convert_to_pixels(l):
+    pixels = list()
+    for char in l:
+        a = int(ord(char) / 3)
+        b = int((ord(char)-a) / 2)
+        c = ord(char) - a - b
+        #print(char,ord(char),a,b,c)
+        color = (255-a,255-b,255-c)
+        pixels.append(color)
+    return pixels
+
+def make_png_pod(keyword):
+    images = []
+    header = ""
+    pixels = []
+    csv_file_location = join(dir_path,"static","pods",keyword+"_urls_db.csv")
+    f = open(csv_file_location)
+    
+    '''One image per 100 URLs, so pnd pods stay small.'''
+    image_lines = []
+    c = 0
+    for l in f:
+        if "#Pod name" in l or "#Version" in l:
+            header+=l
+        else:
+            image_lines.append(l)
+            c+=1
+        if c == 100:
+            pixels+=convert_to_pixels(header)
+            for line in image_lines:
+                pixels+=convert_to_pixels(line)
+            images.append(draw_image(pixels,keyword, len(images)+1))
+            del pixels[:]
+            del image_lines[:]
+            print(len(pixels))
+            c = 0
+    f.close()
+    pixels+=convert_to_pixels(header)
+    for line in image_lines:
+        pixels+=convert_to_pixels(line)
+    images.append(draw_image(pixels, keyword, len(images)+1))
+    return images
