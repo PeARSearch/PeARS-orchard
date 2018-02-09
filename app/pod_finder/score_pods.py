@@ -54,8 +54,6 @@ def output(best_pods):
         for p in best_pods:
             results.append([p, get_db_pod_name(p), get_db_pod_description(p), get_db_pod_language(p)])
             print(results)
-    else:
-        results = [["","","Sorry, no pod found :(",""]]
     return results
 
 

@@ -56,7 +56,10 @@ def find_a_pod():
     query = request.args.get('search-pod')
     print(request,request.args,query)
     pods = score_pods.run(query)
-    return render_template('pod_finder/find-a-pod.html',pods=pods)
+    if len(pods) > 0:
+        return render_template('pod_finder/find-a-pod.html',pods=pods,msg="")
+    else:
+        return render_template('pod_finder/find-a-pod.html',pods=[],msg="Sorry, no pod found for your query :(")
 
 @pod_finder.route("/subscribe", methods=["POST"])
 def subscribe():
@@ -91,8 +94,6 @@ def subscribe_from_file():
     print("Running progress for subscribe from file")
     file = request.files['file_source']
     filename = secure_filename(file.filename)
-    #remove(join(dir_path, "app","static","pods","urls_from_pod.csv"))
-    #remove(join(dir_path, "app","static","pods","urls_from_pod.png"))
     if filename[-3:] == "csv":
         file.save(join(dir_path, "app","static","pods","urls_from_pod.csv"))
     if filename[-3:] == "png":
@@ -105,14 +106,16 @@ def progress_file():
     def generate():
         c = 0
         urls = list()
+        pod_name = ""
         print(len(urls))
         f = open(join(dir_path, "app","static","pods","urls_from_pod.csv"),'r')
         for l in f:
+            if "#Pod name" in l:
+                pod_name = l.rstrip('\n').replace("#Pod name:","")
             if len(l.rstrip('\n').split(',')) == 7:
                 url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(l)
-                print(url)
                 if not db.session.query(Urls).filter_by(url=url).all():
-                    u = Urls(url=url, title=title, snippet=snippet, vector=vector, freqs=freqs, cc=cc)
+                    u = Urls(url=url, title=title, snippet=snippet, pod=pod_name, vector=vector, freqs=freqs, cc=cc)
                     urls.append(u)
         f.close()
         if len(urls) == 0:

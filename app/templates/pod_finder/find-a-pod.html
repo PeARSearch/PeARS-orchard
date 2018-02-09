@@ -65,7 +65,11 @@
 		        </label>
 		    </div>
                     {% endfor %}<br>
+                    {% if msg %}
+                    <p><b>{{msg}}</b></p>
+                    {% else %}
                     <input id="submit_button" type="submit" class="btn btn-primary" value="Subscribe">
+                    {% endif %}
                 </div>
             </form>
             <hr>
