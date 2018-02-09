@@ -164,5 +164,13 @@ def unsubscribe():
         unsubscribed_pods = request.form.getlist('pods')
         for pod in unsubscribed_pods:
             print("Unsubscribing pod...",pod)
+            pod_entries=db.session.query(Urls).filter_by(pod=pod).all()
+            if pod_entries is not None:
+                for e in pod_entries:
+                    db.session.delete(e)
+                    db.session.commit()
+            pod_entry=db.session.query(Pods).filter_by(name=pod).first()
+            pod_entry.registered = False
+            db.session.commit()
     return render_template('pod_finder/unsubscribe-success.html',pods=unsubscribed_pods)
 

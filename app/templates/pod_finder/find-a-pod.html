@@ -54,22 +54,6 @@
         <div  class="row">
             <div class="col-md-6">
             <br><br>
-            <p><b>Find a pod</b></p>
-            <p>Looking for pods that may interest you? Enter some keywords below and your pear will try to find appropriate pods for you.
-            This function is also available from the title bar at the top right of your screen.</p><br>
-            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.find_a_pod')}}">
-                <div class="input-group">
-                     <input class="form-control input-s" title="Enter some keywords" placeholder="Enter some keywords" type="text" name='search-pod' id='search-pod' class="form-control">
-                     <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-default" value="Find a pod">
-                     </span>
-                </div>
-            </form>
-            <br><br>
-            <hr>
-            </div>
-            <div class="col-md-6">
-            <br><br>
             <p><b>Pods you could subscribe to</b></p>
             <p>Below, you will find the pods that we think you might be interested in. Click on 'subscribe' to subscribe to that pod.</p><br>
             <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe')}}">
@@ -84,6 +68,11 @@
                     <input id="submit_button" type="submit" class="btn btn-primary" value="Subscribe">
                 </div>
             </form>
+            <hr>
+            </div>
+            <div class="col-md-6">
+            <br><br>
+            <img src="{{url_for('static', filename='tree-silhouette.png')}}" width='300px'/>
             </div>
         </div>
 
