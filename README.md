@@ -25,9 +25,8 @@ The fully distributed version of PeARS will be made of many individual users wit
     git clone https://github.com/PeARSearch/PeARS-orchard.git
 
 
-2. Setup a virtualenv in your directory (**this step is optional**):
+2. **Optional step** Setup a virtualenv in your directory. If you haven't yet set up virtualenv on your machine, please install it via pip:
 
-If you haven't yet set up virtualenv on your machine, please install it via pip:
 
     sudo apt-get install python3-setuptools
 
@@ -35,7 +34,7 @@ If you haven't yet set up virtualenv on your machine, please install it via pip:
 
     sudo pip3 install virtualenv
 
-Then run:
+    Then run:
 
     virtualenv -p python3 env && source env/bin/activate
 
