@@ -1,7 +1,5 @@
 from math import sqrt
 import numpy as np
-from matplotlib import cm
-import pandas as pd
 import logging
 import json
 import requests

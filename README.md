@@ -27,6 +27,16 @@ The fully distributed version of PeARS will be made of many individual users wit
 
 2. Setup a virtualenv in your directory (**this step is optional**):
 
+If you haven't yet set up virtualenv on your machine, please install it via pip:
+
+    sudo apt-get install python3-setuptools
+
+    sudo easy_install3 pip    
+
+    sudo pip3 install virtualenv
+
+Then run:
+
     virtualenv -p python3 env && source env/bin/activate
 
 3. Install the build dependencies:

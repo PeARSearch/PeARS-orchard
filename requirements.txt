@@ -13,11 +13,8 @@ jusText==2.2.0
 langdetect==1.0.7
 lxml==4.1.1
 MarkupSafe==1.0
-matplotlib==2.1.0
 numpy==1.13.3
-pandas==0.21.0
 Pillow==5.0.0
-pkg-resources==0.0.0
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.3
