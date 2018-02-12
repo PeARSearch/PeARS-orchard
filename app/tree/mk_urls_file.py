@@ -8,7 +8,8 @@ dir_path = dirname(dirname(realpath(__file__)))
 
 
 def make_csv_pod(keyword):
-    file_location = join(dir_path,"static","pods",keyword+"_urls_db.csv")
+    url_keyword = keyword.replace(' ','_')
+    file_location = join(dir_path,"static","pods",url_keyword+"_urls_db.csv")
     f = open(file_location,'w')
     f.write("#Pod name:"+keyword+"\n")
     f.write("#Space version:"+version+"\n")
@@ -19,7 +20,8 @@ def make_csv_pod(keyword):
     return file_location
 
 def draw_image(pixels,keyword,img_num):
-    png_file_location = join(dir_path,"static","pods",keyword+"_urls_db"+str(img_num)+".png")
+    url_keyword = keyword.replace(' ','_')
+    png_file_location = join(dir_path,"static","pods",url_keyword+"_urls_db"+str(img_num)+".png")
     '''This will be the transparency pixel -- super important so that Twitter and co don't convert the png to jpg.'''
     pixels.append((255,255,255))	
     size = int(math.sqrt(len(pixels))) + 1
@@ -55,19 +57,19 @@ def make_png_pod(keyword):
     image_lines = []
     c = 0
     for l in f:
-        if "#Pod name" in l or "#Version" in l:
+        if "#Pod name" in l or "#Space version" in l:
             header+=l
         else:
             image_lines.append(l)
             c+=1
         if c == 100:
+            print(header)
             pixels+=convert_to_pixels(header)
             for line in image_lines:
                 pixels+=convert_to_pixels(line)
             images.append(draw_image(pixels,keyword, len(images)+1))
             del pixels[:]
             del image_lines[:]
-            print(len(pixels))
             c = 0
     f.close()
     pixels+=convert_to_pixels(header)
