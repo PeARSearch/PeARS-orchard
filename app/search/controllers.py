@@ -5,8 +5,8 @@ from flask import Blueprint, request, render_template, \
 # Import the database object from the main app module
 from app import db
 
-from app.api.models import Urls
-from app.api.models import dm_dict_en
+from app.api.models import Urls, dm_dict_en 
+#from app.api.models import DS_M, mk_matrix_from_db
 from app.search import score_pages
 
 # Import utilities
@@ -31,6 +31,9 @@ def get_cached_urls(urls):
 @search.route('/')
 @search.route('/index')
 def index():
+    #'''Check whether DS has been updated.'''
+    #if DS_M.shape[0] != len(Urls.query.all()):
+    #    mk_matrix_from_db() 
     results = []
     internal_message = ""
     pod0_message = ""

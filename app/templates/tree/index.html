@@ -13,7 +13,7 @@
   <![endif]-->
   <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
 </head>
-<body style="background-image: url('/static/tree-silhouette.png'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center;">
+<body style="background-image: url('/static/cubic-orchard.jpg'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center; height:100%; background-attachment: fixed;">
     <nav class="navbar navbar-default">
     <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -54,11 +54,9 @@
 <div class="container-full">
 
   <div class="row">
-
-    <div class="col-lg-3 text-center v-center"></div>
     {% for p in pears %}
     <div class="col-lg-1 text-center v-center">
-        <div  style="border: 5px solid #000; border-radius:50%; width:100px; height:100px; background-color:#26aed5;">
+        <div style="width:100px; height:100px; background-image:url('/static/example_snow_pod.png')">
         <br><b><a href="{{url_for('tree.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b>
         </div>
     </div>

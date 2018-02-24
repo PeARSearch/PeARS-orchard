@@ -85,6 +85,21 @@ def cosine_similarity(v1, v2):
     den_b = np.dot(v2, v2)
     return num / (sqrt(den_a) * sqrt(den_b))
 
+def cosine_to_matrix(q,M):
+    qsqrt = sqrt(np.dot(q,q))
+    if qsqrt == 0:
+        return np.zeros(M.shape[0])
+    qMdot = np.dot(q,M.T)
+    Mdot = np.dot(M,M.T)
+    Msqrts = [ sqrt(Mdot[i][i]) for i in range(len(Mdot[0])) ]
+    cosines = []
+    for i in range(len(Mdot[0])):
+        if Msqrts[i] != 0:
+            cosines.append(qMdot[i] / (qsqrt * Msqrts[i]))
+        else:
+            cosines.append(0)
+    return cosines
+
 def sim_to_matrix(dm_dict,vec,n):
     cosines={}
     c=0
@@ -142,7 +157,7 @@ def get_pod_info(url):
 def get_pod0_message():
     msg = ""
     try:
-        r = requests.get("http://www.openmeaning.org/pod0/api/message/", timeout=3)
+        r = requests.get("http://www.openmeaning.org/pod0/api/message/", timeout=1)
         if r.status_code == 200:
            msg = r.json()['message']
     except:

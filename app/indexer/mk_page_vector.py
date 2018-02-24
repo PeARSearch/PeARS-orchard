@@ -38,6 +38,7 @@ def compute_dist_vector(text,dm_dict):
     return vbase
 
 def compute_vectors(target_url, keyword):
+    print("Computing vectors for",target_url)
     if not db.session.query(Urls).filter_by(url=target_url).all():
         u = Urls(url=target_url)
         title, body_str, snippet, cc = extract_from_url(target_url)

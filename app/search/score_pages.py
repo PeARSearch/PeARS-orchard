@@ -10,22 +10,25 @@ from operator import itemgetter
 import math
 import numpy
 from app.api.models import Urls
+#from app.api.models import DS_M, url_to_mat
 from app.utils_db import get_db_url_snippet, get_db_url_title, get_db_url_cc, get_db_url_pod
 
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
-from app.utils import cosine_similarity, convert_to_array
+from app.utils import cosine_similarity, cosine_to_matrix, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
 
 def score(query, query_dist, query_freqs):
-    """ Get distributional score """
+    """ Get various scores -- This is slow, slow, slow. Add code for vec to matrix calculations """
     DS_scores = {}
     URL_scores = {}
     title_scores = {}
     term_scores = {}
     coverages = {}
+    #cosines = cosine_to_matrix(query_dist,DS_M)	#Code for vec to matrix cosine calculation -- work in progress
     for u in Urls.query.all():
         DS_scores[u.url] = cosine_similarity(convert_to_array(u.vector), query_dist)
+        #DS_scores[u.url] = cosines[url_to_mat[u.url]]
         URL_scores[u.url] = score_url_overlap(query, u.url)
         title_scores[u.url] = generic_overlap(query, u.title)
         term_scores[u.url], coverages[u.url] = term_cosine.run(query, query_freqs, u.freqs)
@@ -52,7 +55,7 @@ def bestURLs(doc_scores):
         loc = urlparse(w).netloc
         if c < 50:
           if loc not in netlocs_used and doc_scores[w] > 0:
-              print(w,doc_scores[w])
+              #print(w,doc_scores[w])
               best_urls.append(w)
               netlocs_used.append(loc)
               c += 1
