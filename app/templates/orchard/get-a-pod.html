@@ -13,7 +13,7 @@
   <![endif]-->
   <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
 </head>
-<body style="background-image: url('/static/cubic-orchard.jpg'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center; height:100%; background-attachment: fixed;">
+<body>
     <nav class="navbar navbar-default">
     <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -34,7 +34,7 @@
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
         <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -51,16 +51,29 @@
     </div><!-- /.container-fluid -->
     </nav>
 
-<div class="container-full">
-
+<div class="container">
   <div class="row">
-    {% for p in pears %}
-    <div class="col-lg-1 text-center v-center">
-        <div style="width:100px; height:100px; background-image:url('/static/example_snow_pod.png')">
-        <br><b><a href="{{url_for('tree.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b>
+    <div class="col-md-6 text-center v-center">
+        <br><br>
+        {% for png_location in png_locations %}
+        <img src="/static/pods/{{png_location}}" width="200px" style="border:1px solid #000; padding:1px"/>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <br><br>
+        <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:400px">
+        <p><b>You've just picked a PeARS Pod on the topic: <span style="color:blue">{{query}}</span>!</b></p>
+        <p>Your index is available as one pod file at the following location on your machine:<br> <i>{{csv_location}}</i>.</p>
+
+        <br>
+        <p>Alternatively, you can also share the Snow Pod(s) on the left with your friends. The pictures are located at:<br>
+        <i>{{csv_location[:-3]}}1...png</i>.</p>
+
+        <p>(You can also right-click on any picture and select 'Save image as...' if you'd like to save it to another location.)</p>
+
+        <p>Now, share your pod! Send the csv to your friends, post the pictures on social media, send them to your Grandma on a USB drive... Just share them.</p>
         </div>
     </div>
-    {% endfor %}
   </div> <!-- /row -->
 </div> <!-- /container full -->
 <!-- script references -->

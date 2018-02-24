@@ -34,7 +34,7 @@
         <li><a href="{{url_for('search.index')}}">Search</a></li>
         <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
         <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('tree.index')}}">My tree</a></li>
+        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
         <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -86,7 +86,7 @@
        <br><br>
        <p id="createpod"><b>Can I create my own pod?</b></p>
        <p>Yes! The revolution needs you, and your appetite for Web pages on bungee-jumping, creepy-crawlies, the perfect cup of tea, and extinct languages. Whatever you're into, be your own search engine and start indexing pages like the pros. Your pear includes an <a href="{{url_for('indexer.index')}}">indexing page</a> which helps you with the hard work of converting Web pages into searchable representations. You can index in three ways. The simplest one is to type a single URL in the 'Index a single URL' box -- this will index just that page. If you have a favourite website (or part of a website), you can also type in its address in 'Crawl a website' to get all indexable pages from that site (but first check our <a href="#crawlsite">advice on indexing websites</a>). Finally, you can prepare a file of different URLs you would like to record and feed that in to your pear (see <a href="#indexfile"><i>How do I use 'index from file?'</i></a>). When you index things, it is <b>very important</b> to also provide a keyword describing the page(s) you're indexing. You can choose whatever you like, but make sure it's descriptive for you, and that you will <b>keep using the same keyword</b> when you index more pages on the topic.</p>
-       <p>Once in a while, you can go and check how many pages you've indexed on a particular topic. Head over to <a href="{{url_for('indexer.index')}}">My tree</a>. There, you will find a beautiful tree growing a pod for each keyword you have used in the indexer. Each pod in the making shows you its current size. Once a pod has grown enough, you may want to share it on the Internet. To do this, click on the pod of your choice. After a moment, a new page will be displayed, giving you instructions about where to find your pod's information. By default, PeARS produces two types of representation: a text-based one (the 'CSV Pod') and an image-based one (the 'Snow Pods'). The CSV file produced by your pear can be used when setting up an official pod. It can also simply be sent to a friend, who will index it on their own pear upon receipt. The Snow Pods can also be sent to your friends in a regular way, or shared on social media as images.</p>
+       <p>Once in a while, you can go and check how many pages you've indexed on a particular topic. Head over to <a href="{{url_for('indexer.index')}}">My orchard</a>. There, you will find a beautiful orchard growing a pod for each keyword you have used in the indexer. Each pod in the making shows you its current size. Once a pod has grown enough, you may want to share it on the Internet. To do this, click on the pod of your choice. After a moment, a new page will be displayed, giving you instructions about where to find your pod's information. By default, PeARS produces two types of representation: a text-based one (the 'CSV Pod') and an image-based one (the 'Snow Pods'). The CSV file produced by your pear can be used when setting up an official pod. It can also simply be sent to a friend, who will index it on their own pear upon receipt. The Snow Pods can also be sent to your friends in a regular way, or shared on social media as images.</p>
        <p>Remember, the more you share, the more rich and robust the PeARS network will become! So dispatch those pods!</p>
 
        <br><br>
@@ -117,7 +117,7 @@
 
        </div>
        <div class="col-md-6">
-       <img src="{{url_for('static', filename='tree-silhouette.png')}}" width='300px'/>
+       <img src="{{url_for('static', filename='orchard-silhouette.png')}}" width='300px'/>
        </div>
   </div> <!-- /row -->
 </div> <!-- /container full -->
