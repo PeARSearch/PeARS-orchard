@@ -32,7 +32,7 @@ def BS_parse(url):
 def extract_links(url):
     links = []
     try:
-        req = requests.head(url)
+        req = requests.head(url, timeout=10)
         if "text/html" not in req.headers["content-type"]:
             print("Not a HTML document...")
             return links
@@ -57,7 +57,7 @@ def extract_from_url(url):
     snippet=""
     cc=False
     try:
-        req = requests.head(url)
+        req = requests.head(url, timeout=10)
         if "text/html" not in req.headers["content-type"]:
             print("Not a HTML document...")
             return title, body_str, snippet, cc
