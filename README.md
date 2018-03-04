@@ -1,23 +1,17 @@
 # Orchard PeARS
-----
+
 ## What and why
 
-Orchard PeARS is a decentralised version of the Web search engine PeARS (Peer-to-peer Agent for Reciprocated Search). 
+PeARS (version Orchard) is a search engine that you can install and run locally from your browser. It allows you to 'index' pages (i.e. to produce a computer-readable representation of the pages' content, essential to the search process), and to search pages that you or your friends have indexed. Search happens entirely on your machine, meaning that no one knows what you are searching and when.
 
-You can install the software and build yourself a Web index that is privately searchable on your machine by connecting to themed 'pods' provided by the community. 
-
-Orchard PeARS is to be accompanied by the 'Orchard' repo [coming very soon], which contains code to set up your own pod. We encourage you to start a pod on topics you're passionate about, and share/index the best websites on the topic.
+The main feature of PeARS ORchard is the ability to convert a small index into a greyish, unassuming picture, called a 'snow pod'. Snow pods are the mini-weapons of the indexing revolution. They can easily be shared with others by email, on social media, or through any other mean, so you can be your very own search engine, for yourself and for your friends.
 
 
 ### How does it fit with peer-to-peer PeARS?
 
-Orchard PeARS should be seen as Phase 1 of the PeARS project: the decentralised version is a first step that will help us build a fully distributed model. In particular, building a user base in the decentralised setup will allow us to provide a pool of indexed pages to the final distributed network.
+The fully-fledged PeARS system (Peer-to-peer Agent for Reciprocated Search) is supposed to be completely distributed. You can imagine it as an 'automated' version of Phase 1, where you don't have to go and hunt for pods yourself. Your PeARS install will automatically find them on other users' systems and connect to them. We are still working on this phase of the project.
 
-### Why 'orchard'?
 
-The fully distributed version of PeARS will be made of many individual users with the availability to connect to each other. In the decentralised version, we are pooling the Web indexing work in small community-based farms (the pods).
-
-----
 ## Usage
 
 1. Clone this repo on your machine:
