@@ -8,7 +8,7 @@ from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector
 from app.utils import readUrls, readPods
 from werkzeug import secure_filename
-from app.utils_db import url_from_json, pod_from_json
+from app.utils_db import url_from_json, pod_from_json, pod_from_file
 from app.utils import get_pod_info
 from app.indexer.htmlparser import extract_links
 from urllib.parse import urljoin, urlparse
@@ -28,6 +28,11 @@ def index():
         return render_template("indexer/index.html", num_entries=num_db_entries)
 
 
+'''
+ Controllers for various ways to index
+ (from file, from url, from crawl)
+'''
+
 @indexer.route("/from_file", methods=["POST"])
 def from_file():
     print("FILE:",request.files['file_source'])
@@ -36,7 +41,6 @@ def from_file():
         filename = secure_filename(file.filename)
         file.save(join(dir_path, "urls_to_index.txt"))
         return render_template('indexer/progress_file.html')
-
 
 @indexer.route("/from_url", methods=["POST"])
 def from_url():
@@ -49,8 +53,6 @@ def from_url():
         f.close()
         return render_template('indexer/progress_url.html',url=url)
 
-
-
 @indexer.route("/from_crawl", methods=["POST"])
 def from_crawl():
     if request.form['site_url'] != None:
@@ -61,6 +63,15 @@ def from_crawl():
         f.write(url+";"+keyword+"\n")
         f.close()
         return render_template('indexer/progress_crawl.html')
+
+
+
+
+'''
+Controllers for progress pages.
+One controller per ways to index (file, crawl).
+The URL indexing uses same progress as file.
+'''
 
 @indexer.route("/progress_crawl")
 def progress_crawl():
@@ -89,6 +100,7 @@ def progress_crawl():
                 yield "data:" + str(indexed) + "\n\n"
             else:
                 stack.pop(0)
+        pod_from_file(keyword)
         yield "data:" + "Finished!" + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
 
@@ -99,9 +111,12 @@ def progress_file():
         urls, keywords = readUrls(join(dir_path, "urls_to_index.txt"))
         for c in range(len(urls)):
             mk_page_vector.compute_vectors(urls[c],keywords[c])
+            pod_from_file(keywords[c])
             c+=1
             yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
+
+
 
 
 @indexer.route("/url", methods=["GET", "POST"])

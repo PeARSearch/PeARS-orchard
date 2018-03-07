@@ -8,7 +8,7 @@ from app import db
 from werkzeug import secure_filename
 from app.pod_finder import score_pods, index_pod_file
 from app.utils import get_pod_info
-from app.utils_db import url_from_json, pod_from_json
+from app.utils_db import url_from_json, pod_from_json, pod_from_file
 import requests
 from os import remove
 from os.path import dirname,join,realpath,isfile
@@ -108,7 +108,7 @@ def progress_file():
         urls = list()
         pod_name = ""
         print(len(urls))
-        f = open(join(dir_path, "app","static","pods","urls_from_pod.csv"),'r')
+        f = open(join(dir_path, "app","static","pods","urls_from_pod.csv"),'r', encoding="utf-8")
         for l in f:
             if "#Pod name" in l:
                 pod_name = l.rstrip('\n').replace("#Pod name:","")
@@ -120,13 +120,14 @@ def progress_file():
         f.close()
         if len(urls) == 0:
             print("All URLs already known.")
-            yield "data:" + "100" + "\n\n"
+            yield "data:" + "no news" + "\n\n"
         else:
             for u in urls:
                 db.session.add(u)
                 db.session.commit()
                 c+=1
                 yield "data:" + str(int(c/len(urls)*100)) + "\n\n"
+                pod_from_file(pod_name)                
     return Response(generate(), mimetype= 'text/event-stream')
 
 

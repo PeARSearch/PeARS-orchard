@@ -56,7 +56,7 @@
   <div class="row">
     {% for p in pears %}
     <div class="col-lg-1 text-center v-center">
-        <div style="width:100px; height:100px; background-image:url('/static/example_snow_pod.png')">
+        <div style="width:100px; height:100px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png')">
         <br><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b>
         </div>
     </div>

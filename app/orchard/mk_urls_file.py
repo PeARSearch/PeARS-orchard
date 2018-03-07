@@ -50,7 +50,8 @@ def make_png_pod(keyword):
     images = []
     header = ""
     pixels = []
-    csv_file_location = join(dir_path,"static","pods",keyword+"_urls_db.csv")
+    url_keyword = keyword.replace(' ','_')
+    csv_file_location = join(dir_path,"static","pods",url_keyword+"_urls_db.csv")
     f = open(csv_file_location)
     
     '''One image per 100 URLs, so pnd pods stay small.'''
