@@ -1,6 +1,6 @@
 import os, requests
 import re
-import sys
+import webbrowser
 from urllib.parse import urlparse
 import math
 from app.api.models import Urls, Pods
@@ -61,7 +61,7 @@ def score_docs(query, query_dist, query_freqs, pod):
     document_scores = {}  # Document scores
     DS_scores, URL_scores, title_scores, term_scores, coverages = score(query,query_dist,query_freqs, pod)
     for url in list(DS_scores.keys()):
-        print(url,DS_scores[url], title_scores[url], term_scores[url])
+        #print(url,DS_scores[url], title_scores[url], term_scores[url])
         document_scores[url] = DS_scores[url] + title_scores[url] + term_scores[url] + 2 *coverages[url]
         if math.isnan(document_scores[url]):  # Check for potential NaN -- messes up with sorting in bestURLs.
             document_scores[url] = 0
@@ -90,9 +90,7 @@ def ddg_redirect(query):
     duckquery = ""
     for w in query.rstrip('\n').split():
         duckquery = duckquery + w + "+"
-    webbrowser.open_new_tab(
-            "https://duckduckgo.com/?q=" +
-            duckquery.rstrip('+'))
+    webbrowser.open("https://duckduckgo.com/?q=" + duckquery.rstrip('+'))
     return
 
 def output(best_urls):
@@ -109,13 +107,12 @@ def output(best_urls):
 
 
 def run(query, pears):
-    best_urls = []
+    document_scores = {}
     q_dist, q_freqs = compute_query_vectors(query)
     best_pods = ["Me"]+score_pods(query, q_dist, q_freqs)
     for pod in best_pods:
         print(pod)
-        document_scores = score_docs(query, q_dist, q_freqs, pod)	#with URL overlap
-        best_urls+=bestURLs(document_scores)
-    
+        document_scores = {**document_scores, **score_docs(query, q_dist, q_freqs, pod)}
+    best_urls = bestURLs(document_scores)
     return output(best_urls)
 
