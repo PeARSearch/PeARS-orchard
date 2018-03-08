@@ -112,7 +112,7 @@ def run(query, pears):
     best_pods = ["Me"]+score_pods(query, q_dist, q_freqs)
     for pod in best_pods:
         print(pod)
-        document_scores = {**document_scores, **score_docs(query, q_dist, q_freqs, pod)}
+        document_scores.update(score_docs(query, q_dist, q_freqs, pod))
     best_urls = bestURLs(document_scores)
     return output(best_urls)
 
