@@ -16,12 +16,14 @@ The fully-fledged PeARS system (Peer-to-peer Agent for Reciprocated Search) is s
 
 NB: we have some instructions for Windows users [on the wiki](https://github.com/PeARSearch/PeARS-orchard/wiki/Windows-installation).
 
-### 1. Clone this repo on your machine:
+#### 1. Clone this repo on your machine:
 
      git clone https://github.com/PeARSearch/PeARS-orchard.git
 
 
-### 2. **Optional step** Setup a virtualenv in your directory. If you haven't yet set up virtualenv on your machine, please install it via pip:
+#### 2. **Optional step** Setup a virtualenv in your directory. 
+
+If you haven't yet set up virtualenv on your machine, please install it via pip:
 
 
      sudo apt-get install python3-setuptools
@@ -34,13 +36,17 @@ Then run:
 
      virtualenv -p python3 env && source env/bin/activate
 
-### 3. Install the build dependencies:
+#### 3. Install the build dependencies:
 
      pip3 install -r requirements.txt
 
-### 4. Head over to the app/static/spaces directory and unzip english.dm.zip.
+#### 4. Unpack the semantic space
 
-### 5. In the root of the repo, run:
+Head over to the app/static/spaces directory and unzip english.dm.zip.
+
+#### 5. Run it!
+
+In the root of the repo, run:
 
      python3 run.py
 
