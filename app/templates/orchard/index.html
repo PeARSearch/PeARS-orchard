@@ -8,10 +8,6 @@
   <meta name="generator" content="Bootply"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-  <!--[if lt IE 9]>
-  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
 </head>
 <body style="background-image: url('/static/cubic-orchard.jpg'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center; height:100%; background-attachment: fixed;">
     <nav class="navbar navbar-default">
@@ -40,12 +36,6 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
         <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
-      <form class="navbar-form navbar-left" action="{{url_for('pod_finder.find_a_pod')}}">
-        <div class="form-group">
-          <input id="search-box" name="search-pod" type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Find a pod</button>
-      </form>
       </ul>
     </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -53,13 +43,11 @@
 
 <div class="container-full">
 
-  <div class="row">
+  <div style="padding-left: 20px; display:flex;  flex-direction: row;  flex-wrap: wrap;  margin-bottom: 45px;">
     {% for p in pears %}
-    <div class="col-lg-1 text-center v-center">
-        <div style="width:100px; height:100px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png')">
-        <br><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b>
+        <div style="margin-right:20px; width:130px; height:130px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png'); flex-shrink: 0;  position: relative;">
+        <br><p style="margin-left:10px"><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b></p>
         </div>
-    </div>
     {% endfor %}
   </div> <!-- /row -->
 </div> <!-- /container full -->

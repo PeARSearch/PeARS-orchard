@@ -4782,6 +4782,7 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 }
 
 @media screen and (min-width: 768px) {
+
     .jumbotron {
         padding-top: 48px;
         padding-bottom: 48px
