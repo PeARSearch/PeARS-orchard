@@ -20,7 +20,7 @@ def convert_img_to_csv():
     image = Image.open(join(dir_path, "app","static","pods", "urls_from_pod.png"))
     pixels = list(image.getdata())
 
-    f = open(join(dir_path, "app","static","pods", "urls_from_pod.csv"),'w')
+    f = open(join(dir_path, "app","static","pods", "urls_from_pod.csv"),'w', encoding="utf-8")
     
     '''Discard the last pixel, which should be the transparency pixel.'''
     for p in pixels[:-1]:
