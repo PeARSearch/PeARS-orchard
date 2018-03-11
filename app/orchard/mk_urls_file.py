@@ -10,7 +10,7 @@ dir_path = dirname(dirname(realpath(__file__)))
 def make_csv_pod(keyword):
     url_keyword = keyword.replace(' ','_')
     file_location = join(dir_path,"static","pods",url_keyword+"_urls_db.csv")
-    f = open(file_location,'w')
+    f = open(file_location,'w', encoding="utf-8")
     f.write("#Pod name:"+keyword+"\n")
     f.write("#Space version:"+version+"\n")
     for url in db.session.query(Urls).filter_by(keyword=keyword).all():
@@ -52,7 +52,7 @@ def make_png_pod(keyword):
     pixels = []
     url_keyword = keyword.replace(' ','_')
     csv_file_location = join(dir_path,"static","pods",url_keyword+"_urls_db.csv")
-    f = open(csv_file_location)
+    f = open(csv_file_location, encoding="utf-8")
     
     '''One image per 100 URLs, so pnd pods stay small.'''
     image_lines = []
