@@ -102,3 +102,6 @@ ENV/
 
 # sqlite3 db
 db.sqlite3
+
+# Language spaces
+*.dm
