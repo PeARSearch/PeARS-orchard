@@ -102,6 +102,9 @@ ENV/
 
 # sqlite3 db
 db.sqlite3
+app.db
 
 # Language spaces
 *.dm
+pods/
+urls_to_index.txt
