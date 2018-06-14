@@ -1,16 +1,13 @@
-import os, requests
-import re
-import sys
 import math
-import numpy
 from app import db
 from app.api.models import Pods
-from app.utils_db import get_db_pod_name, get_db_pod_description, get_db_pod_language
+from app.utils_db import (
+    get_db_pod_name, get_db_pod_description, get_db_pod_language)
 
-from app.search.overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
 from app.utils import cosine_similarity, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
+
 
 def score(query, query_dist, query_freqs):
     """ Get distributional score """
@@ -18,21 +15,25 @@ def score(query, query_dist, query_freqs):
     term_scores = {}
     coverages = {}
     for p in db.session.query(Pods).filter_by(registered=False).all():
-        DS_scores[p.url] = cosine_similarity(convert_to_array(p.DS_vector), query_dist)
-        term_scores[p.url], coverages[p.url] = term_cosine.run(query, query_freqs, p.word_vector)
+        DS_scores[p.url] = cosine_similarity(
+            convert_to_array(p.DS_vector), query_dist)
+        term_scores[p.url], coverages[p.url] = term_cosine.run(
+            query, query_freqs, p.word_vector)
     return DS_scores, term_scores
 
 
 def score_pods(query, query_dist, query_freqs):
     """ Score pods for a query """
     pod_scores = {}  # Pod scores
-    DS_scores, term_scores = score(query,query_dist,query_freqs)
+    DS_scores, term_scores = score(query, query_dist, query_freqs)
     for pod in list(DS_scores.keys()):
-        #print(url,DS_scores[pod], term_scores[pod])
+        # print(url,DS_scores[pod], term_scores[pod])
         pod_scores[pod] = DS_scores[pod] + term_scores[pod]
-        if math.isnan(pod_scores[pod]):  # Check for potential NaN -- messes up with sorting in bestURLs.
-          pod_scores[pod] = 0
-        
+        if math.isnan(
+                pod_scores[pod]
+        ):  # Check for potential NaN -- messes up with sorting in bestURLs.
+            pod_scores[pod] = 0
+
     return pod_scores
 
 
@@ -52,16 +53,20 @@ def output(best_pods):
     results = []
     if len(best_pods) > 0:
         for p in best_pods:
-            results.append([p, get_db_pod_name(p), get_db_pod_description(p), get_db_pod_language(p)])
+            results.append([
+                p,
+                get_db_pod_name(p),
+                get_db_pod_description(p),
+                get_db_pod_language(p)
+            ])
             print(results)
     return results
 
 
 def run(query):
-    print("Looking for pods for query",query)
+    print("Looking for pods for query", query)
     best_pods = []
     q_dist, q_freqs = compute_query_vectors(query)
-    pod_scores = score_pods(query, q_dist, q_freqs)	#with URL overlap
+    pod_scores = score_pods(query, q_dist, q_freqs)  # with URL overlap
     best_pods = bestPods(pod_scores)
     return output(best_pods)
-

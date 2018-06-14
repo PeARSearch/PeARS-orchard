@@ -1,6 +1,6 @@
 import re
-import sys
 import string
+
 
 def jaccard(a, b):
     c = a.intersection(b)
@@ -21,12 +21,11 @@ def score_url_overlap(query, url):
     # print jaccard(set(query.lower()), set(url.lower()))
     return dice(set(query.lower()), set(url.lower()))
 
-def generic_overlap(i1,i2):
-  '''Generic overlap calculation between two strings'''
-  i1 = "".join(l for l in i1 if l not in string.punctuation)
-  i2 = "".join(l for l in i2 if l not in string.punctuation)
-  words1 = i1.lower().split()
-  words2 = i2.lower().split()
-  return dice(set(words1), set(words2))
 
-
+def generic_overlap(i1, i2):
+    '''Generic overlap calculation between two strings'''
+    i1 = "".join(l for l in i1 if l not in string.punctuation)
+    i2 = "".join(l for l in i2 if l not in string.punctuation)
+    words1 = i1.lower().split()
+    words2 = i2.lower().split()
+    return dice(set(words1), set(words2))

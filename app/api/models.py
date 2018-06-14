@@ -3,26 +3,29 @@ from app import db
 import numpy as np
 from app.utils import convert_to_array
 
-#Build semantic spaces
+# Build semantic spaces
 dm_dict_en, version = readDM("./app/static/spaces/english.dm")
 
-#Record language codes
+# Record language codes
 language_codes = {}
-language_codes["English"]=[dm_dict_en, "en"]
+language_codes["English"] = [dm_dict_en, "en"]
 
 
 # Define a base model for other database tables to inherit
 class Base(db.Model):
 
-    __abstract__  = True
+    __abstract__ = True
 
-    id            = db.Column(db.Integer, primary_key=True)
-    date_created  = db.Column(db.DateTime,  default=db.func.current_timestamp())
-    date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
-                                           onupdate=db.func.current_timestamp())
+    id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp())
+
 
 class Urls(Base):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(1000))
     title = db.Column(db.String(1000))
     vector = db.Column(db.String(7000))
@@ -32,7 +35,15 @@ class Urls(Base):
     pod = db.Column(db.String(1000))
     keyword = db.Column(db.String(1000))
 
-    def __init__(self, url=None, title=None, vector=None, freqs=None, snippet=None, cc=False, pod=None, keyword=None):
+    def __init__(self,
+                 url=None,
+                 title=None,
+                 vector=None,
+                 freqs=None,
+                 snippet=None,
+                 cc=False,
+                 pod=None,
+                 keyword=None):
         self.url = url
         self.title = title
         self.vector = vector
@@ -59,8 +70,9 @@ class Urls(Base):
             'keyword': self.keyword
         }
 
+
 class Pods(Base):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000))
     url = db.Column(db.String(1000))
     description = db.Column(db.String(7000))
@@ -69,12 +81,19 @@ class Pods(Base):
     word_vector = db.Column(db.String(7000))
     registered = db.Column(db.Boolean)
 
-    def __init__(self, name=None, url=None, description=None, language=None, DS_vector=None, word_vector=None, registered=False):
+    def __init__(self,
+                 name=None,
+                 url=None,
+                 description=None,
+                 language=None,
+                 DS_vector=None,
+                 word_vector=None,
+                 registered=False):
         self.name = name
         self.url = url
         self.description = description
         self.language = language
-    
+
     @property
     def serialize(self):
         return {
@@ -88,7 +107,7 @@ class Pods(Base):
         }
 
 
-#The urls matrix
+# The urls matrix
 def mk_matrix_from_db():
     print("Making URL matrix from database...")
     urls = []
@@ -96,24 +115,26 @@ def mk_matrix_from_db():
     url_to_mat = {}
     mat_to_url = {}
     try:
-        urls =  Urls.query.all()
-        print("Found",len(urls),"records...")
-    except:
+        urls = Urls.query.all()
+        print("Found", len(urls), "records...")
+    except Exception:
         print("Database empty")
     if len(urls) > 0:
         c = 0
-        DS_M = convert_to_array(urls[0].vector).reshape(1,400)
+        DS_M = convert_to_array(urls[0].vector).reshape(1, 400)
         url_to_mat[urls[0].url] = c
         mat_to_url[c] = urls[0].url
-        c+=1
+        c += 1
         for u in urls[1:]:
-            DS_M = np.vstack((DS_M,convert_to_array(u.vector).reshape(1,400)))
+            DS_M = np.vstack((DS_M, convert_to_array(u.vector).reshape(1,
+                                                                       400)))
             url_to_mat[u.url] = c
             mat_to_url[c] = u.url
-            c+=1
+            c += 1
     return DS_M, url_to_mat, mat_to_url
 
-#DS_M, url_to_mat, mat_to_url = mk_matrix_from_db()
 
-#db.drop_all()
-#db.create_all()
+# DS_M, url_to_mat, mat_to_url = mk_matrix_from_db()
+
+# db.drop_all()
+# db.create_all()
