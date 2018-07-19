@@ -1,15 +1,14 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, Response
-from app.api.models import Pods, Urls
-from app.utils_db import pod_from_json
-from app.utils import readPods
-from app import db
 from werkzeug import secure_filename
-from app.pod_finder import score_pods, index_pod_file
-from app.utils import get_pod_info
-from app.utils_db import url_from_json, pod_from_file
-import requests
+import requests, csv
 from os.path import dirname, join, realpath
+from app import db
+from app.api.models import Pods, Urls
+from app.utils import readPods, get_pod_info
+from app.utils_db import pod_from_json, url_from_json, pod_from_file, pod_from_scratch
+from app.pod_finder import score_pods, index_pod_file
+from app.pod_finder.update_pod_list import update_pod_list
 
 dir_path = dirname(dirname(dirname(realpath(__file__))))
 
@@ -33,16 +32,11 @@ def index():
 @pod_finder.route('/find-a-pod/')
 def find_a_pod():
     print("Running progress pod update")
-    pods = []
-    try:
-        r = requests.get("http://www.openmeaning.org/pod0/api/pods/")
-        for pod in r.json()['json_list']:
-            pods.append(pod)
-            pod_from_json(pod, pod['url'])
-    except:
-        print("ERROR: Couldn't access pod0 to update pod list.")
+    pods = update_pod_list()
+    for p in pods:
+        pod_from_scratch(p[0],p[1],p[2],p[3])
     query = request.args.get('search-pod')
-    print(request, request.args, query)
+    #print(request, request.args, query)
     pods = score_pods.run(query)
     if len(pods) > 0:
         return render_template('pod_finder/find-a-pod.html', pods=pods, msg="")
@@ -74,6 +68,7 @@ def subscribe_from_url():
         print("Writing to", join(dir_path, "pods_to_index.txt"))
         f = open(join(dir_path, "pods_to_index.txt"), 'w')
         pod = request.form['pod']
+        print(pod)
         f.write(pod + "\n")
         f.close()
     return render_template('pod_finder/progress_pod.html')
@@ -109,9 +104,9 @@ def progress_file():
         for l in f:
             if "#Pod name" in l:
                 pod_name = l.rstrip('\n').replace("#Pod name:", "")
-            if len(l.rstrip('\n').split(',')) == 7:
-                url, title, snippet, vector, freqs, cc = index_pod_file\
-                    .parse_line(l)
+            fields = l.rstrip('\n').split(',')
+            if len(fields) == 7:
+                url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(fields)
                 if not db.session.query(Urls).filter_by(url=url).all():
                     u = Urls(
                         url=url,
@@ -148,24 +143,39 @@ def progress_pods():
     urls = []
     for pod_url in pod_urls:
         print(pod_url)
-        pod = get_pod_info(pod_url)
-        pod_from_json(pod, pod_url)
         pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
         pod_entry.registered = True
         db.session.commit()
-        r = requests.get(pod_url + "api/urls/")
-        print(r)
-        for u in r.json()['json_list']:
-            urls.append([u, pod['name']])
-
+        with requests.Session() as s:
+            download = s.get(pod_url)
+            decoded_content = download.content.decode('utf-8')
+            crows = csv.reader(decoded_content.splitlines(), delimiter=',')
+            records = list(crows)
+        for u in records:
+            if len(u) == 7:
+                url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(u)
+                if not db.session.query(Urls).filter_by(url=url).all():
+                    u = Urls(
+                        url=url,
+                        title=title,
+                        snippet=snippet,
+                        pod=pod_entry.name,
+                        vector=vector,
+                        freqs=freqs,
+                        cc=cc)
+                    urls.append(u)
     def generate():
-        c = 0
-        for pair in urls:
-            u = pair[0]
-            pod = pair[1]
-            url_from_json(u, pod)
-            c += 1
-            yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
+        if len(urls) == 0:
+            print("All URLs already known.")
+            yield "data:" + "no news" + "\n\n"
+        else:
+            c = 0
+            for u in urls:
+                #print("Adding",u.url,"to DB")
+                db.session.add(u)
+                db.session.commit()
+                c += 1
+                yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
 
     return Response(generate(), mimetype='text/event-stream')
 

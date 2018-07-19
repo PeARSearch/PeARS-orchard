@@ -2,6 +2,7 @@ from app import db
 from app.api.models import Urls, Pods
 from app.utils import (
     convert_to_array, convert_string_to_dict, convert_to_string, normalise)
+from app.indexer.mk_page_vector import compute_query_vectors
 import numpy as np
 
 
@@ -115,4 +116,28 @@ def pod_from_file(name):
         db.session.commit()
     p = Pods.query.filter(Pods.url == url).first()
     p.DS_vector, p.word_vector = compute_pod_summary(name)
+    db.session.commit()
+
+def pod_from_scratch(name,url,language,description):
+    if not db.session.query(Pods).filter_by(url=url).all():
+        p = Pods(url=url)
+        db.session.add(p)
+        db.session.commit()
+    p = Pods.query.filter(Pods.url == url).first()
+    p.name = name
+    p.description = description
+    p.language = language
+    #Using compute_query_vector as hack to get vectors from pod's name 
+    vector, freqs = compute_query_vectors(name.lower()+' '+description.lower())
+    p.DS_vector = convert_to_string(normalise(vector))
+    word_vector = ""
+    c = 0
+    for w in sorted(freqs, key=freqs.get, reverse=True):
+        word_vector += w + ':' + str(freqs[w]) + ' '
+        c += 1
+        if c == 300:
+            break
+    p.word_vector = word_vector
+    if not p.registered:
+        p.registered = False
     db.session.commit()

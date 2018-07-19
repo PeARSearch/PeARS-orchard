@@ -5,8 +5,7 @@ from os.path import dirname, join, realpath
 dir_path = dirname(dirname(dirname(realpath(__file__))))
 
 
-def parse_line(l):
-    fields = l.rstrip('\n').split(',')
+def parse_line(fields):
     url = fields[1]
     title = fields[2]
     snippet = fields[3]

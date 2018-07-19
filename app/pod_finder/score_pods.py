@@ -15,10 +15,9 @@ def score(query, query_dist, query_freqs):
     term_scores = {}
     coverages = {}
     for p in db.session.query(Pods).filter_by(registered=False).all():
-        DS_scores[p.url] = cosine_similarity(
-            convert_to_array(p.DS_vector), query_dist)
-        term_scores[p.url], coverages[p.url] = term_cosine.run(
-            query, query_freqs, p.word_vector)
+        DS_scores[p.url] = cosine_similarity(convert_to_array(p.DS_vector), query_dist)
+        term_scores[p.url], coverages[p.url] = term_cosine.run(query, query_freqs, p.word_vector)
+        #print(p.url,DS_scores[p.url], term_scores[p.url])
     return DS_scores, term_scores
 
 
@@ -27,7 +26,6 @@ def score_pods(query, query_dist, query_freqs):
     pod_scores = {}  # Pod scores
     DS_scores, term_scores = score(query, query_dist, query_freqs)
     for pod in list(DS_scores.keys()):
-        # print(url,DS_scores[pod], term_scores[pod])
         pod_scores[pod] = DS_scores[pod] + term_scores[pod]
         if math.isnan(
                 pod_scores[pod]
@@ -56,10 +54,10 @@ def output(best_pods):
             results.append([
                 p,
                 get_db_pod_name(p),
-                get_db_pod_description(p),
-                get_db_pod_language(p)
+                get_db_pod_language(p),
+                get_db_pod_description(p)
             ])
-            print(results)
+            #print(results)
     return results
 
 

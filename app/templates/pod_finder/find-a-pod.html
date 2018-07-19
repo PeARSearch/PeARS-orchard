@@ -54,7 +54,7 @@
                     {% for pod in pods %}
                     <div class="form-check">
 		        <label class="toggle">
-		        <input type="checkbox" name="pods" id="{{pod[0]}}" value="{{pod[0]}}"> <span class="label-text">{{pod[1]}}, '{{pod[2]}}', {{pod[3]}}</span>
+		        <input type="checkbox" name="pods" id="{{pod[0]}}" value="{{pod[0]}}"> <span class="label-text"><span style="color:blue;">{{pod[1]}}</span> ({{pod[2]}}): {{pod[3]}}</span>
 		        </label>
 		    </div>
                     {% endfor %}<br>
