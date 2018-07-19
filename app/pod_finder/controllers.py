@@ -27,37 +27,20 @@ def index():
     return render_template('pod_finder/index.html', pods=pods)
 
 
-'''Update pod list'''
-
-
-@pod_finder.route('/update-pod-list/', methods=['POST', 'GET'])
-def update_pod_list():
-    return render_template('pod_finder/progress_pod_update.html')
-
-
-@pod_finder.route("/progress_pod_update")
-def progress_pod_update():
-    print("Running progress pod update")
-    pods = []
-    r = requests.get("http://www.openmeaning.org/pod0/api/pods/")
-    for pod in r.json()['json_list']:
-        pods.append(pod)
-
-    def generate():
-        c = 0
-        for pod in pods:
-            pod_from_json(pod, pod['url'])
-            c += 1
-            yield "data:" + str(int(c / len(pods) * 100)) + "\n\n"
-
-    return Response(generate(), mimetype='text/event-stream')
-
-
 '''Find a pod'''
 
 
 @pod_finder.route('/find-a-pod/')
 def find_a_pod():
+    print("Running progress pod update")
+    pods = []
+    try:
+        r = requests.get("http://www.openmeaning.org/pod0/api/pods/")
+        for pod in r.json()['json_list']:
+            pods.append(pod)
+            pod_from_json(pod, pod['url'])
+    except:
+        print("ERROR: Couldn't access pod0 to update pod list.")
     query = request.args.get('search-pod')
     print(request, request.args, query)
     pods = score_pods.run(query)

@@ -66,7 +66,11 @@ def output(best_pods):
 def run(query):
     print("Looking for pods for query", query)
     best_pods = []
-    q_dist, q_freqs = compute_query_vectors(query)
-    pod_scores = score_pods(query, q_dist, q_freqs)  # with URL overlap
-    best_pods = bestPods(pod_scores)
+    if query != "":
+        q_dist, q_freqs = compute_query_vectors(query)
+        pod_scores = score_pods(query, q_dist, q_freqs)  # with URL overlap
+        best_pods = bestPods(pod_scores)
+    else:
+        all_pods = [p.url for p in db.session.query(Pods).filter_by(registered=False).all()]
+        best_pods = all_pods
     return output(best_pods)
