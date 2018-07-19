@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template, Response
 from app.api.models import dm_dict_en, Urls
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector
-from app.utils import readUrls
+from app.utils import readUrls, readBookmarks
 from app.utils_db import pod_from_file
 from app.indexer.htmlparser import extract_links
 from os.path import dirname, join, realpath
@@ -37,6 +37,21 @@ def from_file():
         file = request.files['file_source']
         # filename = secure_filename(file.filename)
         file.save(join(dir_path, "urls_to_index.txt"))
+        return render_template('indexer/progress_file.html')
+
+@indexer.route("/from_bookmarks", methods=["POST"])
+def from_bookmarks():
+    print("FILE:", request.files['file_source'])
+    if request.files['file_source'].filename == "bookmarks.html":
+        keyword = request.form['bookmark_keyword']
+        file = request.files['file_source']
+        file.save(join(dir_path, "bookmarks.html"))
+        urls = readBookmarks(join(dir_path,"bookmarks.html"), keyword)
+        print(urls)
+        f = open(join(dir_path, "urls_to_index.txt"), 'w')
+        for u in urls:
+            f.write(u + ";" + keyword + "\n")
+        f.close()
         return render_template('indexer/progress_file.html')
 
 

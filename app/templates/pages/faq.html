@@ -48,11 +48,11 @@
        <h3>F.A.Q.</h3>
        <p><a href="#firsttime">So I'm here now and I don't have any pages to search. What do I do?</a><br>
        <a href="#newpods">What is a pod? And how do I find new pods?</a><br>
-       <a href="#fewpods">Why are there so few pods?</a><br>
        <a href="#createpod">Can I create my own pod?</a><br>
        <a href="#snowpods">How do I share my Snow Pod on social media?</a><br>
        <a href="#crawlsite">How do I use 'crawl a website'?</a><br>
        <a href="#indexfile">How do I use 'index from file'?</a><br>
+       <a href="#indexbookmarks">How do I use 'index from bookmarks'?</a><br>
        <a href="#mistake">Help! I made a mistake while indexing!</a><br>
        <a href="#contribute">How do I contribute to the PeARS code?</a></p>
        <br><br>
@@ -91,6 +91,12 @@
        <p>https://en.wikipedia.org/;general knowledge<br>
           http://flask.pocoo.org/;programming</p>
        <p>We then ensure that the file is save in <b>plain text</b> format. This is important! Now, all we need to do is go to our indexer page, and search for that file under 'index from file'. PeARS will do the rest.</p>
+
+
+       <br><br>
+       <p id="indexbookmarks"><b>How do I use 'index from bookmarks'?</b></p>
+       <p>If you use Firefox, you can <a href="https://support.mozilla.org/en-US/kb/export-firefox-bookmarks-to-backup-or-transfer">export your bookmarks as a bookmarks.html file</a>. This function is particularly handy if you want to make a pod out of your favourites.</p>
+       <p>We'll assume that you have been <a href="https://support.mozilla.org/en-US/kb/categorizing-bookmarks-make-them-easy-to-find">using tags</a> while bookmarking (if not, start!) Say you have tagged some pages as <i>cute cats</i>, all you have to do to create a pod out of those pages is to give your bookmarks.html file to PeARS, and indicate the keyword <i>cute cats</i> in the relevant text box. Your indexing will start shortly! You can then search those pages locally, and also share them with your friends as a pod by going to <a href="{{url_for('indexer.index')}}">My orchard</a>.</p>
 
        <br><br>
        <p id="mistake"><b>Help! I made a mistake while indexing!</b></p>

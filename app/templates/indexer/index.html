@@ -94,21 +94,43 @@
 
         <div  class="row">
             <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:230px">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
             <p><b>Index from file</b></p>
-            <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords. Please make sure to follow the right format, <a href="{{url_for('pages.return_faq', _anchor='indexfile')}}">as explained here</a>. Warning: indexing takes time, so you probably don't want to index thousands of URLs in one go!</p><br>
+            <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords. Please make sure to follow the right format, <a href="{{url_for('pages.return_faq', _anchor='indexfile')}}">as explained here</a>.</p>
 
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
                 <div class="input-group">
+                     <label for="file_source">File source:</label>
                      <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
-                     <span class="input-group-btn">
+                </div><br>
+                <br><br><br>
+                <span class="input-group-btn">
                      <input id="submit_button" type="submit" class="btn btn-primary" value="Index file">
-                     </span>
-                </div>
+                </span>
             </form>
             </div>
             </div>
             
+            <div class="col-md-6">
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
+            <p><b>Index from bookmarks</b></p>
+            <p>Index from a bookmark export file! Just indicate your bookmarks.html location, and the tag you would like to index.</p><br>
+
+            <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_bookmarks')}}">
+                <div class="input-group">
+                     <label for="file_source">File source:</label>
+                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                </div><br>
+                <div class="form-group">
+                     <label for="bookmark_keyword">Keyword:</label>
+                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='bookmark_keyword' id='bookmark_keyword'>
+                </div>
+                <span class="input-group-btn">
+                     <input id="submit_button" type="submit" class="btn btn-primary" value="Index bookmarks">
+                </span>
+            </form>
+            </div>
+            </div>
 
         </div>
 

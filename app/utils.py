@@ -3,6 +3,7 @@ import numpy as np
 import logging
 import requests
 from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 
 
 def readDM(dm_file):
@@ -34,6 +35,14 @@ def readUrls(url_file):
         keywords.append(line[1])
     f.close()
     return urls, keywords
+
+def readBookmarks(bookmark_file, keyword):
+    urls = []
+    bs_obj = BeautifulSoup(open(bookmark_file), "html.parser")
+    links = bs_obj.find_all('a', {'tags' : keyword})
+    for l in links:
+        urls.append(l['href'])
+    return urls
 
 
 def readPods(pod_file):
