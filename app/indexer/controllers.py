@@ -3,7 +3,7 @@ from flask import Blueprint, request, render_template, Response
 
 from app.api.models import dm_dict_en, Urls
 from app.indexer.neighbours import neighbour_urls
-from app.indexer import mk_page_vector
+from app.indexer import mk_page_vector, spider
 from app.utils import readUrls, readBookmarks
 from app.utils_db import pod_from_file
 from app.indexer.htmlparser import extract_links
@@ -96,23 +96,14 @@ def progress_crawl():
     def generate():
         # netloc = urlparse(url).netloc
         all_links = [url]
-        links = extract_links(url)
-        stack = list(
-            set([link for link in links if url in link and '#' not in link]))
+        stack = spider.get_links(url,200)
         indexed = 0
         while len(stack) > 0:
             all_links.append(stack[0])
             print("Processing", stack[0])
             new_page = mk_page_vector.compute_vectors(stack[0], keyword)
             if new_page:
-                # new_links = extract_links(stack[0])
-                new_site_links = list(
-                    set([
-                        link for link in links if url in link and
-                        link not in all_links and '#' not in link
-                    ]))
                 stack.pop(0)
-                stack = list(set(stack + new_site_links))
                 indexed += 1
                 yield "data:" + str(indexed) + "\n\n"
             else:
