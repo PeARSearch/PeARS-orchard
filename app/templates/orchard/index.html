@@ -42,8 +42,17 @@
     </nav>
 
 <div class="container-full">
-
-  <div style="padding-left: 20px; display:flex;  flex-direction: row;  flex-wrap: wrap;  margin-bottom: 45px;">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 text-center v-center" style="background:white; padding: 20px">
+    Welcome to your orchard! Here, you can check out the number of pages you have indexed, ordered by keyword. You can also 'pick' a pod, that is, create a shareable version of your pod, available as either a CSV file or an image. It's simple: just click on your chosen pod and wait for your files to be created.<br><br>
+    <b>Warning:</b> when you pick a pod, it gets deleted from your orchard. So only click when your pod is ready to share!
+    </div>
+  </div>
+  <br><br>
+  <div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10" style="padding-left: 20px; display:flex;  flex-direction: row;  flex-wrap: wrap;  margin-bottom: 45px;">
     {% for p in pears %}
         <div style="margin-right:20px; width:130px; height:130px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png'); flex-shrink: 0;  position: relative;">
         <br><p style="margin-left:10px"><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b></p>

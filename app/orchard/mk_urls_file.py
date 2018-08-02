@@ -1,4 +1,4 @@
-from app.api.models import Urls, version
+from app.api.models import Urls, Pods, version
 from app import db
 from os.path import dirname, realpath, join, basename
 from PIL import Image, ImageDraw
@@ -22,6 +22,19 @@ def make_csv_pod(keyword):
         f.write(line.replace('\r', '').replace('\n', '') + '\n')
     f.close()
     return file_location
+
+
+def del_pod(keyword):
+    for url in db.session.query(Urls).filter_by(keyword=keyword).all():
+        print("Deleting "+url.url+" "+url.pod)
+        if url.pod == "Me":
+            db.session.delete(url)
+        pod_entries = db.session.query(Pods).filter_by(description=keyword).all()
+        for pod_entry in pod_entries:
+            if "localhost" in pod_entry.url:
+                db.session.delete(pod_entry)
+                db.session.commit()
+                break
 
 
 def draw_image(pixels, keyword, img_num):

@@ -70,6 +70,8 @@ def compute_vectors(target_url, keyword):
             db.session.add(u)
             db.session.commit()
             return True
+    else:
+        return False
 
 
 def compute_query_vectors(query):

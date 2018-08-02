@@ -120,7 +120,7 @@ def progress_file():
         f.close()
         if len(urls) == 0:
             print("All URLs already known.")
-            yield "data:" + "no news" + "\n\n"
+            yield "data:" + "100" + "\n\n"
         else:
             for u in urls:
                 db.session.add(u)
@@ -167,7 +167,7 @@ def progress_pods():
     def generate():
         if len(urls) == 0:
             print("All URLs already known.")
-            yield "data:" + "no news" + "\n\n"
+            yield "data:" + "100" + "\n\n" 
         else:
             c = 0
             for u in urls:
@@ -195,7 +195,11 @@ def unsubscribe():
                     db.session.delete(e)
                     db.session.commit()
             pod_entry = db.session.query(Pods).filter_by(name=pod).first()
-            pod_entry.registered = False
-            db.session.commit()
+            if "localhost" in pod_entry.url:
+                db.session.delete(pod_entry)
+                db.session.commit()
+            else:
+                pod_entry.registered = False
+                db.session.commit()
     return render_template(
         'pod_finder/unsubscribe-success.html', pods=unsubscribed_pods)

@@ -60,20 +60,6 @@
             </form>
             </div>
             <br>
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:140px">
-            <p><b>Subscribe from URL</b></p>
-            <p>Index a pod directly from its URL.</p>
-
-            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_url')}}">
-                <div class="input-group">
-                    <input class="form-control input-s" title="Enter pod." placeholder="http://www.openmeaning.org/pod0/" type="text" id='pod' name='pod'>
-                    <span class="input-group-btn">
-                    <input id="submit_button" type="submit" class="btn btn-primary" value="Index a pod" style="width:100px !important">
-                    </span>
-                </div>
-            </form>
-            </div>
-            <br>
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:170px">
             <p><b>Record pod from file</b></p>
             <p>A friend sent you their pod? Add it to your pear! The file you input should either be in .csv or .png format.</p>

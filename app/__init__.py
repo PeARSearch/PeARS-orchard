@@ -55,12 +55,14 @@ class UrlsModelView(ModelView):
     column_searchable_list = ['url', 'title', 'keyword', 'pod']
     column_editable_list = ['keyword']
     can_edit = False
+    page_size = 50
 
 class PodsModelView(ModelView):
     list_template = 'admin/pears_list.html'
     column_exclude_list = ['DS_vector','word_vector']
     column_searchable_list = ['url', 'name', 'description', 'language']
     can_edit = False
+    page_size = 50
 
 admin.add_view(PodsModelView(Pods, db.session))
 admin.add_view(UrlsModelView(Urls, db.session))

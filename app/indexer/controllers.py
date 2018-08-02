@@ -121,8 +121,11 @@ def progress_file():
     def generate():
         urls, keywords = readUrls(join(dir_path, "urls_to_index.txt"))
         for c in range(len(urls)):
-            mk_page_vector.compute_vectors(urls[c], keywords[c])
-            pod_from_file(keywords[c])
+            success = mk_page_vector.compute_vectors(urls[c], keywords[c])
+            if success:
+                pod_from_file(keywords[c])
+            else:
+                print("Error accessing the URL.")
             c += 1
             yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
 
