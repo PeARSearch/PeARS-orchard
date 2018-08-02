@@ -29,6 +29,7 @@ def del_pod(keyword):
         print("Deleting "+url.url+" "+url.pod)
         if url.pod == "Me":
             db.session.delete(url)
+            db.session.commit()
         pod_entries = db.session.query(Pods).filter_by(description=keyword).all()
         for pod_entry in pod_entries:
             if "localhost" in pod_entry.url:
@@ -37,10 +38,10 @@ def del_pod(keyword):
                 break
 
 
-def draw_image(pixels, keyword, img_num):
+def draw_image(pixels, keyword):
     url_keyword = keyword.replace(' ', '_')
     png_file_location = join(dir_path, "static", "pods",
-                             url_keyword + "_urls_db" + str(img_num) + ".png")
+                             url_keyword + "_urls_db.png")
     '''This will be the transparency pixel -- super important so that Twitter
     and co don't convert the png to jpg.'''
     pixels.append((255, 255, 255))
@@ -69,34 +70,16 @@ def convert_to_pixels(l):
 
 
 def make_png_pod(keyword):
-    images = []
     header = ""
     pixels = []
     url_keyword = keyword.replace(' ', '_')
     csv_file_location = join(dir_path, "static", "pods",
                              url_keyword + "_urls_db.csv")
     f = open(csv_file_location, encoding="utf-8")
-    '''One image per 100 URLs, so pnd pods stay small.'''
     image_lines = []
-    c = 0
     for l in f:
-        if "#Pod name" in l or "#Space version" in l:
-            header += l
-        else:
-            image_lines.append(l)
-            c += 1
-        if c == 100:
-            print(header)
-            pixels += convert_to_pixels(header)
-            for line in image_lines:
-                pixels += convert_to_pixels(line)
-            images.append(draw_image(pixels, keyword, len(images) + 1))
-            del pixels[:]
-            del image_lines[:]
-            c = 0
+        image_lines.append(l)
     f.close()
-    pixels += convert_to_pixels(header)
     for line in image_lines:
         pixels += convert_to_pixels(line)
-    images.append(draw_image(pixels, keyword, len(images) + 1))
-    return images
+    return draw_image(pixels, keyword)

@@ -45,9 +45,7 @@
   <div class="row">
     <div class="col-md-6 text-center v-center">
         <br><br>
-        {% for png_location in png_locations %}
-        <img src="/static/pods/{{png_location}}" width="200px" style="border:1px solid #000; padding:1px"/>
-        {% endfor %}
+        <img src="/static/pods/{{png_location}}" width="400px" style="border:1px solid #000; padding:1px"/>
     </div>
     <div class="col-md-6">
         <br><br>
@@ -56,10 +54,10 @@
         <p>Your index is available as one pod file at the following location on your machine:<br> <i>{{csv_location}}</i>.</p>
 
         <br>
-        <p>Alternatively, you can also share the Snow Pod(s) on the left with your friends. The pictures are located at:<br>
-        <i>{{csv_location[:-3]}}1...png</i>.</p>
+        <p>Alternatively, you can also share the Snow Pod on the left with your friends. The picture is located at:<br>
+        <i>{{csv_location[:-3]}}png</i>.</p>
 
-        <p>(You can also right-click on any picture and select 'Save image as...' if you'd like to save it to another location.)</p>
+        <p>(You can also right-click on the picture and select 'Save image as...' if you'd like to save it to another location.)</p>
 
         <p>Now, share your pod! Send the csv to your friends, post the pictures on social media, send them to your Grandma on a USB drive... Just share them.</p>
         </div>

@@ -31,11 +31,11 @@ def index():
 def get_a_pod():
     query = request.args.get('pod')
     csv_location = make_csv_pod(query)
-    png_locations = make_png_pod(query)
+    png_location = make_png_pod(query)
     del_pod(query)
-    print(png_locations)
+    print(png_location)
     return render_template(
         'orchard/get-a-pod.html',
         query=query,
         csv_location=csv_location,
-        png_locations=png_locations)
+        png_location=png_location)
