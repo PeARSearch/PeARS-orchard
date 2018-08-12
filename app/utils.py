@@ -30,9 +30,12 @@ def readUrls(url_file):
     keywords = []
     f = open(url_file, 'r')
     for line in f:
-        line = line.rstrip('\n').split(';')
-        urls.append(line[0])
-        keywords.append(line[1])
+        try:
+            line = line.rstrip('\n').split(';')
+            urls.append(line[0])
+            keywords.append(line[1])
+        except:
+            print("ERROR: Problem reading",line)
     f.close()
     return urls, keywords
 

@@ -2,7 +2,7 @@ import re
 import numpy as np
 import string
 from app import db
-from app.api.models import dm_dict_en, Urls
+from app.api.models import dm_dict_en,Urls
 from app.indexer.htmlparser import extract_from_url
 from app.utils import convert_to_string, convert_dict_to_string, normalise
 
@@ -70,8 +70,10 @@ def compute_vectors(target_url, keyword):
             db.session.add(u)
             db.session.commit()
             return True
+        else:
+            return False
     else:
-        return False
+        return True
 
 
 def compute_query_vectors(query):

@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, Response
 from werkzeug import secure_filename
-import requests, csv
+import requests, csv, sys
 from os.path import dirname, join, realpath
 from app import db
 from app.api.models import Pods, Urls
@@ -11,6 +11,7 @@ from app.pod_finder import score_pods, index_pod_file
 from app.pod_finder.update_pod_list import update_pod_list
 
 dir_path = dirname(dirname(dirname(realpath(__file__))))
+csv.field_size_limit(sys.maxsize)
 
 # Define the blueprint:
 pod_finder = Blueprint('pod_finder', __name__, url_prefix='/pod_finder')
@@ -143,14 +144,12 @@ def progress_pods():
     urls = []
     for pod_url in pod_urls:
         print(pod_url)
-        pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
-        pod_entry.registered = True
-        db.session.commit()
         with requests.Session() as s:
             download = s.get(pod_url)
             decoded_content = download.content.decode('utf-8')
             crows = csv.reader(decoded_content.splitlines(), delimiter=',')
             records = list(crows)
+        pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
         for u in records:
             if len(u) == 7:
                 url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(u)
@@ -164,6 +163,8 @@ def progress_pods():
                         freqs=freqs,
                         cc=cc)
                     urls.append(u)
+        pod_entry.registered = True
+        db.session.commit()
     def generate():
         if len(urls) == 0:
             print("All URLs already known.")
@@ -172,10 +173,14 @@ def progress_pods():
             c = 0
             for u in urls:
                 #print("Adding",u.url,"to DB")
-                db.session.add(u)
-                db.session.commit()
-                c += 1
+                try:
+                    db.session.add(u)
+                    db.session.commit()
+                    c += 1
+                except:
+                    print("Failed to add",u.url,"to DB...")
                 yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
+                
 
     return Response(generate(), mimetype='text/event-stream')
 

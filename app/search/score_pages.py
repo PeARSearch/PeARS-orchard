@@ -85,11 +85,12 @@ def bestURLs(doc_scores):
     for w in sorted(doc_scores, key=doc_scores.get, reverse=True):
         loc = urlparse(w).netloc
         if c < 50:
-            if loc not in netlocs_used and doc_scores[w] > 0:
-                # print(w,doc_scores[w])
-                best_urls.append(w)
-                netlocs_used.append(loc)
-                c += 1
+            if doc_scores[w] > 0:
+                if netlocs_used.count(loc) < 10:
+                    # print(w,doc_scores[w])
+                    best_urls.append(w)
+                    netlocs_used.append(loc)
+                    c += 1
         else:
             break
     return best_urls

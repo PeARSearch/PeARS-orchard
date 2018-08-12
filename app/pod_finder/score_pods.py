@@ -39,7 +39,7 @@ def bestPods(pod_scores):
     best_pods = []
     c = 0
     for w in sorted(pod_scores, key=pod_scores.get, reverse=True):
-        if c < 10:
+        if c < 3:
             best_pods.append(w)
             c += 1
         else:
