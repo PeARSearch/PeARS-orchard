@@ -67,7 +67,7 @@
             </form>
             </div>
             </div>
-            
+
             <div class="col-md-6">
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:350px">
             <p><b>Index a single URL</b></p>
@@ -101,7 +101,7 @@
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
                 <div class="input-group">
                      <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <input id="file_source" name="file_source" type="file" accept="text/plain" class="btn btn-default btn-s">
                 </div><br>
                 <br><br><br>
                 <span class="input-group-btn">
@@ -110,7 +110,7 @@
             </form>
             </div>
             </div>
-            
+
             <div class="col-md-6">
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
             <p><b>Index from bookmarks</b></p>
@@ -119,7 +119,7 @@
             <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_bookmarks')}}">
                 <div class="input-group">
                      <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <input id="file_source" name="file_source" type="file" accept="text/html" class="btn btn-default btn-s">
                 </div><br>
                 <div class="form-group">
                      <label for="bookmark_keyword">Keyword:</label>
@@ -137,4 +137,3 @@
     </div><!-- /.container -->
     </body>
 </html>
-
