@@ -3,11 +3,16 @@
 
 
 def open_site(url):
-    '''Checking for wikipedia or SO page'''
-    for i in ["wikipedia.org", "stackoverflow.com"]:
-        if i in url:
-            return True
-    return False
+    with open("opensites.txt",'r') as file: #Using urls specified in opensites.txt
+        '''Checking for wikipedia or SO page'''
+        content = file.readlines()
+        urls = []
+        for i in content:
+            urls.append(i[0:int(len(i)-1)])
+        for i in urls:
+            if i in url:
+                return True
+        return False
 
 
 def cc_img(bs_obj):
