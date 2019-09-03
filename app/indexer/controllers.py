@@ -1,5 +1,5 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, Response
+from flask import Blueprint, request, render_template, Response, flash, redirect, url_for
 
 from app.api.models import dm_dict_en, Urls
 from app.indexer.neighbours import neighbour_urls
@@ -38,6 +38,9 @@ def from_file():
         # filename = secure_filename(file.filename)
         file.save(join(dir_path, "urls_to_index.txt"))
         return render_template('indexer/progress_file.html')
+    else:
+        flash(".txt file required","text")
+        return render_template('indexer/index.html')
 
 @indexer.route("/from_bookmarks", methods=["POST"])
 def from_bookmarks():
@@ -53,6 +56,9 @@ def from_bookmarks():
             f.write(u + ";" + keyword + "\n")
         f.close()
         return render_template('indexer/progress_file.html')
+    else:
+        flash("bookmarks.html required","html")
+        return render_template('indexer/index.html')
 
 
 @indexer.route("/from_url", methods=["POST"])
