@@ -3,15 +3,11 @@
 
 
 def open_site(url):
-    with open("opensites.txt",'r') as file: #Using urls specified in opensites.txt
-        '''Checking for wikipedia or SO page'''
-        content = file.readlines()
-        urls = []
-        for i in content:
-            urls.append(i[0:int(len(i)-1)])
-        for i in urls:
-            if i in url:
-                return True
+    file = open("Opensites.txt",'r').readlines()
+    urls = [line.rstrip('\n') for line in file]
+    for i in urls:
+        if i in url:
+            return True
         return False
 
 
