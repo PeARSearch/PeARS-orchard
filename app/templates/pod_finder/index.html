@@ -65,7 +65,7 @@
             <p>A friend sent you their pod? Add it to your pear! The file you input should either be in .csv or .png format.</p>
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_file')}}">
                 <div class="input-group">
-                     <input id="file_source" accept=".csv" oninput="invert()" name="file_source" type="file" class="btn btn-default btn-s">
+                     <input id="file_source" accept=".csv,image/x-png" oninput="invert()" name="file_source" type="file" class="btn btn-default btn-s">
                      <span class="input-group-btn">
                      <input id="submit_button_input" disabled="true" type="submit" class="btn btn-primary" value="Read file" style="width:100px !important">
                      <script>
@@ -78,7 +78,7 @@
             </form>
             </div>
             </div>
-            
+
             <div class="col-md-6" style="padding-left:50px;">
             <br><br>
             <p><b>Your pods</b></p>
@@ -101,4 +101,3 @@
     </div><!-- /.container -->
     </body>
 </html>
-

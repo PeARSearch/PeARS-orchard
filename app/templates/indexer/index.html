@@ -55,7 +55,7 @@
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_crawl')}}">
                 <div class="form-group">
                      <label for="site_url">Website URL:</label>
-                     <input class="form-control input-s" title="Enter the URL of the website." placeholder="Enter the URL of the website" type="text" name='site_url' id='site_url'>
+                     <input class="form-control input-s" title="Enter the URL of the website." placeholder="Enter the URL of the website" type="url" name='site_url' id='site_url'>
                 </div>
                 <div class="form-group">
                      <label for="site_keyword">Keyword:</label>
@@ -67,7 +67,7 @@
             </form>
             </div>
             </div>
-            
+
             <div class="col-md-6">
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:350px">
             <p><b>Index a single URL</b></p>
@@ -76,7 +76,7 @@
             <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_url')}}">
                 <div class="form-group">
                      <label for="url">Url:</label>
-                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="text" name='url' id='url'>
+                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="url" name='url' id='url'>
                 </div>
                 <div class="form-group">
                      <label for="url_keyword">Keyword:</label>
@@ -101,7 +101,7 @@
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
                 <div class="input-group">
                      <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <input id="file_source" name="file_source" type="file" accept="text/plain" class="btn btn-default btn-s">
                 </div><br>
                 <br><br><br>
                 <span class="input-group-btn">
@@ -110,7 +110,7 @@
             </form>
             </div>
             </div>
-            
+
             <div class="col-md-6">
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
             <p><b>Index from bookmarks</b></p>
@@ -137,4 +137,3 @@
     </div><!-- /.container -->
     </body>
 </html>
-
