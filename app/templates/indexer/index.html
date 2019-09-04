@@ -55,11 +55,11 @@
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_crawl')}}">
                 <div class="form-group">
                      <label for="site_url">Website URL:</label>
-                     <input class="form-control input-s" title="Enter the URL of the website." placeholder="Enter the URL of the website" type="url" name='site_url' id='site_url'>
+                     <input required class="form-control input-s" title="Enter the URL of the website." placeholder="Enter the URL of the website" type="url" name='site_url' id='site_url'>
                 </div>
                 <div class="form-group">
                      <label for="site_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='site_keyword' id='site_keyword'>
+                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='site_keyword' id='site_keyword' required>
                 </div>
                 <span class="input-group-btn">
                 <input id="submit_button" type="submit" class="btn btn-primary" value="Index website">
@@ -76,11 +76,11 @@
             <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_url')}}">
                 <div class="form-group">
                      <label for="url">Url:</label>
-                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="url" name='url' id='url'>
+                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="url" name='url' id='url' required>
                 </div>
                 <div class="form-group">
                      <label for="url_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='url_keyword' id='url_keyword'>
+                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='url_keyword' id='url_keyword' required>
                 </div>
                 <span class="input-group-btn">
                 <input id="submit_button" type="submit" class="btn btn-primary" value="Index URL">
@@ -123,7 +123,7 @@
                 </div><br>
                 <div class="form-group">
                      <label for="bookmark_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='bookmark_keyword' id='bookmark_keyword'>
+                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='bookmark_keyword' id='bookmark_keyword' required>
                 </div>
                 <span class="input-group-btn">
                      <input id="submit_button" type="submit" class="btn btn-primary" value="Index bookmarks">
