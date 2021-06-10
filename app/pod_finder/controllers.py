@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, Response
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import requests, csv, sys
 from os.path import dirname, join, realpath
 from app import db
