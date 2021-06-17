@@ -12,16 +12,20 @@ One feature of PeARS Orchard is the ability to convert a small index into a grey
 The fully-fledged PeARS system (Peer-to-peer Agent for Reciprocated Search) is supposed to be completely distributed. You can imagine it as an 'automated' version of Phase 1, where you don't have to go and hunt for pods yourself. Your PeARS install will automatically find them on other users' systems and connect to them. We are still working on this phase of the project.
 
 
-## Usage
+## Installation and Setup
 
 NB: we have some instructions for Windows users [on the wiki](https://github.com/PeARSearch/PeARS-orchard/wiki/Windows-installation).
 
-#### 1. Clone this repo on your machine:
+You can setup PeARS-Orchard from source or using docker
+
+#### From Source
+
+##### 1. Clone this repo on your machine:
 
     git clone https://github.com/PeARSearch/PeARS-orchard.git
 
 
-#### 2. **Optional step** Setup a virtualenv in your directory. 
+##### 2. **Optional step** Setup a virtualenv in your directory.
 
 If you haven't yet set up virtualenv on your machine, please install it via pip:
 
@@ -41,11 +45,11 @@ Then change into the PeARS-orchard directory:
 
     cd PeARS-orchard
 
-#### 3. Install the build dependencies:
+##### 3. Install the build dependencies:
 
     pip3 install -r requirements.txt
 
-#### 4. Unpack the semantic space
+##### 4. Unpack the semantic space
 
 Head over to the app/static/spaces directory and unzip english.dm.zip.
 
@@ -53,12 +57,27 @@ Head over to the app/static/spaces directory and unzip english.dm.zip.
 
     unzip english.dm.zip
 
-#### 5. Run it!
+##### 5. Run it!
 
 In the root of the repo, run:
 
     python3 run.py
 
-Now, go to your browser at localhost:8080. You should see the search page for PeARS. You don't have any pages indexed yet, so go to the F.A.Q. page (link at the top of the page) and follow the short instructions to get you going!
 
+#### Using docker
+
+> Note: Make sure you have [docker installed in your
+system](https://docs.docker.com/get-docker/).
+
+The latest Docker image for PeARS-Orchard can be found on Dockerhub
+under the organization pearsproject. You can run it locally using the
+command:
+
+```
+docker run -d -p 8080:8080 pearsproject/pears-orchard:latest
+```
+
+## Usage
+
+Now, go to your browser at localhost:8080. You should see the search page for PeARS. You don't have any pages indexed yet, so go to the F.A.Q. page (link at the top of the page) and follow the short instructions to get you going!
 
