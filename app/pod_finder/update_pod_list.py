@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-location = "http://pearsearch.org/pods.html"
+location = "http://pearsproject.org/pods.html"
 
 def update_pod_list():
     links = []
