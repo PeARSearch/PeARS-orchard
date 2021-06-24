@@ -1,5 +1,11 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, Response
+import logging
+
+from flask import (Blueprint,
+                   flash,
+                   request,
+                   render_template,
+                   Response)
 
 from app.api.models import dm_dict_en, Urls
 from app.indexer.neighbours import neighbour_urls
@@ -89,9 +95,10 @@ The URL indexing uses same progress as file.
 @indexer.route("/progress_crawl")
 def progress_crawl():
     print("Running progress crawl")
-    url, keyword = readUrls(join(dir_path, "urls_to_index.txt"))
-    url = url[0]
-    keyword = keyword[0]
+    urls, keywords, errors = readUrls(join(dir_path, "urls_to_index.txt"))
+    if url and keyword:
+        url = urls[0]
+        keyword = keywords[0]
 
     def generate():
         # netloc = urlparse(url).netloc
@@ -116,16 +123,22 @@ def progress_crawl():
 
 @indexer.route("/progress_file")
 def progress_file():
-    print("Running progress file")
-
+    logging.debug("Running progress file")
     def generate():
-        urls, keywords = readUrls(join(dir_path, "urls_to_index.txt"))
-        for c in range(len(urls)):
-            success = mk_page_vector.compute_vectors(urls[c], keywords[c])
+        urls, keywords, errors = readUrls(join(dir_path, "urls_to_index.txt"))
+        if errors:
+            logging.error('Some URLs could not be processed')
+        if not urls or not keywords:
+            logging.error('Invalid file format')
+            yield "data: 0 \n\n"
+
+        c = 0
+        for url, kwd in zip(urls, keywords):
+            success = mk_page_vector.compute_vectors(url, kwd)
             if success:
-                pod_from_file(keywords[c])
+                pod_from_file(kwd)
             else:
-                print("Error accessing the URL.")
+                logging.error("Error accessing the URL")
             c += 1
             yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
 

@@ -1,9 +1,11 @@
+import logging
+import re
+import requests
+
+from bs4 import BeautifulSoup
 from math import sqrt
 import numpy as np
-import logging
-import requests
 from urllib.parse import urljoin
-from bs4 import BeautifulSoup
 
 
 def readDM(dm_file):
@@ -24,20 +26,25 @@ def readDM(dm_file):
         dm_dict[row] = vec
     return dm_dict, version
 
+def _extract_url_and_kwd(line):
+    # The following regexp pattern matches lines in the form "url;keyword". This
+    # accepts both http and https link as of now
+    pattern = "(https?://\S+);(.+)"
+    return re.match(pattern, line)
 
 def readUrls(url_file):
     urls = []
     keywords = []
-    f = open(url_file, 'r')
-    for line in f:
-        try:
-            line = line.rstrip('\n').split(';')
-            urls.append(line[0])
-            keywords.append(line[1])
-        except:
-            print("ERROR: Problem reading",line)
-    f.close()
-    return urls, keywords
+    errors = False
+    with open(url_file) as fd:
+        for line in fd:
+            matches = _extract_url_and_kwd(line)
+            if matches:
+                urls.append(matches.group(1))
+                keywords.append(matches.group(2))
+            else:
+                errors = True
+    return urls, keywords, errors
 
 def readBookmarks(bookmark_file, keyword):
     urls = []
