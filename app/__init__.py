@@ -1,6 +1,7 @@
 # Import flask and template operators
 from flask import Flask, render_template
 from flask_admin import Admin
+  
 
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
@@ -39,11 +40,26 @@ app.register_blueprint(pages_module)
 
 # Build the database:
 # This will create the database file using SQLAlchemy
-# db.drop_all()
+#db.drop_all()
 db.create_all()
 
 from flask_admin.contrib.sqla import ModelView
+from sklearn.feature_extraction.text import CountVectorizer
 from app.api.models import Pods,Urls
+from app.utils import read_vocab
+import sentencepiece as spm
+import pickle
+
+with open("./app/static/flies/fly.m", 'rb') as f: 
+    fruitfly = pickle.load(f)
+with open("./app/static/webmap/pod_matrix.m", 'rb') as f: 
+    webmap = pickle.load(f)
+
+sp = spm.SentencePieceProcessor()
+sp.load('./app/static/spm/spmcc.model')
+    
+vocab, reverse_vocab, logprobs = read_vocab()
+vectorizer = CountVectorizer(vocabulary=vocab, lowercase=False, token_pattern='[^ ]+')
 
 # Flask and Flask-SQLAlchemy initialization here
 
@@ -52,8 +68,8 @@ admin = Admin(app, name='PeARS DB', template_mode='bootstrap3')
 class UrlsModelView(ModelView):
     list_template = 'admin/pears_list.html'
     column_exclude_list = ['vector','freqs']
-    column_searchable_list = ['url', 'title', 'keyword', 'pod']
-    column_editable_list = ['keyword']
+    column_searchable_list = ['url', 'title', 'category', 'pod']
+    column_editable_list = ['category']
     can_edit = False
     page_size = 50
 

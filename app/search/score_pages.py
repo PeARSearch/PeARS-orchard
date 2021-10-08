@@ -1,81 +1,40 @@
+import numpy as np
+import math
+import pickle
 import webbrowser
 from urllib.parse import urlparse
-import math
+import app
 from app.api.models import Urls, Pods
 from app import db
-from app.utils_db import (
-    get_db_url_snippet, get_db_url_title, get_db_url_cc, get_db_url_pod)
-
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
-from app.utils import cosine_similarity, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
+from sklearn.metrics.pairwise import cosine_similarity
+from scipy.spatial.distance import cdist
 
 
-def score(query, query_dist, query_freqs, pod):
-    """ Get various scores -- This is slow, slow, slow.
-    Add code for vec to matrix calculations """
-    DS_scores = {}
-    URL_scores = {}
-    title_scores = {}
-    term_scores = {}
-    coverages = {}
-    for u in db.session.query(Urls).filter_by(pod=pod).all():
-        DS_scores[u.url] = cosine_similarity(
-            convert_to_array(u.vector), query_dist)
-        # DS_scores[u.url] = cosines[url_to_mat[u.url]]
-        URL_scores[u.url] = score_url_overlap(query, u.url)
-        title_scores[u.url] = generic_overlap(query, u.title)
-        term_scores[u.url], coverages[u.url] = term_cosine.run(
-            query, query_freqs, u.freqs)
-    return DS_scores, URL_scores, title_scores, term_scores, coverages
+def score_pods(q_hash,top):
+    distances = cosine_similarity(q_hash,app.webmap.m)[0]
+    #distances = cdist(np.array(q_hash.toarray()),app.webmap.m,'hamming')[0]
+    print(distances)
+    best_sim = np.argpartition(distances, -top)[-top:]
+    best_pods= [app.webmap.metacats[i] for i in best_sim]
+    return best_pods
 
 
-def score_pods(query, query_dist, query_freqs):
-    '''Score pods for a query'''
-    pod_scores = {}
-    score_sum = 0.0
-    pods = db.session.query(Pods).filter_by(registered=True).all()
-    for p in pods:
-        DS_score = cosine_similarity(convert_to_array(p.DS_vector), query_dist)
-        term_score, coverage = term_cosine.run(query, query_freqs,
-                                               p.word_vector)
-        score = DS_score + term_score + 2 * coverage
-        if math.isnan(score):
-            score = 0
-        pod_scores[p.name] = score
-        score_sum += score
-    print(pod_scores)
-    '''If all scores are rubbish, search entire pod collection
-    (we're desperate!)'''
-    if score_sum < 1:
-        return list(pod_scores.keys())
-    else:
-        best_pods = []
-        for k in sorted(pod_scores, key=pod_scores.get, reverse=True):
-            if len(best_pods) < 1:
-                best_pods.append(k)
-            else:
-                break
-        return best_pods
-
-
-def score_docs(query, query_dist, query_freqs, pod):
+def score_docs(q_hash, pod):
     '''Score documents for a query'''
-    document_scores = {}  # Document scores
-    DS_scores, URL_scores, title_scores, term_scores, coverages = score(
-        query, query_dist, query_freqs, pod)
-    for url in list(DS_scores.keys()):
-        # print(url,DS_scores[url], title_scores[url], term_scores[url])
-        document_scores[
-            url
-        ] = DS_scores[
-            url] + title_scores[url] + term_scores[url] + 2 * coverages[url]
-        if math.isnan(
-                document_scores[url]
-        ):  # Check for potential NaN -- messes up with sorting in bestURLs.
-            document_scores[url] = 0
-    return document_scores
+    pod_mp = "./app/static/pods/"+pod+"/"+pod+".hs"
+    pod_up = "./app/static/pods/"+pod+"/"+pod+".url"
+    pod_m = pickle.load(open(pod_mp,'rb'))
+    pod_urls = pickle.load(open(pod_up,'rb'))
+    distances = cosine_similarity(q_hash,pod_m)[0]
+    print(distances)
+    top = min(20,len(distances)) #Number of docs to return
+    best_sim = np.argpartition(distances, -top)[-top:]
+    best_docs= {pod_urls[i]:distances[i] for i in best_sim}
+    print(best_docs)
+    return best_docs
 
 
 def bestURLs(doc_scores):
@@ -111,12 +70,13 @@ def output(best_urls):
     if len(best_urls) > 0:
         for u in best_urls:
             results.append([
-                u,
-                get_db_url_title(u),
-                get_db_url_snippet(u),
-                get_db_url_cc(u)
+                u,u,u,u
+                #get_db_url_title(u),
+                #get_db_url_snippet(u),
+                #get_db_url_cc(u)
             ])
-            pod = get_db_url_pod(u)
+            #pod = get_db_url_pod(u)
+            pod = "TEST"
             if pod not in pods:
                 pods.append(pod)
             # print(results)
@@ -125,10 +85,10 @@ def output(best_urls):
 
 def run(query, pears):
     document_scores = {}
-    q_dist, q_freqs = compute_query_vectors(query)
-    best_pods = ["Me"] + score_pods(query, q_dist, q_freqs)
+    q_hash = compute_query_vectors(query)
+    best_pods = score_pods(q_hash,1) #Change 1 here if you want to return more than the top pod
     for pod in best_pods:
         print(pod)
-        document_scores.update(score_docs(query, q_dist, q_freqs, pod))
+        document_scores.update(score_docs(q_hash, pod))
     best_urls = bestURLs(document_scores)
     return output(best_urls)

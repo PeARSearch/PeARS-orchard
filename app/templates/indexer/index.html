@@ -102,6 +102,13 @@
                 <div class="input-group">
                      <label for="file_source">File source:</label>
                      <input id="file_source" name="file_source" type="file" accept="text/plain" class="btn btn-default btn-s">
+                     {% with messages = get_flashed_messages(category_filter=["text"]) %}
+	                     {% if messages %}
+	                       {% for message in messages %}
+                            {{message}}
+                         {% endfor %}
+	                     {% endif %}
+	                   {% endwith %}
                 </div><br>
                 <br><br><br>
                 <span class="input-group-btn">
@@ -119,7 +126,14 @@
             <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_bookmarks')}}">
                 <div class="input-group">
                      <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s">
+                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s" accept="text/html">
+                     {% with messages = get_flashed_messages(category_filter=["html"]) %}
+	                     {% if messages %}
+	                       {% for message in messages %}
+                            {{message}}
+                         {% endfor %}
+	                     {% endif %}
+	                   {% endwith %}
                 </div><br>
                 <div class="form-group">
                      <label for="bookmark_keyword">Keyword:</label>
