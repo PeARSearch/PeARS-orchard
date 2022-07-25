@@ -1,4 +1,6 @@
-# Orchard PeARS
+# Orchard PeARS, with a fruit fly
+
+**This branch is for the development of the new version of PeARS Orchard, with an underlying fruit fly model.**
 
 ## What and why
 
