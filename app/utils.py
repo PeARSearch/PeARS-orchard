@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from math import sqrt
 import numpy as np
 from urllib.parse import urljoin
+from scipy.spatial import distance
 
 
 def readDM(dm_file):
@@ -73,16 +74,14 @@ def normalise(v):
 
 
 def convert_to_string(vector):
-    vector_str = ""
-    for n in vector:
-        vector_str = vector_str + "%.6f" % n + " "
-    return vector_str[:-1]
+    s = ' '.join(str(i) for i in vector)
+    return(s)
 
 
 def convert_to_array(vector):
     # for i in vector.rstrip(' ').split(' '):
     #    print('#',i,float(i))
-    return np.array([float(i) for i in vector.rstrip(' ').split(' ')])
+    return np.array([float(i) for i in vector.split()])
 
 
 def convert_dict_to_string(dic):
@@ -111,6 +110,8 @@ def cosine_similarity(v1, v2):
     den_b = np.dot(v2, v2)
     return num / (sqrt(den_a) * sqrt(den_b))
 
+def hamming_similarity(v1, v2):
+    return 1 - distance.hamming(v1,v2)
 
 def cosine_to_matrix(q, M):
     qsqrt = sqrt(np.dot(q, q))

@@ -1,14 +1,59 @@
 from app.utils import readDM
 from app import db
-import numpy as np
 from app.utils import convert_to_array
+import numpy as np
+import configparser
+import joblib
+from glob import glob
+from os.path import isdir
+import sentencepiece as spm
 
-# Build semantic spaces
+sp = spm.SentencePieceProcessor()
+
+# Build semantic spaces - LEGACY
 dm_dict_en, version = readDM("./app/static/spaces/english.dm")
 
-# Record language codes
+# Record language codes - LEGACY
 language_codes = {}
 language_codes["English"] = [dm_dict_en, "en"]
+
+# New language codes
+def get_installed_languages():
+    installed_languages = []
+    language_paths = glob('./app/api/models/*/')
+    for p in language_paths:
+        lang = p[:-1].split('/')[-1]
+        installed_languages.append(lang)
+    print("Installed languages:",installed_languages)
+    return installed_languages
+
+installed_languages = get_installed_languages()
+
+# Load model configuration files
+def read_configs():
+    model_configs = {}
+    for lang in installed_languages:
+        config_path = './app/api/models/'+lang+'/'+lang+'.hyperparameters.cfg'
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        model_configs[lang] = config
+    return model_configs
+
+model_configs = read_configs()
+
+# Load dimensionality reducers
+reducers = {}
+for lang in installed_languages:
+    reducer_type = model_configs[lang]['REDUCER']['type']
+    if reducer_type == 'PCA':
+        reducers[lang] = joblib.load(f'./app/api/models/{lang}/{lang}wiki-latest-pages-articles.train.pca')
+    else:
+        reducers[lang] = joblib.load(f'./app/api/models/{lang}/{lang}wiki-latest-pages-articles.train.hacked.umap')
+
+# Load flies 
+flies = {}
+for lang in installed_languages:
+    flies[lang] = joblib.load(f'./app/api/models/{lang}/fly.m')
 
 
 # Define a base model for other database tables to inherit

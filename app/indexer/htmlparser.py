@@ -31,7 +31,7 @@ def BS_parse(url):
     except Exception:
         print("Request failed when trying to index", url, "...")
         return False, req
-    if req.status_code is not 200:
+    if req.status_code != 200:
         logging.exception(
             "Warning: " + str(req.url) + ' has a status code of: ' +
             str(req.status_code) + ' omitted from database.\n')

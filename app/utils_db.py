@@ -48,7 +48,7 @@ def get_db_pod_language(url):
 
 def compute_pod_summary(name):
     '''This function is very similar to 'self' in PeARS-pod'''
-    DS_vector = np.zeros(400)
+    DS_vector = np.zeros(256) 
     word_vector = ""
     freqs = {}
     for u in db.session.query(Urls).filter_by(pod=name).all():
@@ -130,6 +130,7 @@ def pod_from_scratch(name,url,language,description):
     #Using compute_query_vector as hack to get vectors from pod's name 
     vector, freqs = compute_query_vectors(name.lower()+' '+description.lower())
     p.DS_vector = convert_to_string(normalise(vector))
+    print("PD",p.DS_vector)
     word_vector = ""
     c = 0
     for w in sorted(freqs, key=freqs.get, reverse=True):

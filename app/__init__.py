@@ -43,7 +43,7 @@ app.register_blueprint(pages_module)
 db.create_all()
 
 from flask_admin.contrib.sqla import ModelView
-from app.api.models import Pods,Urls
+from app.api.models import Pods, Urls
 
 # Flask and Flask-SQLAlchemy initialization here
 

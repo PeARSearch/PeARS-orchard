@@ -8,7 +8,7 @@ from app.utils_db import (
 
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
-from app.utils import cosine_similarity, convert_to_array
+from app.utils import cosine_similarity, hamming_similarity, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
 
 
@@ -21,7 +21,7 @@ def score(query, query_dist, query_freqs, pod):
     term_scores = {}
     coverages = {}
     for u in db.session.query(Urls).filter_by(pod=pod).all():
-        DS_scores[u.url] = cosine_similarity(
+        DS_scores[u.url] = hamming_similarity(
             convert_to_array(u.vector), query_dist)
         # DS_scores[u.url] = cosines[url_to_mat[u.url]]
         URL_scores[u.url] = score_url_overlap(query, u.url)
@@ -37,7 +37,7 @@ def score_pods(query, query_dist, query_freqs):
     score_sum = 0.0
     pods = db.session.query(Pods).filter_by(registered=True).all()
     for p in pods:
-        DS_score = cosine_similarity(convert_to_array(p.DS_vector), query_dist)
+        DS_score = hamming_similarity(convert_to_array(p.DS_vector), query_dist)
         term_score, coverage = term_cosine.run(query, query_freqs,
                                                p.word_vector)
         score = DS_score + term_score + 2 * coverage
@@ -66,7 +66,7 @@ def score_docs(query, query_dist, query_freqs, pod):
     DS_scores, URL_scores, title_scores, term_scores, coverages = score(
         query, query_dist, query_freqs, pod)
     for url in list(DS_scores.keys()):
-        # print(url,DS_scores[url], title_scores[url], term_scores[url])
+        print(url,DS_scores[url], title_scores[url], term_scores[url])
         document_scores[
             url
         ] = DS_scores[
