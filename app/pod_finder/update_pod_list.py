@@ -1,19 +1,20 @@
 import requests
-from bs4 import BeautifulSoup
+import joblib
+from os.path import dirname, realpath, join
+from pathlib import Path
+from app.api.models import installed_languages
 
-location = "http://pearsproject.org/pods.html"
+dir_path = dirname(dirname(realpath(__file__)))
 
 def update_pod_list():
-    links = []
-    try:
-        req = requests.get(location, timeout=30)
-        req.encoding = 'utf-8'
-        bs_obj = BeautifulSoup(req.text, "lxml")
-        rows = bs_obj.findAll('tr')
-        for row in rows[1:]:	#Don't read header
-            h = row.findAll(text=True)
-            links.append(h)
-    except Exception:
-        print("Request failed when trying to index", location, "...")
-    #print(links)
-    return links
+    print("Running update pod list")
+    for lang in installed_languages:
+        URL = "https://github.com/PeARSearch/PeARS-public-pods/blob/main/"+lang+"/"+lang+"wiki.summary.fh?raw=true"
+        try:
+            local_dir = join(dir_path, "static", "webmap", lang)
+            Path(local_dir).mkdir(exist_ok=True, parents=True)
+            local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
+            with open (local_file, "wb") as f:
+                f.write(requests.get(URL,allow_redirects=True).content)
+        except Exception:
+            print("Request failed when trying to index", URL, "...")

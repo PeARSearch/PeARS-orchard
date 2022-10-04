@@ -1,10 +1,16 @@
 # Import flask dependencies
 from flask import Blueprint, jsonify
-from app.api.models import Urls, Pods
+from app.api.models import dm_dict_en, Urls, Pods
 from app import db
 
 # Define the blueprint:
 api = Blueprint('api', __name__, url_prefix='/api')
+
+
+@api.route('/vectors/<word>/')
+def return_vector(word):
+    v = list(dm_dict_en[word])
+    return jsonify(vector=v)
 
 
 @api.route('/urls/')

@@ -5,10 +5,12 @@ import requests, csv, sys
 from os.path import dirname, join, realpath
 from app import db
 from app.api.models import Pods, Urls
-from app.utils import readPods, get_pod_info
-from app.utils_db import pod_from_json, url_from_json, pod_from_file, pod_from_scratch
+from app.utils import readPods, get_pod_info, convert_to_string
+from app.utils_db import pod_from_json, url_from_json, pod_from_file, pod_from_scratch, update_official_pod_list
 from app.pod_finder import score_pods, index_pod_file
 from app.pod_finder.update_pod_list import update_pod_list
+import joblib
+import re
 
 dir_path = dirname(dirname(dirname(realpath(__file__))))
 csv.field_size_limit(sys.maxsize)
@@ -33,9 +35,8 @@ def index():
 @pod_finder.route('/find-a-pod/')
 def find_a_pod():
     print("Running progress pod update")
-    pods = update_pod_list()
-    for p in pods:
-        pod_from_scratch(p[0],p[1],p[2],p[3])
+    update_pod_list()
+    update_official_pod_list()
     query = request.args.get('search-pod')
     #print(request, request.args, query)
     pods = score_pods.run(query)
@@ -144,25 +145,34 @@ def progress_pods():
     urls = []
     for pod_url in pod_urls:
         print(pod_url)
-        with requests.Session() as s:
-            download = s.get(pod_url)
-            decoded_content = download.content.decode('utf-8')
-            crows = csv.reader(decoded_content.splitlines(), delimiter=',')
-            records = list(crows)
+        m = re.search('/([a-z]*)wiki',pod_url)
+        lang = m.group(1)
+        try:
+            local_dir = join(dir_path, "app", "static", "webmap", lang)
+            local_file = join(local_dir,pod_url.split('/')[-1].replace('?raw=true',''))
+            with open (local_file, "wb") as f:
+                f.write(requests.get(pod_url,allow_redirects=True).content)
+            print("Pod downloaded to",local_file)
+        except Exception:
+            print("Request failed when trying to index", pod_url, "...")
+
+        m, titles = joblib.load(local_file)
+        print(m.shape,len(titles),titles[0])
         pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
-        for u in records:
-            if len(u) == 7:
-                url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(u)
-                if not db.session.query(Urls).filter_by(url=url).all():
-                    u = Urls(
-                        url=url,
-                        title=title,
-                        snippet=snippet,
-                        pod=pod_entry.name,
-                        vector=vector,
-                        freqs=freqs,
-                        cc=cc)
-                    urls.append(u)
+        for i in range(len(titles)):
+            title = titles[i]
+            url = 'https://'+lang+'.wikipedia.org/wiki/'+title.replace(' ','_') #Hack, URLs should of course be provided
+            vector = convert_to_string(m[i].toarray()[0])
+            print(vector)
+            if not db.session.query(Urls).filter_by(url=url).all():
+                u = Urls(
+                    url=url,
+                    title=title,
+                    snippet=title, #FIX
+                    pod=pod_url.split('/')[-1].replace('?raw=true',''), #FIX
+                    vector=vector,
+                    cc=True if 'wikipedia.org' in url else False)
+                urls.append(u)
         pod_entry.registered = True
         db.session.commit()
     def generate():

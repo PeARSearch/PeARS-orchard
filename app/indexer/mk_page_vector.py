@@ -50,7 +50,7 @@ def compute_fly_hash(lang, text):
     ridge = reducers[lang]
     fly = flies[lang]
     hs = return_hash(lang, text, ridge, fly, int(model_configs[lang]['PREPROCESSING']['logprob_power']))
-    print("FRUIT FLY HS:",hs.toarray()[0])
+    #print("FRUIT FLY HS:",hs.toarray()[0])
     return hs.toarray()[0]
 
 def compute_vectors(target_url, keyword):
@@ -88,10 +88,11 @@ def compute_vectors(target_url, keyword):
 
 def compute_query_vectors(query):
     """ Make distribution for query """
-    query = query.rstrip('\n')
-    words = query.split()
+    #query = query.rstrip('\n')
+    #words = query.split()
     text = tokenize_text('simple', query)
+    print(text)
     vector = compute_fly_hash('simple', text)
-    print(vector,vector.shape)
-    freqs = compute_freq_vector(words)
-    return vector, freqs
+    #print("FFH",vector,vector.shape)
+    #freqs = compute_freq_vector(words)
+    return vector

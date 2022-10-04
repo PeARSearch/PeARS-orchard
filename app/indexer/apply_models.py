@@ -16,6 +16,7 @@ from app.indexer.fly_utils import hash_dataset_
 def apply_ridge(lang, text, ridge, logprob_power, top_words):
     dataset = vectorize_scale(lang, text, logprob_power, top_words)
     dataset = ridge.predict(dataset)
+    print("RIDGE VECTOR:",dataset)
     return dataset
 
 
@@ -24,10 +25,9 @@ def fly_hash(fly, m):
     return hashed_data
 
 
-
 def return_hash(lang, text, ridge, fly, logprob_power):
     print("FLY TOP WORDS",fly.top_words)
     #m = apply_ridge(lang, text, ridge, logprob_power, fly.top_words) #FIX FLY!
-    m = apply_ridge(lang, text, ridge, logprob_power, 300)
+    m = apply_ridge(lang, text, ridge, logprob_power, min(len(text),fly.top_words))
     hs = fly_hash(fly, m)
     return hs

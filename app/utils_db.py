@@ -1,9 +1,11 @@
+import joblib
 from app import db
 from app.api.models import Urls, Pods
-from app.utils import (
-    convert_to_array, convert_string_to_dict, convert_to_string, normalise)
+from app.api.models import installed_languages
+from app.utils import convert_to_array, convert_string_to_dict, convert_to_string, normalise
 from app.indexer.mk_page_vector import compute_query_vectors
 import numpy as np
+from os.path import dirname, realpath, join
 
 
 def get_db_url_vector(url):
@@ -118,6 +120,32 @@ def pod_from_file(name):
     p.DS_vector, p.word_vector = compute_pod_summary(name)
     db.session.commit()
 
+
+def update_official_pod_list():
+    dir_path = dirname(realpath(__file__))
+    print(dir_path)
+    for lang in installed_languages:
+        #lang = lang if lang != "simple" else "en"
+        local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
+        pod_ids, pod_keywords, pod_matrix = joblib.load(local_file)
+        for i in range(len(pod_ids)):
+            url = "https://github.com/PeARSearch/PeARS-public-pods/blob/main/"+lang+"/"+pod_ids[i]+"?raw=true"
+            if not db.session.query(Pods).filter_by(url=url).all():
+                p = Pods(url=url)
+                db.session.add(p)
+                db.session.commit()
+            p = Pods.query.filter(Pods.url == url).first()
+            p.name = pod_ids[i]
+            p.description = ','.join(pod_keywords[i])
+            #p.language = lang if lang != "en" else "simple"
+            p.language = lang
+            p.DS_vector = convert_to_string(pod_matrix[i])
+            #print("PD",p.DS_vector)
+            if not p.registered:
+                p.registered = False
+            db.session.commit()
+
+#FFA TO DO - UPDATE DB PODS FROM HASHES ON WEBSITE
 def pod_from_scratch(name,url,language,description):
     if not db.session.query(Pods).filter_by(url=url).all():
         p = Pods(url=url)
@@ -130,7 +158,7 @@ def pod_from_scratch(name,url,language,description):
     #Using compute_query_vector as hack to get vectors from pod's name 
     vector, freqs = compute_query_vectors(name.lower()+' '+description.lower())
     p.DS_vector = convert_to_string(normalise(vector))
-    print("PD",p.DS_vector)
+    #print("PD",p.DS_vector)
     word_vector = ""
     c = 0
     for w in sorted(freqs, key=freqs.get, reverse=True):

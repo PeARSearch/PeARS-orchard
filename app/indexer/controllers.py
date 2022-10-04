@@ -7,7 +7,7 @@ from flask import (Blueprint,
                    render_template,
                    Response)
 
-from app.api.models import Urls
+from app.api.models import dm_dict_en, Urls
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector, spider
 from app.utils import readUrls, readBookmarks
@@ -145,3 +145,18 @@ def progress_file():
     return Response(generate(), mimetype='text/event-stream')
 
 
+@indexer.route("/url", methods=["GET", "POST"])
+def url_index():
+    if request.method == "GET":
+        neighbours, num_db_entries = neighbour_urls(
+            "http://www.openmeaning.org/", dm_dict_en)
+        return render_template(
+            "indexer/index.html",
+            neighbours=neighbours,
+            num_entries=num_db_entries)
+    target_url = request.form["target_url"]
+    neighbours, num_db_entries = neighbour_urls(target_url, dm_dict_en)
+    return render_template(
+        "indexer/index.html",
+        neighbours=neighbours,
+        num_entries=num_db_entries)

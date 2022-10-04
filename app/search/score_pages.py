@@ -12,35 +12,26 @@ from app.utils import cosine_similarity, hamming_similarity, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
 
 
-def score(query, query_dist, query_freqs, pod):
-    """ Get various scores -- This is slow, slow, slow.
-    Add code for vec to matrix calculations """
+def score(query, query_dist, pod):
     DS_scores = {}
     URL_scores = {}
     title_scores = {}
-    term_scores = {}
-    coverages = {}
     for u in db.session.query(Urls).filter_by(pod=pod).all():
         DS_scores[u.url] = hamming_similarity(
             convert_to_array(u.vector), query_dist)
         # DS_scores[u.url] = cosines[url_to_mat[u.url]]
         URL_scores[u.url] = score_url_overlap(query, u.url)
         title_scores[u.url] = generic_overlap(query, u.title)
-        term_scores[u.url], coverages[u.url] = term_cosine.run(
-            query, query_freqs, u.freqs)
-    return DS_scores, URL_scores, title_scores, term_scores, coverages
+    return DS_scores, URL_scores, title_scores
 
 
-def score_pods(query, query_dist, query_freqs):
+def score_pods(query, query_dist):
     '''Score pods for a query'''
     pod_scores = {}
     score_sum = 0.0
     pods = db.session.query(Pods).filter_by(registered=True).all()
     for p in pods:
-        DS_score = hamming_similarity(convert_to_array(p.DS_vector), query_dist)
-        term_score, coverage = term_cosine.run(query, query_freqs,
-                                               p.word_vector)
-        score = DS_score + term_score + 2 * coverage
+        score = hamming_similarity(convert_to_array(p.DS_vector), query_dist)
         if math.isnan(score):
             score = 0
         pod_scores[p.name] = score
@@ -60,17 +51,16 @@ def score_pods(query, query_dist, query_freqs):
         return best_pods
 
 
-def score_docs(query, query_dist, query_freqs, pod):
+def score_docs(query, query_dist, pod):
     '''Score documents for a query'''
     document_scores = {}  # Document scores
-    DS_scores, URL_scores, title_scores, term_scores, coverages = score(
-        query, query_dist, query_freqs, pod)
+    DS_scores, URL_scores, title_scores = score(query, query_dist, pod)
     for url in list(DS_scores.keys()):
-        print(url,DS_scores[url], title_scores[url], term_scores[url])
+        print(url,DS_scores[url], title_scores[url])
         document_scores[
             url
         ] = DS_scores[
-            url] + title_scores[url] + term_scores[url] + 2 * coverages[url]
+            url] + title_scores[url]
         if math.isnan(
                 document_scores[url]
         ):  # Check for potential NaN -- messes up with sorting in bestURLs.
@@ -125,10 +115,10 @@ def output(best_urls):
 
 def run(query, pears):
     document_scores = {}
-    q_dist, q_freqs = compute_query_vectors(query)
-    best_pods = ["Me"] + score_pods(query, q_dist, q_freqs)
+    q_dist = compute_query_vectors(query)
+    best_pods = ["Me"] + score_pods(query, q_dist)
     for pod in best_pods:
         print(pod)
-        document_scores.update(score_docs(query, q_dist, q_freqs, pod))
+        document_scores.update(score_docs(query, q_dist, pod))
     best_urls = bestURLs(document_scores)
     return output(best_urls)
