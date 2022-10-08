@@ -7,7 +7,7 @@ from flask import (Blueprint,
                    render_template,
                    Response)
 
-from app.api.models import dm_dict_en, Urls
+from app.api.models import Urls
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector, spider
 from app.utils import readUrls, readBookmarks
@@ -96,7 +96,7 @@ The URL indexing uses same progress as file.
 def progress_crawl():
     print("Running progress crawl")
     urls, keywords, errors = readUrls(join(dir_path, "urls_to_index.txt"))
-    if url and keyword:
+    if urls and keywords:
         url = urls[0]
         keyword = keywords[0]
 

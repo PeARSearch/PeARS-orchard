@@ -2,7 +2,7 @@ import re
 import numpy as np
 import string
 from app import db
-from app.api.models import dm_dict_en, Urls, installed_languages, model_configs, reducers, flies, sp
+from app.api.models import Urls, installed_languages, model_configs, reducers, flies, sp
 from app.indexer.htmlparser import extract_from_url
 from app.utils import convert_to_string, convert_dict_to_string, normalise
 from app.indexer.apply_models import return_hash

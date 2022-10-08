@@ -1,4 +1,3 @@
-from app.utils import readDM
 from app import db
 from app.utils import convert_to_array
 import numpy as np
@@ -11,11 +10,9 @@ import sentencepiece as spm
 sp = spm.SentencePieceProcessor()
 
 # Build semantic spaces - LEGACY
-dm_dict_en, version = readDM("./app/static/spaces/english.dm")
 
 # Record language codes - LEGACY
 language_codes = {}
-language_codes["English"] = [dm_dict_en, "en"]
 
 # New language codes
 def get_installed_languages():
@@ -50,7 +47,7 @@ for lang in installed_languages:
     else:
         reducers[lang] = joblib.load(f'./app/api/models/{lang}/{lang}wiki-latest-pages-articles.train.hacked.umap')
 
-# Load flies 
+# Load flies
 flies = {}
 for lang in installed_languages:
     flies[lang] = joblib.load(f'./app/api/models/{lang}/fly.m')
