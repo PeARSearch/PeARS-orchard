@@ -5,13 +5,13 @@ from urllib.parse import urljoin
 from app.indexer import detect_open
 from bs4 import BeautifulSoup
 from langdetect import detect
-
+from app.api.models import installed_languages
 
 def remove_boilerplates(response):
     text = ""
     paragraphs = justext.justext(
         response.content,
-        justext.get_stoplist("English"),
+        justext.get_stoplist("English"), #FIX FOR MULTIPLE LANGUAGES
         max_link_density=0.3,
         stopwords_low=0.1,
         stopwords_high=0.3,
@@ -93,7 +93,7 @@ def extract_from_url(url):
                 print("Couldn't detect page language.")
                 return title, body_str, snippet, cc
 
-            if detect(title + " " + body_str) != "en":
+            if detect(title + " " + body_str) not in installed_languages:
                 print("Ignoring", url, "because language is not supported.")
                 title = ""
                 return title, body_str, snippet, cc

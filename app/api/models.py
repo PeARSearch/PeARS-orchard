@@ -1,4 +1,3 @@
-from app.utils import readDM
 from app import db
 from app.utils import convert_to_array
 import numpy as np
@@ -10,14 +9,6 @@ import sentencepiece as spm
 
 sp = spm.SentencePieceProcessor()
 
-# Build semantic spaces - LEGACY
-dm_dict_en, version = readDM("./app/static/spaces/english.dm")
-
-# Record language codes - LEGACY
-language_codes = {}
-language_codes["English"] = [dm_dict_en, "en"]
-
-# New language codes
 def get_installed_languages():
     installed_languages = []
     language_paths = glob('./app/api/models/*/')
@@ -50,7 +41,7 @@ for lang in installed_languages:
     else:
         reducers[lang] = joblib.load(f'./app/api/models/{lang}/{lang}wiki-latest-pages-articles.train.hacked.umap')
 
-# Load flies 
+# Load flies
 flies = {}
 for lang in installed_languages:
     flies[lang] = joblib.load(f'./app/api/models/{lang}/fly.m')
@@ -151,35 +142,3 @@ class Pods(Base):
             'registered': self.registered
         }
 
-
-# The urls matrix
-def mk_matrix_from_db():
-    print("Making URL matrix from database...")
-    urls = []
-    DS_M = []
-    url_to_mat = {}
-    mat_to_url = {}
-    try:
-        urls = Urls.query.all()
-        print("Found", len(urls), "records...")
-    except Exception:
-        print("Database empty")
-    if len(urls) > 0:
-        c = 0
-        DS_M = convert_to_array(urls[0].vector).reshape(1, 400)
-        url_to_mat[urls[0].url] = c
-        mat_to_url[c] = urls[0].url
-        c += 1
-        for u in urls[1:]:
-            DS_M = np.vstack((DS_M, convert_to_array(u.vector).reshape(1,
-                                                                       400)))
-            url_to_mat[u.url] = c
-            mat_to_url[c] = u.url
-            c += 1
-    return DS_M, url_to_mat, mat_to_url
-
-
-# DS_M, url_to_mat, mat_to_url = mk_matrix_from_db()
-
-# db.drop_all()
-# db.create_all()

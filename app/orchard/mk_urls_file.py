@@ -15,15 +15,14 @@ def make_csv_pod(keyword):
     f.write("#Pod name:" + keyword + "\n")
     for url in db.session.query(Urls).filter_by(keyword=keyword).all():
         line = str(url.id) + "," + url.url + "," + url.title.replace(
-            ',', '-') + "," + url.snippet.replace(
-                ',', '-') + "," + url.vector + "," + url.freqs + "," + str(
-                    url.cc)
+            ',', '-') + "," + url.snippet.replace(',', '-') + "," + url.vector + "," + str(url.cc)
         f.write(line.replace('\r', '').replace('\n', '') + '\n')
     f.close()
     return file_location
 
 
 def del_pod(keyword):
+    print("Deleting pod")
     for url in db.session.query(Urls).filter_by(keyword=keyword).all():
         print("Deleting "+url.url+" "+url.pod)
         if url.pod == "Me":
@@ -34,7 +33,6 @@ def del_pod(keyword):
             if "localhost" in pod_entry.url:
                 db.session.delete(pod_entry)
                 db.session.commit()
-                break
 
 
 def draw_image(pixels, keyword):

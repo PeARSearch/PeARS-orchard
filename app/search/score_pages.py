@@ -1,5 +1,6 @@
 import webbrowser
 from urllib.parse import urlparse
+import re
 import math
 from app.api.models import Urls, Pods
 from app import db
@@ -8,7 +9,7 @@ from app.utils_db import (
 
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
-from app.utils import cosine_similarity, hamming_similarity, convert_to_array
+from app.utils import cosine_similarity, hamming_similarity, convert_to_array, get_language
 from app.indexer.mk_page_vector import compute_query_vectors
 
 
@@ -19,32 +20,32 @@ def score(query, query_dist, pod):
     for u in db.session.query(Urls).filter_by(pod=pod).all():
         DS_scores[u.url] = hamming_similarity(
             convert_to_array(u.vector), query_dist)
-        # DS_scores[u.url] = cosines[url_to_mat[u.url]]
         URL_scores[u.url] = score_url_overlap(query, u.url)
         title_scores[u.url] = generic_overlap(query, u.title)
     return DS_scores, URL_scores, title_scores
 
 
-def score_pods(query, query_dist):
+def score_pods(query, query_dist, lang):
     '''Score pods for a query'''
     pod_scores = {}
     score_sum = 0.0
-    pods = db.session.query(Pods).filter_by(registered=True).all()
+    pods = db.session.query(Pods).filter_by(language=lang).filter_by(registered=True).all()
     for p in pods:
         score = hamming_similarity(convert_to_array(p.DS_vector), query_dist)
         if math.isnan(score):
             score = 0
         pod_scores[p.name] = score
         score_sum += score
-    print(pod_scores)
+    print("POD SCORES:",pod_scores)
     '''If all scores are rubbish, search entire pod collection
     (we're desperate!)'''
-    if score_sum < 1:
+    if score_sum < 0.1: #FIX FOR FRUIT FLY VERSION
         return list(pod_scores.keys())
     else:
         best_pods = []
         for k in sorted(pod_scores, key=pod_scores.get, reverse=True):
-            if len(best_pods) < 1:
+            if len(best_pods) < 2: 
+                print("Appending pod",k)
                 best_pods.append(k)
             else:
                 break
@@ -56,7 +57,7 @@ def score_docs(query, query_dist, pod):
     document_scores = {}  # Document scores
     DS_scores, URL_scores, title_scores = score(query, query_dist, pod)
     for url in list(DS_scores.keys()):
-        print(url,DS_scores[url], title_scores[url])
+        #print(url,DS_scores[url], title_scores[url])
         document_scores[
             url
         ] = DS_scores[
@@ -115,8 +116,9 @@ def output(best_urls):
 
 def run(query, pears):
     document_scores = {}
-    q_dist = compute_query_vectors(query)
-    best_pods = ["Me"] + score_pods(query, q_dist)
+    query, lang = get_language(query)
+    q_dist = compute_query_vectors(query, lang)
+    best_pods = ["Me"] + score_pods(query, q_dist, lang)
     for pod in best_pods:
         print(pod)
         document_scores.update(score_docs(query, q_dist, pod))

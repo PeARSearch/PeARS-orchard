@@ -22,15 +22,15 @@ def compute_fly_hash(lang, text):
     return hs.toarray()[0]
 
 
-def compute_vectors(target_url, keyword):
+def compute_vectors(target_url, keyword, lang):
     print("Computing vectors for", target_url)
     if not db.session.query(Urls).filter_by(url=target_url).all():
         u = Urls(url=target_url)
         title, body_str, snippet, cc = extract_from_url(target_url)
         if title != "":
             text = title + " " + body_str
-            text = tokenize_text('simple', text)
-            vector = compute_fly_hash('simple', text)
+            text = tokenize_text(lang, text)
+            vector = compute_fly_hash(lang, text)
             u.title = str(title)
             u.vector = convert_to_string(vector)
             if keyword == "":
@@ -53,13 +53,13 @@ def compute_vectors(target_url, keyword):
         return True
 
 
-def compute_query_vectors(query):
+def compute_query_vectors(query, lang):
     """ Make distribution for query """
     #query = query.rstrip('\n')
     #words = query.split()
-    text = tokenize_text('simple', query)
+    text = tokenize_text(lang, query)
     print(text)
-    vector = compute_fly_hash('simple', text)
+    vector = compute_fly_hash(lang, text)
     #print("FFH",vector,vector.shape)
     #freqs = compute_freq_vector(words)
     return vector

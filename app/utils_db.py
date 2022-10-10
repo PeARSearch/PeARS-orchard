@@ -90,7 +90,7 @@ def pod_from_json(pod, url):
     db.session.commit()
 
 
-def pod_from_file(name):
+def pod_from_file(name, lang):
     url = "http://localhost:8080/api/pods/" + name.replace(
         ' ', '+'
     )
@@ -100,7 +100,7 @@ def pod_from_file(name):
         p = Pods(url=url)
         p.name = name
         p.description = name
-        p.language = "UNK"
+        p.language = lang
         p.registered = True
         db.session.add(p)
         db.session.commit()

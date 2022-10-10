@@ -12,12 +12,13 @@ from scipy.spatial import distance
 def _extract_url_and_kwd(line):
     # The following regexp pattern matches lines in the form "url;keyword". This
     # accepts both http and https link as of now
-    pattern = "(https?://\S+);(.+)"
+    pattern = "(https?://\S+);(.+);(.+)"
     return re.match(pattern, line)
 
 def readUrls(url_file):
     urls = []
     keywords = []
+    langs = []
     errors = False
     with open(url_file) as fd:
         for line in fd:
@@ -25,14 +26,17 @@ def readUrls(url_file):
             if matches:
                 urls.append(matches.group(1))
                 keywords.append(matches.group(2))
+                langs.append(matches.group(3))
             else:
                 errors = True
-    return urls, keywords, errors
+    return urls, keywords, langs, errors
 
 def readBookmarks(bookmark_file, keyword):
+    print("READING BOOKMARKS")
     urls = []
     bs_obj = BeautifulSoup(open(bookmark_file), "html.parser")
     links = bs_obj.find_all('a', {'tags' : keyword})
+    print(links)
     for l in links:
         urls.append(l['href'])
     return urls
@@ -178,3 +182,13 @@ def get_pod0_message():
     except Exception:
         print("Problem contacting pod0...")
     return msg
+    
+def get_language(query):
+    lang = 'simple' #default
+    m = re.search('(.*) -(..\s*)$',query)
+    if m:
+        query = m.group(1)
+        lang = m.group(2)
+        if lang == 'en':
+            lang = 'simple'
+    return query, lang
