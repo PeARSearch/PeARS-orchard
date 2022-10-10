@@ -8,7 +8,6 @@ from app.search import term_cosine
 from app.utils import cosine_similarity, convert_to_array
 from app.indexer.mk_page_vector import compute_query_vectors
 
-#FFA: TO DO - CHANGE TO SCORE WRT FFA HASHES
 def score(query, query_dist):
     """ Get distributional score """
     DS_scores = {}
@@ -17,7 +16,6 @@ def score(query, query_dist):
         #print(p.description,DS_scores[p.url])
     return DS_scores
 
-#FFA: TO DO - CHANGE TO ELIMINATE TERM SCORES
 def score_pods(query, query_dist):
     """ Score pods for a query """
     pod_scores = {}  # Pod scores
@@ -31,7 +29,7 @@ def score_pods(query, query_dist):
     return pod_scores
 
 
-def bestPods(pod_scores):
+def get_best_pods(pod_scores):
     best_pods = []
     c = 0
     for w in sorted(pod_scores, key=pod_scores.get, reverse=True):
@@ -56,14 +54,13 @@ def output(best_pods):
             #print(results)
     return results
 
-#FFA: TO DO - CHANGE TO COMPUTE QUERY IN FFA FASHION
 def run(query):
     print("Looking for pods for query", query)
     best_pods = []
     if query != "":
         q_dist = compute_query_vectors(query)
         pod_scores = score_pods(query, q_dist)
-        best_pods = bestPods(pod_scores)
+        best_pods = get_best_pods(pod_scores)
     else:
         all_pods = [p.url for p in db.session.query(Pods).filter_by(registered=False).all()]
         best_pods = all_pods

@@ -11,16 +11,16 @@ orchard = Blueprint('orchard', __name__, url_prefix='/my-orchard')
 @orchard.route('/')
 @orchard.route('/index', methods=['GET', 'POST'])
 def index():
-    query = db.session.query(Urls.category.distinct().label("category"))
-    categories = [row.category for row in query.all()]
-    print(categories)
+    query = db.session.query(Urls.keyword.distinct().label("keyword"))
+    keywords = [row.keyword for row in query.all()]
+    print(keywords)
     pears = []
-    for category in categories:
-        if category:
+    for keyword in keywords:
+        if keyword:
             pear_urls = []
-            for u in db.session.query(Urls).filter_by(category=category).all():
+            for u in db.session.query(Urls).filter_by(keyword=keyword).all():
                 pear_urls.append(u)
-            pear = [category, len(pear_urls)]
+            pear = [keyword, len(pear_urls)]
             pears.append(pear)
     # for p in sorted(pears, key=lambda p: len(pears[p]), reverse=True):
     #    print(p,len(pears[p]),pears[p][:5])

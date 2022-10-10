@@ -1,10 +1,4 @@
 # Run a test server.
-import zipfile
-import os
-
-if  os.path.exists('app/static/spaces/english.dm')==False:
-    with zipfile.ZipFile('app/static/spaces/english.dm.zip', 'r') as zip_ref:
-        zip_ref.extractall('app/static/spaces/')
 
 class DeployedFly:
     def __init__(self):

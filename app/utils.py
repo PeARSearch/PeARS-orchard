@@ -9,24 +9,6 @@ from urllib.parse import urljoin
 from scipy.spatial import distance
 
 
-def readDM(dm_file):
-    dm_dict = {}
-    version = ""
-    with open(dm_file) as f:
-        dmlines = f.readlines()
-    f.close()
-
-    # Make dictionary with key=row, value=vector
-    for l in dmlines:
-        if "#Version:" in l:
-            version = l.rstrip('\n').replace("#Version:", "")
-        items = l.rstrip().split()
-        row = items[0]
-        vec = [float(i) for i in items[1:]]
-        vec = np.array(vec)
-        dm_dict[row] = vec
-    return dm_dict, version
-
 def _extract_url_and_kwd(line):
     # The following regexp pattern matches lines in the form "url;keyword". This
     # accepts both http and https link as of now

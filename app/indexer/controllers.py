@@ -7,7 +7,7 @@ from flask import (Blueprint,
                    render_template,
                    Response)
 
-from app.api.models import dm_dict_en, Urls
+from app.api.models import Urls
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector, spider
 from app.utils import readUrls, readBookmarks
@@ -35,7 +35,6 @@ def index():
  (from file, from url, from crawl)
 '''
 
-
 @indexer.route("/from_file", methods=["POST"])
 def from_file():
     print("FILE:", request.files['file_source'])
@@ -59,7 +58,6 @@ def from_bookmarks():
             f.write(u + ";" + keyword + "\n")
         f.close()
         return render_template('indexer/progress_file.html')
-
 
 @indexer.route("/from_url", methods=["POST"])
 def from_url():
@@ -96,7 +94,7 @@ The URL indexing uses same progress as file.
 def progress_crawl():
     print("Running progress crawl")
     urls, keywords, errors = readUrls(join(dir_path, "urls_to_index.txt"))
-    if url and keyword:
+    if urls and keywords:
         url = urls[0]
         keyword = keywords[0]
 
@@ -144,19 +142,3 @@ def progress_file():
 
     return Response(generate(), mimetype='text/event-stream')
 
-
-@indexer.route("/url", methods=["GET", "POST"])
-def url_index():
-    if request.method == "GET":
-        neighbours, num_db_entries = neighbour_urls(
-            "http://www.openmeaning.org/", dm_dict_en)
-        return render_template(
-            "indexer/index.html",
-            neighbours=neighbours,
-            num_entries=num_db_entries)
-    target_url = request.form["target_url"]
-    neighbours, num_db_entries = neighbour_urls(target_url, dm_dict_en)
-    return render_template(
-        "indexer/index.html",
-        neighbours=neighbours,
-        num_entries=num_db_entries)
