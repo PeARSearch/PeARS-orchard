@@ -6,7 +6,6 @@ from app.api.models import Urls
 from app.search import score_pages
 
 # Import utilities
-from app.utils import get_pod0_message
 import re
 
 # Define the blueprint:
@@ -32,21 +31,17 @@ def index():
     #    mk_matrix_from_db()
     results = []
     internal_message = ""
-    pod0_message = ""
     if len(Urls.query.all()) == 0:
         internal_message = "Hey there! It looks like you're here\
          for the first time :) To understand how to use PeARS,\
          go to the FAQ (link at the top of the page)."
-    else:
-        pod0_message = get_pod0_message()
     query = request.args.get('q')
     print(request, request.args, query)
     if not query:
         print("no query")
         return render_template(
             "search/index.html",
-            internal_message=internal_message,
-            pod0_message=pod0_message)
+            internal_message=internal_message)
     else:
         results = []
         query = query.lower()

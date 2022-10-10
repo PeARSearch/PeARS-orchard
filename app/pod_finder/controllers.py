@@ -6,7 +6,7 @@ from os.path import dirname, join, realpath
 from app import db
 from app.api.models import Pods, Urls
 from app.utils import readPods, get_pod_info, convert_to_string
-from app.utils_db import pod_from_json, url_from_json, pod_from_file, pod_from_scratch, update_official_pod_list
+from app.utils_db import pod_from_json, url_from_json, pod_from_file, update_official_pod_list
 from app.pod_finder import score_pods, index_pod_file
 from app.pod_finder.update_pod_list import download_pod_centroids
 import joblib

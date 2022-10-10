@@ -23,7 +23,7 @@ def compute_fly_hash(lang, text):
 
 
 def compute_vectors(target_url, keyword, lang):
-    print("Computing vectors for", target_url)
+    print("Computing vectors for", target_url, "(",keyword,")",lang)
     if not db.session.query(Urls).filter_by(url=target_url).all():
         u = Urls(url=target_url)
         title, body_str, snippet, cc = extract_from_url(target_url)
@@ -48,6 +48,7 @@ def compute_vectors(target_url, keyword, lang):
             db.session.commit()
             return True
         else:
+            print("Urgh")
             return False
     else:
         return True

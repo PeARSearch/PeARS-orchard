@@ -68,6 +68,7 @@ def extract_from_url(url):
     body_str = ""
     snippet = ""
     cc = False
+    language = "simple"
     try:
         req = requests.head(url, timeout=10)
         if "text/html" not in req.headers["content-type"]:
@@ -87,13 +88,15 @@ def extract_from_url(url):
             body_str = remove_boilerplates(req)
             try:
                 language = detect(title + " " + body_str)
+                if language == 'en':
+                    language = 'simple'
                 print("Language for", url, ":", language)
             except Exception:
                 title = ""
                 print("Couldn't detect page language.")
                 return title, body_str, snippet, cc
 
-            if detect(title + " " + body_str) not in installed_languages:
+            if language not in installed_languages:
                 print("Ignoring", url, "because language is not supported.")
                 title = ""
                 return title, body_str, snippet, cc

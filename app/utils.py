@@ -172,17 +172,6 @@ def get_pod_info(url):
     return pod
 
 
-def get_pod0_message():
-    msg = ""
-    try:
-        r = requests.get(
-            "http://www.openmeaning.org/pod0/api/message/", timeout=1)
-        if r.status_code == 200:
-            msg = r.json()['message']
-    except Exception:
-        print("Problem contacting pod0...")
-    return msg
-    
 def get_language(query):
     lang = 'simple' #default
     m = re.search('(.*) -(..\s*)$',query)
