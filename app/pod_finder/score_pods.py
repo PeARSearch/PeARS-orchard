@@ -64,6 +64,6 @@ def run(query):
         pod_scores = score_pods(query, q_dist)
         best_pods = get_best_pods(pod_scores)
     else:
-        all_pods = [p.url for p in db.session.query(Pods).filter_by(registered=False).all()]
+        all_pods = [p.url for p in db.session.query(Pods).filter_by(language=lang).filter_by(registered=False).all()]
         best_pods = all_pods
     return output(best_pods)

@@ -109,51 +109,25 @@ def pod_from_file(name, lang):
     db.session.commit()
 
 
-def update_official_pod_list():
+def update_official_pod_list(lang):
     dir_path = dirname(realpath(__file__))
     print(dir_path)
-    for lang in installed_languages:
-        local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
-        pod_ids, pod_keywords, pod_matrix = joblib.load(local_file)
-        for i in range(len(pod_ids)):
-            url = "https://github.com/PeARSearch/PeARS-public-pods-"+lang+"/blob/main/"+lang+"/"+pod_ids[i]+"?raw=true"
-            #print(url)
-            if not db.session.query(Pods).filter_by(url=url).all():
-                p = Pods(url=url)
-                db.session.add(p)
-                db.session.commit()
-            p = Pods.query.filter(Pods.url == url).first()
-            p.name = pod_ids[i]
-            p.description = ','.join(pod_keywords[i])
-            p.language = lang if lang != "en" else "simple"
-            p.DS_vector = convert_to_string(pod_matrix[i])
-            #print("PD",p.DS_vector)
-            if not p.registered:
-                p.registered = False
+    local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
+    pod_ids, pod_keywords, pod_matrix = joblib.load(local_file)
+    for i in range(len(pod_ids)):
+        url = "https://github.com/PeARSearch/PeARS-public-pods-"+lang+"/blob/main/"+lang+"/"+pod_ids[i]+"?raw=true"
+        #print(url)
+        if not db.session.query(Pods).filter_by(url=url).all():
+            p = Pods(url=url)
+            db.session.add(p)
             db.session.commit()
-
-#FFA TO DO - UPDATE DB PODS FROM HASHES ON WEBSITE
-def pod_from_scratch(name,url,language,description):
-    if not db.session.query(Pods).filter_by(url=url).all():
-        p = Pods(url=url)
-        db.session.add(p)
+        p = Pods.query.filter(Pods.url == url).first()
+        p.name = pod_ids[i]
+        p.description = ','.join(pod_keywords[i])
+        p.language = lang if lang != "en" else "simple"
+        p.DS_vector = convert_to_string(pod_matrix[i])
+        #print("PD",p.DS_vector)
+        if not p.registered:
+            p.registered = False
         db.session.commit()
-    p = Pods.query.filter(Pods.url == url).first()
-    p.name = name
-    p.description = description
-    p.language = language
-    #Using compute_query_vector as hack to get vectors from pod's name 
-    vector, freqs = compute_query_vectors(name.lower()+' '+description.lower())
-    p.DS_vector = convert_to_string(normalise(vector))
-    #print("PD",p.DS_vector)
-    word_vector = ""
-    c = 0
-    for w in sorted(freqs, key=freqs.get, reverse=True):
-        word_vector += w + ':' + str(freqs[w]) + ' '
-        c += 1
-        if c == 300:
-            break
-    p.word_vector = word_vector
-    if not p.registered:
-        p.registered = False
-    db.session.commit()
+
