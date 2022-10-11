@@ -8,7 +8,7 @@ PeARS (version Orchard) is a search engine that you can install and run locally 
 
 The fruit fly version of Orchard includes a nifty indexing system based on the olfactory system of the actual fruit fly, (*Drosophila melanogaster*)which has already been used in [other computer science applications](https://science.sciencemag.org/content/358/6364/793.abstract) and is recognised for its simplicity and high efficiency.
 
-**We gratefully acknowledge financial support from [NLnet](https://nlnet.nl/) under the [NGI Zero programme](https://nlnet.nl/NGI0/). **
+We gratefully acknowledge financial support from [NLnet](https://nlnet.nl/) under the [NGI Zero programme](https://nlnet.nl/NGI0/).
 
 
 ### How does this fit with peer-to-peer PeARS?
@@ -53,7 +53,7 @@ Then change into the PeARS-orchard directory:
 
 If you want to search and index in several languages at the same time, you can add multilingual support to your English install. To do this:
 
-    python3 install_language lc
+    python3 install_language.py lc
 
 where you should replace lc with a language code of your choice. You can check our organization to see which languages are currently available. The models for each language are saved in a repository of the form *PeARS-public-pods-lc* where again, 'lc' stands for a given language code. For instance, check out the French repo here: [https://github.com/PeARSearch/PeARS-public-pods-fr](https://github.com/PeARSearch/PeARS-public-pods-fr).
 
