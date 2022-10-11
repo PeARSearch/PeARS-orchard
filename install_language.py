@@ -8,6 +8,11 @@ if len(sys.argv) != 2:
     sys.exit()
 
 lang = sys.argv[1]
+
+if len(lang) != 2:
+    print("Your language code should just be a two-letter string. \nEXAMPLE USAGE: python install_language.py ml.")
+    sys.exit()
+
 dir_path = dirname(realpath(__file__))
 local_dir = join(dir_path, "app", "api", "models", lang)
 Path(local_dir).mkdir(exist_ok=True, parents=True)

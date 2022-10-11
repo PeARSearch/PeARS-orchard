@@ -49,7 +49,6 @@
        <p><a href="#firsttime">So I'm here now and I don't have any pages to search. What do I do?</a><br>
        <a href="#newpods">What is a pod? And how do I find new pods?</a><br>
        <a href="#createpod">Can I create my own pod?</a><br>
-       <a href="#snowpods">How do I share my Snow Pod on social media?</a><br>
        <a href="#crawlsite">How do I use 'crawl a website'?</a><br>
        <a href="#indexfile">How do I use 'index from file'?</a><br>
        <a href="#indexbookmarks">How do I use 'index from bookmarks'?</a><br>
@@ -73,14 +72,8 @@
        <br><br>
        <p id="createpod"><b>Can I create my own pod?</b></p>
        <p>Yes! The revolution needs you, and your appetite for Web pages on bungee-jumping, creepy-crawlies, the perfect cup of tea, and extinct languages. Whatever you're into, be your own search engine and start indexing pages like the pros. Your pear includes an <a href="{{url_for('indexer.index')}}">indexing page</a> which helps you with the hard work of converting Web pages into searchable representations. You can index in three ways. The simplest one is to type a single URL in the 'Index a single URL' box -- this will index just that page. If you have a favourite website (or part of a website), you can also type in its address in 'Crawl a website' to get all indexable pages from that site (but first check our <a href="#crawlsite">advice on indexing websites</a>). Finally, you can prepare a file of different URLs you would like to record and feed that in to your pear (see <a href="#indexfile"><i>How do I use 'index from file?'</i></a>). When you index things, it is <b>very important</b> to also provide a keyword describing the page(s) you're indexing. You can choose whatever you like, but make sure it's descriptive for you, and that you will <b>keep using the same keyword</b> when you index more pages on the topic.</p>
-       <p>Once in a while, you can go and check how many pages you've indexed on a particular topic. Head over to <a href="{{url_for('indexer.index')}}">My orchard</a>. There, you will find a beautiful orchard growing a pod for each keyword you have used in the indexer. Each pod in the making shows you its current size. Once a pod has grown enough, you may want to share it on the Internet. To do this, click on the pod of your choice. After a moment, a new page will be displayed, giving you instructions about where to find your pod's information. By default, PeARS produces two types of representation: a text-based one (the 'CSV Pod') and an image-based one (the 'Snow Pods'). The CSV file produced by your pear can be used when setting up an official pod. It can also simply be sent to a friend, who will index it on their own pear upon receipt. The Snow Pods can also be sent to your friends in a regular way, or shared on social media as images.</p>
-       <p>Remember, the more you share, the more rich and robust the PeARS network will become! So dispatch those pods!</p>
+       <p>Once in a while, you can go and check how many pages you've indexed on a particular topic. Head over to <a href="{{url_for('indexer.index')}}">My orchard</a>. There, you will find a beautiful orchard growing a pod for each keyword you have used in the indexer. Each pod in the making shows you its current size. Once a pod has grown enough, you may want to share it on the Internet. To do this, click on the pod of your choice. After a moment, a new page will be displayed, giving you instructions about where to find your pod's information. We are currently updating the way that PeARS outputs shareable pods. So check back in soon.</p>
 
-       <br><br>
-       <p id="snowpods"><b>How do I share my Snow Pod on social media?</b></p>
-       <p>Snow Pods are .png files, which look like this:<br><br><img src="{{ url_for('static', filename='example_snow_pod.png')}}" width="150px"/></p>
-       <p>Precious indexing information is encoded in the image, and so it is important to keep it in the right format. The most important thing to bear in mind is that you should not modify the file in any way (change its format, apply lossy compression to it, draw on it, let your dog chew it...) This is not as easy as it seems because some social media sites automatically convert the pictures you post to reduce disk usage. We've made the current version of Snow Pods Twitter-ready, but please let us know if you experience any problems with other social media platforms.</p>
-       <p>These preliminaries out of the way... you should share your Snow Pod like you would share any other image. It will be helpful for your followers to know what the pod is about, so tell them. For instance: <i>Hey people, here is a Snow Pod on lightsabers / repetitive strain injury induced by lightsabers / keeping sheep...</i></p>
 
        <br><br>
        <p id="crawlsite"><b>How do I use 'crawl a website'?</b></p>
@@ -116,7 +109,7 @@
 
        <br><br>
        <p id="chat"><b>Where can I chat to the PeARS community?</b></p>
-       <p>Join our <a href="">discord server</a>! We're looking forward to seeing you there!</p>
+       <p>Join our <a href="https://discord.gg/fcxEywrHKu">discord server</a>! We're looking forward to seeing you there!</p>
        </div>
        
        <div class="col-md-6">
