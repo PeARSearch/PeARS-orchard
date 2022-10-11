@@ -6,7 +6,9 @@
 
 PeARS (version Orchard) is a search engine that you can install and run locally from your browser. It allows you to 'index' pages (i.e. to produce a computer-readable representation of the pages' content, essential to the search process), and to search pages that you or your friends have indexed. Search happens entirely on your machine, meaning that no one knows what you are searching for and when.
 
-One feature of PeARS Orchard is the ability to convert a small index into a greyish, unassuming picture, called a 'snow pod'. Snow pods are the mini-weapons of the indexing revolution. They can easily be shared with others by email, on social media, or through any other means, so you can be your very own search engine, for yourself and your friends
+The fruit fly version of Orchard includes a nifty indexing system based on the olfactory system of the actual fruit fly, (*Drosophila melanogaster*)which has already been used in [other computer science applications](https://science.sciencemag.org/content/358/6364/793.abstract) and is recognised for its simplicity and high efficiency.
+
+**We gratefully acknowledge financial support from [NLnet](https://nlnet.nl/) under the [NGI Zero programme](https://nlnet.nl/NGI0/). **
 
 
 ### How does this fit with peer-to-peer PeARS?
@@ -16,11 +18,6 @@ The fully-fledged PeARS system (Peer-to-peer Agent for Reciprocated Search) is s
 
 ## Installation and Setup
 
-NB: we have some instructions for Windows users [on the wiki](https://github.com/PeARSearch/PeARS-orchard/wiki/Windows-installation).
-
-You can setup PeARS-Orchard from source or using docker
-
-#### From Source
 
 ##### 1. Clone this repo on your machine:
 
@@ -51,35 +48,24 @@ Then change into the PeARS-orchard directory:
 
     pip3 install -r requirements.txt
 
-##### 4. Unpack the semantic space
+##### 4. **Optional step** Install further languages
 
-Head over to the app/static/spaces directory and unzip english.dm.zip.
 
-    cd app/static/spaces
+If you want to search and index in several languages at the same time, you can add multilingual support to your English install. To do this:
 
-    unzip english.dm.zip
+    python3 install_language lc
 
-##### 5. Run it!
+where you should replace lc with a language code of your choice. You can check our organization to see which languages are currently available. The models for each language are saved in a repository of the form *PeARS-public-pods-lc* where again, 'lc' stands for a given language code. For instance, check out the French repo here: [https://github.com/PeARSearch/PeARS-public-pods-fr](https://github.com/PeARSearch/PeARS-public-pods-fr).
+
+##### 5. Run your pear!
 
 In the root of the repo, run:
 
     python3 run.py
 
 
-#### Using docker
-
-> Note: Make sure you have [docker installed in your
-system](https://docs.docker.com/get-docker/).
-
-The latest Docker image for PeARS-Orchard can be found on Dockerhub
-under the organization pearsproject. You can run it locally using the
-command:
-
-```
-docker run -d -p 8080:8080 pearsproject/pears-orchard:latest
-```
 
 ## Usage
 
-Now, go to your browser at localhost:8080. You should see the search page for PeARS. You don't have any pages indexed yet, so go to the F.A.Q. page (link at the top of the page) and follow the short instructions to get you going!
+Now, go to your browser at *localhost:8080*. You should see the search page for PeARS. You don't have any pages indexed yet, so go to the F.A.Q. page (link at the top of the page) and follow the short instructions to get you going!
 
