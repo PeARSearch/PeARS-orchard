@@ -1,9 +1,21 @@
+# import logging 
+import logging
+
 # Import flask and template operators
 from flask import Flask, render_template
 from flask_admin import Admin
 
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
+
+
+def configure_logging():
+    # register root logging
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger('werkzeug').setLevel(logging.INFO)
+
+
+configure_logging()
 
 # Define the WSGI application object
 app = Flask(__name__)
@@ -15,10 +27,6 @@ app.config.from_object('config')
 # by modules and controllers
 db = SQLAlchemy(app)
 
-# Sample HTTP error handling
-#@app.errorhandler(404)
-#def not_found(error):
-#    return render_template('404.html'), 404
 
 # Import a module / component using its blueprint handler variable (mod_auth)
 from app.indexer.controllers import indexer as indexer_module
@@ -54,15 +62,43 @@ class UrlsModelView(ModelView):
     column_exclude_list = ['vector','freqs']
     column_searchable_list = ['url', 'title', 'keyword', 'pod']
     column_editable_list = ['keyword']
-    can_edit = False
+    can_edit = True
     page_size = 50
+    form_widget_args = {
+        'vector': {
+            'readonly': True
+        },
+        'freqs': {
+            'readonly': True
+        },
+        'date_created': {
+            'readonly': True
+        },
+        'date_modified': {
+            'readonly': True
+        },
+    }
 
 class PodsModelView(ModelView):
     list_template = 'admin/pears_list.html'
     column_exclude_list = ['DS_vector','word_vector']
     column_searchable_list = ['url', 'name', 'description', 'language']
-    can_edit = False
+    can_edit = True
     page_size = 50
+    form_widget_args = {
+        'DS_vector': {
+            'readonly': True
+        },
+        'word_vector': {
+            'readonly': True
+        },
+        'date_created': {
+            'readonly': True
+        },
+        'date_modified': {
+            'readonly': True
+        },
+    }
 
 admin.add_view(PodsModelView(Pods, db.session))
 admin.add_view(UrlsModelView(Urls, db.session))
