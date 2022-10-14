@@ -1,7 +1,7 @@
 import time
 import requests
 import joblib
-from os.path import dirname, realpath, join, getmtime
+from os.path import dirname, realpath, join, getmtime, exists
 from pathlib import Path
 from app.api.models import installed_languages
 
@@ -21,7 +21,7 @@ def download_pod_centroids(lang):
         local_dir = join(dir_path, "static", "webmap", lang)
         Path(local_dir).mkdir(exist_ok=True, parents=True)
         local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
-        if file_older_than_x_days(local_file, 1): # Don't check for updates all the time
+        if not exists(local_file) or file_older_than_x_days(local_file, 1): # Don't check for updates all the time
             with open (local_file, "wb") as f:
                 f.write(requests.get(URL,allow_redirects=True).content)
         else:
