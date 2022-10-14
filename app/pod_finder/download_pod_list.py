@@ -1,7 +1,7 @@
 import time
 import requests
 import joblib
-from os.path import dirname, realpath, join, getmtime
+from os.path import dirname, realpath, join, getmtime, exists
 from pathlib import Path
 from app.api.models import installed_languages
 
@@ -17,14 +17,14 @@ def file_older_than_x_days(filename, n_days):
 def download_pod_centroids(lang):
     print("Running update pod list for ", lang)
     URL = "https://github.com/PeARSearch/PeARS-public-pods-"+lang+"/blob/main/"+lang+"/"+lang+"wiki.summary.fh?raw=true"
-    try:
-        local_dir = join(dir_path, "static", "webmap", lang)
-        Path(local_dir).mkdir(exist_ok=True, parents=True)
-        local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
-        if file_older_than_x_days(local_file, 1): # Don't check for updates all the time
-            with open (local_file, "wb") as f:
-                f.write(requests.get(URL,allow_redirects=True).content)
-        else:
-            print("Using latest version of pod list.")
-    except Exception:
-        print("Request failed when trying to index", URL, "...")
+    #try:
+    local_dir = join(dir_path, "static", "webmap", lang)
+    Path(local_dir).mkdir(exist_ok=True, parents=True)
+    local_file = join(dir_path, "static", "webmap", lang, lang + "wiki.summary.fh")
+    if not exists(local_file) or file_older_than_x_days(local_file, 1): # Don't check for updates all the time
+        with open (local_file, "wb") as f:
+            f.write(requests.get(URL,allow_redirects=True).content)
+    else:
+        print("Using latest version of pod list.")
+    #except Exception:
+    #    print("Request failed when trying to index", URL, "...")
