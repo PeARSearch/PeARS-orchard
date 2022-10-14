@@ -123,7 +123,7 @@ def update_official_pod_list(lang):
             db.session.commit()
         p = Pods.query.filter(Pods.url == url).first()
         p.name = pod_ids[i]
-        p.description = ','.join(pod_keywords[i])
+        p.description = pod_keywords[i]
         p.language = lang if lang != "en" else "simple"
         p.DS_vector = convert_to_string(pod_matrix[i])
         #print("PD",p.DS_vector)
