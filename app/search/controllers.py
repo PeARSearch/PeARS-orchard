@@ -28,7 +28,7 @@ def index():
          go to the FAQ (link at the top of the page)."
     query = request.args.get('q')
     if not query:
-        LOG.info("No Querry")
+        LOG.info("No query")
         return render_template(
             "search/index.html",
             internal_message=internal_message)

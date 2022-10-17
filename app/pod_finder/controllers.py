@@ -153,6 +153,7 @@ def progress_pods():
             print("Request failed when trying to index", pod_url, "...")
 
         m, titles = joblib.load(local_file)
+        pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
         print(m.shape,len(titles),titles[0])
         for i in range(len(titles)):
             title = titles[i]
@@ -168,6 +169,7 @@ def progress_pods():
                     vector=vector,
                     cc=True if 'wikipedia.org' in url else False)
                 urls.append(u)
+        pod_entry.registered = True
         db.session.commit()
     def generate():
         if len(urls) == 0:
