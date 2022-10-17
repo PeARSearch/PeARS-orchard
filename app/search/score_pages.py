@@ -44,7 +44,7 @@ def score_pods(query, query_dist, lang):
     else:
         best_pods = []
         for k in sorted(pod_scores, key=pod_scores.get, reverse=True):
-            if len(best_pods) < 2: 
+            if len(best_pods) < 5: 
                 print("Appending pod",k)
                 best_pods.append(k)
             else:
@@ -57,14 +57,9 @@ def score_docs(query, query_dist, pod):
     document_scores = {}  # Document scores
     DS_scores, URL_scores, title_scores = score(query, query_dist, pod)
     for url in list(DS_scores.keys()):
-        #print(url,DS_scores[url], title_scores[url])
-        document_scores[
-            url
-        ] = DS_scores[
-            url] + title_scores[url]
-        if math.isnan(
-                document_scores[url]
-        ):  # Check for potential NaN -- messes up with sorting in bestURLs.
+        print(url,DS_scores[url], title_scores[url])
+        document_scores[url] = DS_scores[url] + title_scores[url]
+        if math.isnan(document_scores[url]):  # Check for potential NaN -- messes up with sorting in bestURLs.
             document_scores[url] = 0
     return document_scores
 
