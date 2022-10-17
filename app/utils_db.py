@@ -91,9 +91,7 @@ def pod_from_json(pod, url):
 
 
 def pod_from_file(name, lang):
-    url = "http://localhost:8080/api/pods/" + name.replace(
-        ' ', '+'
-    )
+    url = "http://localhost:8080/api/pods/" + name.replace(' ', '+')
     # TODO: pods can't be named any old thing,
     # if they're going to be in localhost URLs
     if not db.session.query(Pods).filter_by(url=url).all():

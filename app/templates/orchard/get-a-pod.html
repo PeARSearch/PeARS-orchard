@@ -43,24 +43,17 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-6 text-center v-center">
-        <br><br>
-        <img src="/static/pods/{{png_location}}" width="400px" style="border:1px solid #000; padding:1px"/>
-    </div>
     <div class="col-md-6">
         <br><br>
-        <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:400px">
+        <div  style="border: 1px solid #ccc; border-radius:10px; padding:15px; height:240px">
         <p><b>You've just picked a PeARS Pod on the topic: <span style="color:blue">{{query}}</span>!</b></p>
-        <p>Your index is available as one pod file at the following location on your machine:<br> <i>{{csv_location}}</i>.</p>
-
-        <br>
-        <p>Alternatively, you can also share the Snow Pod on the left with your friends. The picture is located at:<br>
-        <i>{{csv_location[:-3]}}png</i>.</p>
-
-        <p>(You can also right-click on the picture and select 'Save image as...' if you'd like to save it to another location.)</p>
-
-        <p>Now, share your pod! Send the csv to your friends, post the pictures on social media, send them to your Grandma on a USB drive... Just share them.</p>
+        <p>Your index is available as one pod file at the following location on your machine:<br> <i>{{location}}</i>.</p>
+        <p>Now, share your pod! Send the file to your friends, send it to your Grandma on a USB drive... Just share! :)</p>
         </div>
+    </div>
+    <div class="col-md-6 v-bottom">
+        <br><br>
+        <img src="/static/pears-slanted.png" width="200px"/>
     </div>
   </div> <!-- /row -->
 </div> <!-- /container full -->

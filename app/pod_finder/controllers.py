@@ -84,11 +84,7 @@ def subscribe_from_file():
     print("Running progress for subscribe from file")
     file = request.files['file_source']
     filename = secure_filename(file.filename)
-    if filename[-3:] == "csv":
-        file.save(join(dir_path, "app", "static", "pods", "urls_from_pod.csv"))
-    if filename[-3:] == "png":
-        file.save(join(dir_path, "app", "static", "pods", "urls_from_pod.png"))
-        index_pod_file.convert_img_to_csv()
+    file.save(join(dir_path, "app", "static", "pods", "urls_from_pod.fh"))
     return render_template('pod_finder/progress_file.html')
 
 
@@ -96,41 +92,41 @@ def subscribe_from_file():
 def progress_file():
     def generate():
         c = 0
-        urls = list()
+        new_urls = list()
         pod_name = ""
-        print(len(urls))
-        f = open(
-            join(dir_path, "app", "static", "pods", "urls_from_pod.csv"),
-            'r',
-            encoding="utf-8")
-        for l in f:
-            if "#Pod name" in l:
-                pod_name = l.rstrip('\n').replace("#Pod name:", "")
-            fields = l.rstrip('\n').split(',')
-            if len(fields) == 7:
-                url, title, snippet, vector, freqs, cc = index_pod_file.parse_line(fields)
-                if not db.session.query(Urls).filter_by(url=url).all():
-                    u = Urls(
-                        url=url,
-                        title=title,
-                        snippet=snippet,
-                        pod=pod_name,
-                        vector=vector,
-                        freqs=freqs,
-                        cc=cc)
-                    urls.append(u)
-        f.close()
-        if len(urls) == 0:
+        hfile = join(dir_path, "app", "static", "pods", "urls_from_pod.fh")
+        pod_name, lang, m, titles, urls = joblib.load(hfile)
+        pod_entry = db.session.query(Pods).filter_by(name=pod_name).first()
+        for i in range(len(titles)):
+            title = titles[i]
+            url = urls[i]
+            vector = convert_to_string(m[i])
+            if not db.session.query(Urls).filter_by(url=url).all():
+                u = Urls(
+                    url=url,
+                    title=title,
+                    snippet=title, #FIX
+                    pod=pod_name,
+                    vector=vector,
+                    cc=True if 'wikipedia.org' in url else False)
+                new_urls.append(u)
+        db.session.commit()
+        
+        if len(new_urls) == 0:
             print("All URLs already known.")
             yield "data:" + "100" + "\n\n"
         else:
-            for u in urls:
-                db.session.add(u)
-                db.session.commit()
-                c += 1
+            c = 0
+            for u in new_urls:
+                #print("Adding",u.url,"to DB")
+                try:
+                    db.session.add(u)
+                    db.session.commit()
+                    c += 1
+                except:
+                    print("Failed to add",u.url,"to DB...")
                 yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
-                pod_from_file(pod_name)
-
+                pod_from_file(pod_name, lang)        
     return Response(generate(), mimetype='text/event-stream')
 
 
@@ -158,7 +154,6 @@ def progress_pods():
 
         m, titles = joblib.load(local_file)
         print(m.shape,len(titles),titles[0])
-        pod_entry = db.session.query(Pods).filter_by(url=pod_url).first()
         for i in range(len(titles)):
             title = titles[i]
             url = 'https://'+lang+'.wikipedia.org/wiki/'+title.replace(' ','_') #Hack, URLs should of course be provided
@@ -173,7 +168,6 @@ def progress_pods():
                     vector=vector,
                     cc=True if 'wikipedia.org' in url else False)
                 urls.append(u)
-        pod_entry.registered = True
         db.session.commit()
     def generate():
         if len(urls) == 0:
@@ -190,7 +184,6 @@ def progress_pods():
                 except:
                     print("Failed to add",u.url,"to DB...")
                 yield "data:" + str(int(c / len(urls) * 100)) + "\n\n"
-                
 
     return Response(generate(), mimetype='text/event-stream')
 

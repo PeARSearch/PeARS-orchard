@@ -62,7 +62,7 @@
             <br>
             <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:170px">
             <p><b>Record pod from file</b></p>
-            <p>A friend sent you their pod? Add it to your pear! The file you input should either be in .csv or .png format.</p>
+            <p>A friend sent you their pod? Add it to your pear! The file you input should be in .fh format.</p>
             <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_file')}}">
                 <div class="input-group">
                      <input id="file_source" accept=".csv,image/x-png" oninput="invert()" name="file_source" type="file" class="btn btn-default btn-s">
@@ -79,12 +79,13 @@
             </div>
             </div>
 
-            <div class="col-md-6" style="padding-left:50px;">
+            <div class="col-md-6" style="padding-left:50px">
             <br><br>
+            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:400px; overflow-y:scroll">
             <p><b>Your pods</b></p>
             <p>Below, you will find the pods that your are currently subscribed to. Click on 'unsubscribe' to delete all record of a pod on your pear.</p><br>
             <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.unsubscribe')}}">
-                <div class="input-group">
+                <div class="input-group" style="height: 100px; overflow: auto;">
                     {% for pod in pods %}
                     <div class="form-check">
 		        <label class="toggle">
@@ -95,6 +96,7 @@
                     <input id="submit_button" type="submit" class="btn btn-danger" value="Unsubscribe">
                 </div>
             </form>
+            </div>
             </div>
         </div>
 

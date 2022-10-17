@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template
 from app.api.models import Urls
 from app import db
-from app.orchard.mk_urls_file import make_csv_pod, make_png_pod, del_pod
+from app.orchard.mk_urls_file import make_fruitfly_pod, del_pod
 
 # Define the blueprint:
 orchard = Blueprint('orchard', __name__, url_prefix='/my-orchard')
@@ -30,12 +30,10 @@ def index():
 @orchard.route('/get-a-pod', methods=['POST', 'GET'])
 def get_a_pod():
     query = request.args.get('pod')
-    csv_location = make_csv_pod(query)
-    png_location = make_png_pod(query)
-    del_pod(query)
-    print(png_location)
+    hfile = make_fruitfly_pod(query)
+    #del_pod(query)
+    print(hfile)
     return render_template(
         'orchard/get-a-pod.html',
         query=query,
-        csv_location=csv_location,
-        png_location=png_location)
+        location=hfile)
