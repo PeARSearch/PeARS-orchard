@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 beautifulsoup4==4.9.3
 bs4==0.0.1
 certifi==2021.5.30

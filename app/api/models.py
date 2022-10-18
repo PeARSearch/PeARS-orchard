@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from app import db
 from app.utils import convert_to_array
 import numpy as np

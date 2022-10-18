@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from app.api.models import Urls
 from app.utils_db import get_db_url_vector
 from app.utils import convert_to_array, cosine_similarity

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot <aurelie.herbelot@unitn.it>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+
 # -*- mode: python -*- 
 # Run with pyinstaller run.spec
 # Add config.py to dist/pears directory
