@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 '''Spider code, heavily influenced by http://www.netinstructions.com/how-to-make-a-web-crawler-in-under-50-lines-of-python-code/.'''
 
 from html.parser import HTMLParser  

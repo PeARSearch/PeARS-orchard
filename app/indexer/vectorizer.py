@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from sklearn.feature_extraction.text import CountVectorizer
 from app.indexer.fly_utils import read_vocab, read_n_encode_dataset
 from sklearn import preprocessing
