@@ -4,7 +4,7 @@ import numpy as np
 import configparser
 import joblib
 from glob import glob
-from os.path import isdir
+from os.path import isdir, exists
 import sentencepiece as spm
 
 sp = spm.SentencePieceProcessor()
@@ -45,6 +45,13 @@ for lang in installed_languages:
 flies = {}
 for lang in installed_languages:
     flies[lang] = joblib.load(f'./app/api/models/{lang}/fly.m')
+
+
+# Load query expanders
+expanders = {}
+for lang in installed_languages:
+    expanders[lang] = joblib.load(f'./app/api/models/{lang}/{lang}wiki.expansion.m')
+    print(f'./app/api/models/{lang}/{lang}wiki.expansion.m')
 
 
 # Define a base model for other database tables to inherit

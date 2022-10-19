@@ -19,7 +19,7 @@ Path(local_dir).mkdir(exist_ok=True, parents=True)
 
 repo_path = 'https://github.com/PeARSearch/PeARS-public-pods-'+lang+'/blob/main/models/'
 
-paths = ['fly.m', lang+'.hyperparameters.cfg', lang+'wiki-latest-pages-articles.train.hacked.umap', lang+'wiki.model', lang+'wiki.vocab']
+paths = ['fly.m', lang+'.hyperparameters.cfg', lang+'wiki-latest-pages-articles.train.hacked.umap', lang+'wiki.expansion.m', lang+'wiki.model', lang+'wiki.vocab']
 
 for p in paths:
     path = join(repo_path, p+'?raw=true')

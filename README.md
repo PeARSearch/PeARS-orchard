@@ -36,17 +36,21 @@ If you haven't yet set up virtualenv on your machine, please install it via pip:
 
     sudo pip3 install virtualenv
 
-Then run:
-
-    virtualenv -p python3 env && source env/bin/activate
-
 Then change into the PeARS-orchard directory:
 
     cd PeARS-orchard
 
+Then run:
+
+    virtualenv -p python3 env && source env/bin/activate
+
+
 ##### 3. Install the build dependencies:
 
+From the PeARS-orchard directory, run:
+
     pip3 install -r requirements.txt
+
 
 ##### 4. **Optional step** Install further languages
 
