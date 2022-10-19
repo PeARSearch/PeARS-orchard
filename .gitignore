@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: CC0-1.0
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

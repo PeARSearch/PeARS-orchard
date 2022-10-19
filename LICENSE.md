@@ -1,4 +1,10 @@
-                    GNU AFFERO GENERAL PUBLIC LICENSE
+<!--
+SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>

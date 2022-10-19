@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 '''Index URLs from a csv or png sent by a friend.'''
 from PIL import Image
 from os.path import dirname, join, realpath

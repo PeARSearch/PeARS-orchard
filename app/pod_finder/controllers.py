@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 # Import flask dependencies
 from flask import Blueprint, request, render_template, Response
 from werkzeug.utils import secure_filename

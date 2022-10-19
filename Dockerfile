@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 FROM python:3.8-slim-buster
 
 RUN apt-get update && apt install -y zip
