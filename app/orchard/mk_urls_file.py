@@ -21,7 +21,7 @@ def make_fruitfly_pod(keyword):
     titles = []
     urls = []
     m = []
-    for url in db.session.query(Urls).filter_by(keyword=keyword).all():
+    for url in db.session.query(Urls).filter_by(pod=keyword).all():
         m.append(np.array([int (b)for b in url.vector.split()]))
         titles.append(url.title)
         urls.append(url.url)

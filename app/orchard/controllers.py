@@ -15,14 +15,14 @@ orchard = Blueprint('orchard', __name__, url_prefix='/my-orchard')
 @orchard.route('/')
 @orchard.route('/index', methods=['GET', 'POST'])
 def index():
-    query = db.session.query(Urls.keyword.distinct().label("keyword"))
-    keywords = [row.keyword for row in query.all()]
+    query = db.session.query(Urls.pod.distinct().label("pod"))
+    keywords = [row.pod for row in query.all()]
     print(keywords)
     pears = []
     for keyword in keywords:
-        if keyword:
+        if keyword and '.fh' not in keyword:
             pear_urls = []
-            for u in db.session.query(Urls).filter_by(keyword=keyword).all():
+            for u in db.session.query(Urls).filter_by(pod=keyword).all():
                 pear_urls.append(u)
             pear = [keyword, len(pear_urls)]
             pears.append(pear)
