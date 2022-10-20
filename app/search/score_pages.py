@@ -9,7 +9,7 @@ import math
 from app.api.models import Urls, Pods
 from app import db
 from app.utils_db import (
-    get_db_url_snippet, get_db_url_title, get_db_url_cc, get_db_url_pod)
+    get_db_url_snippet, get_db_url_title, get_db_url_cc, get_db_url_pod, get_db_url_notes)
 
 from .overlap_calculation import score_url_overlap, generic_overlap
 from app.search import term_cosine
@@ -43,7 +43,7 @@ def score_pods(query, query_dist, lang):
     print("POD SCORES:",pod_scores)
     '''If all scores are rubbish, search entire pod collection
     (we're desperate!)'''
-    if score_sum < 0.1: #FIX FOR FRUIT FLY VERSION
+    if score_sum < 0.9: #FIX FOR FRUIT FLY VERSION
         return list(pod_scores.keys())
     else:
         best_pods = []
@@ -104,7 +104,8 @@ def output(best_urls):
                 u,
                 get_db_url_title(u),
                 get_db_url_snippet(u),
-                get_db_url_cc(u)
+                get_db_url_cc(u),
+                get_db_url_notes(u)
             ])
             pod = get_db_url_pod(u)
             if pod not in pods:

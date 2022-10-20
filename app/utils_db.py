@@ -32,6 +32,11 @@ def get_db_url_cc(url):
     return url_cc
 
 
+def get_db_url_notes(url):
+    url_notes = Urls.query.filter(Urls.url == url).first().notes
+    return url_notes
+
+
 def get_db_pod_name(url):
     pod_name = Pods.query.filter(Pods.url == url).first().name
     return pod_name

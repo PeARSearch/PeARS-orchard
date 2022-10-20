@@ -81,7 +81,8 @@ SPDX-License-Identifier: AGPL-3.0-only
           <h3><a href="{{result[0]}}">{{result[1]}}</a>
           {% if result[3] == True %}<img src="{{ url_for('static', filename='cc.png')}}" width='24px'/>{% endif %} </h3>
           {{result[2]}} ... <!-- <a href="{{result[3]}}">Cache</a>--> <br>
-          <a href="{{result[0]}}">{{result[0]}}</a>
+	  <a href="{{result[0]}}">{{result[0]}}</a>
+	  {% if result[4] != None %}<br><img src="{{ url_for('static', filename='annot.png')}}" width='40px'/>{{result[4]}}{% endif %} <br>
           <hr/>
         </div>
       </div>
