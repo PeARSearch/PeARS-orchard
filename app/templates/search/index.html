@@ -1,78 +1,35 @@
 <!--
-SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
 
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
-  <meta charset="utf-8">
-  <title>PeARS Search</title>
-  <meta name="generator" content="Bootply"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-default navbar-expand-sm">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <a class="navbar-brand" href="#">Brand</a> -->
-      <a href="{{ url_for('search.index')}}" class="navbar-left"></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{{url_for('search.index')}}">Search</a></li>
-        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
-        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
-        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
-        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav>
-
-<div class="container-full">
-
+{% extends "base/base.html" %}
+{% block body %}
   <div class="row">
 
-    <div class="col-lg-12 text-center v-center">
+    <div class="col-lg-12 text-center mt-5">
 
       <br><br><br>
       <a href="{{ url_for('.index')}}"><img src="{{ url_for('static', filename='pears-logo-small.png')}}"></a>
       <br/><br/><br/>
       <form class="col-lg-12" action="{{url_for('.index')}}">
-        <div class="input-group" style="width:500px;text-align:center;margin:0 auto;">
-          <input class="form-control input-lg" title="Enter your Search Query." placeholder="Enter your Search Query" type="text" name='q'>
-          <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="submit">Search</button></span>
+        <div class="input-group group-lg" style="width:500px;text-align:center;margin:0 auto;">
+          <input class="form-control" title="Enter your Search Query." placeholder="Enter your Search Query" type="search" name='q' required>
+          <span class="input-group-btn"><button class="btn btn-lg btn-outline-success" type="submit">Search</button></span>
         </div>
       </form>
     </div>
-    <br><br><br>
-    <div class="col-lg-12 text-center">
-    {% if internal_message %}
-    <b>{{internal_message}}</b>
-    {% endif %}
+  </div> 
+  {% if internal_message %}
+  <div class="row">
+    <div class="col-lg-12 text-center mt-5">
+      <div class="alert alert-info alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        {{internal_message}}
+      </div>
     </div>
-  </div> <!-- /row -->
-</div> <!-- /container full -->
-<!-- script references -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-</body>
-</html>
+  </div>
+      {% endif %}
+
+{% endblock %}
