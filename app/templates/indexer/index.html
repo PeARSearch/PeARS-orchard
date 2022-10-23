@@ -1,159 +1,159 @@
 <!--
-SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
 
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+{% extends "base/base.html" %}
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-success text-center">
+        <b>{{num_entries}} pages recorded</b>
+      </div>
+    </div>
+  </div>
 
-        <title>PeARS indexer</title>
-    </head>
+  <div class="row p-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center"><b>Crawl a website</b></div>
+        <div class="card-body">
+          <p>This option lets you input the URL of your favourite website and index all pages on that website. Warning:
+            indexing may take time depending on the size of the website. We recommend not to index very large websites
+            that way.</p>
 
-    <body>
-    <nav class="navbar navbar-default">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <a class="navbar-brand" href="#">Brand</a> -->
-      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
+          <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+            action="{{url_for('indexer.from_crawl')}}">
+            <div class="input-group p-2">
+              <span class="input-group-text">Website URL</span>
+              <input required type="text" class="form-control" placeholder="Enter the URL of the website"
+                name='site_url' id='site_url'>
+            </div>
+            <div class="input-group p-2">
+              <span class="input-group-text">Keyword</span>
+              <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text"
+                name='site_keyword' id='site_keyword' required>
+            </div>
+        </div>
+        <div class="card-footer clearfix">
+          <span class="input-group-btn float-end">
+            <input id="submit_button" type="submit" class="btn btn-primary" value="Index website">
+          </span>
+        </div>
+        </form>
+      </div>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{{url_for('search.index')}}">Search</a></li>
-        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
-        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
-        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
-        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav>
+    <div class="col-md-6 pt-4">
+      <div class="card">
+        <div class="card-header text-center"><b>Index a single URL</b></div>
+        <div class="card-body">
+          <p>Think you should index your favourite webpage? Enter its URL here! If you like, you can also enter a
+            keyword
+            describing the page (essential if you're planning on building a pod).
+          </p>
 
-    <div class="container">
-        <b>{{num_entries}} pages recorded</b>
-        <br><br>
-
-        <div  class="row">
-
-            <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:350px">
-            <p><b>Crawl a website</b></p>
-            <p>This option lets you input the URL of your favourite website and index all pages on that website. Warning: indexing may take time depending on the size of the website. We recommend not to index very large websites that way.</p>
-
-            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_crawl')}}">
-                <div class="form-group">
-                     <label for="site_url">Website URL:</label>
-                     <input required class="form-control input-s" title="Enter the URL of the website." placeholder="Enter the URL of the website" type="url" name='site_url' id='site_url'>
-                </div>
-                <div class="form-group">
-                     <label for="site_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='site_keyword' id='site_keyword' required>
-                </div>
-                <span class="input-group-btn">
-                <input id="submit_button" type="submit" class="btn btn-primary" value="Index website">
-                </span>
-            </form>
+          <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+            action="{{url_for('indexer.from_url')}}">
+            <div class="input-group p-2">
+              <span class="input-group-text">URL</span>
+              <input required type="text" class="form-control" placeholder="Enter a URL" name='url' id='url'>
             </div>
-            </div>
-
-            <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:350px">
-            <p><b>Index a single URL</b></p>
-            <p>Think you should index your favourite webpage? Enter its URL here! If you like, you can also enter a keyword describing the page (essential if you're planning on building a pod).</p><br>
-
-            <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_url')}}">
-                <div class="form-group">
-                     <label for="url">Url:</label>
-                     <input class="form-control input-s" title="Enter a URL." placeholder="Enter a URL" type="url" name='url' id='url' required>
-                </div>
-                <div class="form-group">
-                     <label for="url_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='url_keyword' id='url_keyword' required>
-                </div>
-                <span class="input-group-btn">
-                <input id="submit_button" type="submit" class="btn btn-primary" value="Index URL">
-                </span>
-            </form>
-            </div>
+            <div class="input-group p-2">
+              <span class="input-group-text">Keyword</span>
+              <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text"
+                name='url_keyword' id='url_keyword' required>
             </div>
         </div>
-
-            <br>
-
-        <div  class="row">
-            <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
-            <p><b>Index from file</b></p>
-            <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords. Please make sure to follow the right format, <a href="{{url_for('pages.return_faq', _anchor='indexfile')}}">as explained here</a>.</p>
-
-            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_file')}}">
-                <div class="input-group">
-                     <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" accept="text/plain" class="btn btn-default btn-s">
-                     {% with messages = get_flashed_messages(category_filter=["text"]) %}
-	                     {% if messages %}
-	                       {% for message in messages %}
-                            {{message}}
-                         {% endfor %}
-	                     {% endif %}
-	                   {% endwith %}
-                </div><br>
-                <br><br><br>
-                <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-primary" value="Index file">
-                </span>
-            </form>
-            </div>
-            </div>
-
-            <div class="col-md-6">
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:335px">
-            <p><b>Index from bookmarks</b></p>
-            <p>Index from a bookmark export file! Just indicate your bookmarks.html location, and the tag you would like to index.</p><br>
-
-            <form  method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('indexer.from_bookmarks')}}">
-                <div class="input-group">
-                     <label for="file_source">File source:</label>
-                     <input id="file_source" name="file_source" type="file" class="btn btn-default btn-s" accept="text/html">
-                     {% with messages = get_flashed_messages(category_filter=["html"]) %}
-	                     {% if messages %}
-	                       {% for message in messages %}
-                            {{message}}
-                         {% endfor %}
-	                     {% endif %}
-	                   {% endwith %}
-                </div><br>
-                <div class="form-group">
-                     <label for="bookmark_keyword">Keyword:</label>
-                     <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text" name='bookmark_keyword' id='bookmark_keyword' required>
-                </div>
-                <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-primary" value="Index bookmarks">
-                </span>
-            </form>
-            </div>
-            </div>
-
+        <div class="card-footer clearfix">
+          <span class="input-group-btn float-end">
+            <input id="submit_button" type="submit" class="btn btn-primary" value="Index URL">
+          </span>
         </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-    </div><!-- /.container -->
-    </body>
-</html>
+  <div class="row p-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center"><b>Index from file</b></div>
+        <div class="card-body">
+          <p>This option requires a .txt file containing the URLs you would like to index, with associated keywords.
+            Please make sure to follow the right format, <a
+              href="{{url_for('pages.return_faq', _anchor='indexfile')}}">as
+              explained here</a></p>
+
+          <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+            action="{{url_for('indexer.from_file')}}">
+            <div class="input-group p-2">
+              <input required type="file" class="form-control input-s" accept="text/plain" name='file_source'
+                id='file_source'>
+              {% with messages = get_flashed_messages(category_filter=["text"]) %}
+              {% if messages %}
+              {% for message in messages %}
+              {{message}}
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+            </div>
+            <div class="input-group p-2">
+              <span class="input-group-text">Keyword</span>
+              <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text"
+                name='file_keyword' id='file_keyword' required>
+            </div>
+        </div>
+        <div class="card-footer clearfix">
+          <span class="input-group-btn float-end">
+            <input id="submit_button" type="submit" class="btn btn-primary" value="Index file">
+          </span>
+        </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6 pt-4">
+      <div class="card">
+        <div class="card-header text-center"><b>Index from bookmarks</b></div>
+        <div class="card-body">
+          <p>Index from a bookmark export file! Just indicate your bookmarks.html location, and the tag you would like
+            to
+            index.</p>
+
+          <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+            action="{{url_for('indexer.from_bookmarks')}}">
+            <div class="input-group p-2">
+              <input required type="file" class="form-control input-s" accept="text/html" name='file_source'
+                id='bookmark_source'>
+              {% with messages = get_flashed_messages(category_filter=["html"]) %}
+              {% if messages %}
+              {% for message in messages %}
+              {{message}}
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+            </div>
+            <div class="input-group p-2">
+              <span class="input-group-text">Keyword</span>
+              <input class="form-control input-s" title="Enter a keyword." placeholder="Enter a keyword" type="text"
+                name='bookmark_keyword' id='bookmark_keyword' required>
+            </div>
+        </div>
+        <div class="card-footer clearfix">
+          <span class="input-group-btn float-end">
+            <input id="submit_button" type="submit" class="btn btn-primary" value="Index bookmarks">
+          </span>
+        </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+</div><!-- /.container -->
+{% endblock %}
