@@ -1,66 +1,25 @@
 <!--
-SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
 
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
-  <meta charset="utf-8">
-  <title>PeARS Search</title>
-  <meta name="generator" content="Bootply"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-</head>
-<body style="background-image: url('/static/cubic-orchard.jpg'); background-color:#fff; background-size:cover; background-repeat:no-repeat; background-position:center center; height:100%; background-attachment: fixed;">
-    <nav class="navbar navbar-default">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <a class="navbar-brand" href="#">Brand</a> -->
-      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{{url_for('search.index')}}">Search</a></li>
-        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
-        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
-        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
-        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav>
-
+{% extends "base/base.html" %}
+{% block body %}
 <div class="container-full">
   <br><br>
   <div class="row">
-  <div class="col-md-1"></div>
-  <div class="col-md-10" style="padding-left: 20px; display:flex;  flex-direction: row;  flex-wrap: wrap;  margin-bottom: 45px;">
-    {% for p in pears %}
-        <div style="margin-right:20px; width:130px; height:130px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png'); flex-shrink: 0;  position: relative;">
-        <br><p style="margin-left:10px"><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}" style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b></p>
-        </div>
-    {% endfor %}
-  </div> <!-- /row -->
-</div> <!-- /container full -->
-<!-- script references -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-</body>
-</html>
+    <div class="col-md-10 p-3"
+      style="padding-left: 20px; display:flex;  flex-direction: row;  flex-wrap: wrap;  margin-bottom: 45px;">
+      {% for p in pears %}
+      <div
+        style="margin-right:20px; width:130px; height:130px; margin-bottom:20px; background-image:url('/static/example_snow_pod.png'); flex-shrink: 0;  position: relative;">
+        <br>
+        <p style="margin-left:10px"><b><a href="{{url_for('orchard.get_a_pod')}}?pod={{p[0]}}"
+              style="color:#000">{{p[0]}}<br>{{p[1]}}</a></b></p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

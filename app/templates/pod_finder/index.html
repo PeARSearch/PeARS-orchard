@@ -1,111 +1,98 @@
 <!--
-SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
 
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
+{% extends "base/base.html" %}
+{% block body %}
 
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+<div class="container">
+  <div class="row p-3">
+    <div class="col-md-6">
+      <div class="row p-3">
+        <div class="col-md-10">
 
-        <title>PeARS pod finder</title>
-    </head>
+          <div class="card">
+            <div class="card-header text-center"><b>Find a pod</b></div>
+            <div class="card-body">
+              <p>Looking for pods that may interest you? Enter some keywords below and your pear will try to find
+                appropriate
+                pods for
+                you, from 'official' online pods.</p>
 
-    <body>
-    <nav class="navbar navbar-default">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <a class="navbar-brand" href="#">Brand</a> -->
-      <a href="{{ url_for('search.index')}}" class="navbar-left"><img src="{{ url_for('static', filename='pears-logo-small.png')}}" height="50px"></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{{url_for('search.index')}}">Search</a></li>
-        <li><a href="{{url_for('indexer.index')}}">Indexer</a></li>
-        <li><a href="{{url_for('pod_finder.index')}}">Pod management</a></li>
-        <li><a href="{{url_for('orchard.index')}}">My orchard</a></li>
-        <li><a href="{{url_for('admin.index')}}">DB admin</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('pages.return_faq')}}">F.A.Q.</a></li>
-        <li><a href="{{url_for('pages.return_acknowledgements')}}">Acknowledgments</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav>
-
-    <div class="container">
-
-        <div  class="row">
-            <div class="col-md-6" style="padding-right:20px; border-right: 1px solid #ccc;">
-            <br><br>
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:200px">
-            <p><b>Find a pod</b></p>
-            <p>Looking for pods that may interest you? Enter some keywords below and your pear will try to find appropriate pods for you, from 'official' online pods.</p><br>
-            <form class="form-inline" accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.find_a_pod')}}">
-                <div class="input-group">
-                     <input class="form-control input-s" title="Enter some keywords" placeholder="Enter some keywords (optional)" type="text" name="search-pod" id="search-pod">
-                     <span class="input-group-btn">
-                     <input id="submit_button" type="submit" class="btn btn-primary" value="Find a pod" style="width:100px !important">
-                     </span>
+              <form accept-charset="UTF-8" enctype="multipart/form-data"
+                action="{{url_for('pod_finder.find_a_pod')}}">
+                <div class="input-group p-2">
+                  <span class="input-group-text">Keyword</span>
+                  <input type="text" class="form-control" placeholder="Enter some keywords" name='search-pod'
+                    id='search-pod'>
                 </div>
+            </div>
+            <div class="card-footer clearfix">
+              <span class="input-group-btn float-end">
+                <input id="submit_button" type="submit" class="btn btn-primary" value="Find a pod">
+              </span>
+            </div>
             </form>
-            </div>
-            <br>
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:170px">
-            <p><b>Record pod from file</b></p>
-            <p>A friend sent you their pod? Add it to your pear! The file you input should be in .fh format.</p>
-            <form method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.subscribe_from_file')}}">
-                <div class="input-group">
-                     <input id="file_source" accept=".csv,image/x-png" oninput="invert()" name="file_source" type="file" class="btn btn-default btn-s">
-                     <span class="input-group-btn">
-                     <input id="submit_button_input" disabled="true" type="submit" class="btn btn-primary" value="Read file" style="width:100px !important">
-                     <script>
-                       function invert(){
-                         document.getElementById("submit_button_input").disabled=false
-                       }
-                     </script>
-                     </span>
-                </div>
-            </form>
-            </div>
-            </div>
-
-            <div class="col-md-6" style="padding-left:50px">
-            <br><br>
-            <div  style="border: 1px solid #ccc; border-radius:10px; padding:10px; height:400px; overflow-y:scroll">
-            <p><b>Your pods</b></p>
-            <p>Below, you will find the pods that your are currently subscribed to. Click on 'unsubscribe' to delete all record of a pod on your pear.</p><br>
-            <form class="form-inline" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data" action="{{url_for('pod_finder.unsubscribe')}}">
-                <div class="input-group" style="height: 100px; overflow: auto;">
-                    {% for pod in pods %}
-                    <div class="form-check">
-		        <label class="toggle">
-		        <input type="checkbox" name="pods" id="{{pod[0]}}" value="{{pod[0]}}"> <span class="label-text">{{pod[0]}}, '{{pod[1]}}'</span>
-		        </label>
-		    </div>
-                    {% endfor %}<br>
-                    <input id="submit_button" type="submit" class="btn btn-danger" value="Unsubscribe">
-                </div>
-            </form>
-            </div>
-            </div>
+          </div>
         </div>
 
-    </div><!-- /.container -->
-    </body>
-</html>
+        <div class="col-md-10 p-3">
+          <div class="card">
+            <div class="card-header text-center"><b>Record pod from file</b></div>
+            <div class="card-body">
+              <p>A friend sent you their pod? Add it to your pear! The file you input should be in .fh format.</p>
+        
+              <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+                action="{{url_for('pod_finder.subscribe_from_file')}}">
+                <div class="input-group p-2">
+                  <input required type="file" class="form-control input-s" accept=".csv,image/x-png,.fh" name='file_source'
+                    id='file_source'>
+                </div>
+            </div>
+            <div class="card-footer clearfix">
+              <span class="input-group-btn float-end">
+                <input id="submit_button" type="submit" class="btn btn-primary" value="Read file">
+              </span>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5" style="padding-left:50px">
+      <div class="card">
+        <div class="card-header text-center"><b>Your pods</b></div>
+        <div class="card-body">
+            <p>Below, you will find the pods that your are currently subscribed to. Click on 'unsubscribe' to delete all
+            record of a pod on your pear.</p>
+
+            <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data"
+                action="{{url_for('pod_finder.unsubscribe')}}">
+                <div class="input-group p-2">
+                    {% for pod in pods %}
+                    <div class="form-check">
+                        <label class="toggle">
+                            <input type="checkbox" name="pods" id="{{pod[0]}}" value="{{pod[0]}}"> <span class="label-text">{{pod[0]}},
+                                '{{pod[1]}}'</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="card-footer clearfix">
+            <span class="input-group-btn float-end">
+                <input id="submit_button" type="submit" class="btn btn-primary" value="Unsubscribe">
+            </span>
+        </div>
+        </form>
+    </div>
+    </div>
+  </div>
+
+  
+</div>
+
+</div><!-- /.container -->
+{% endblock %}
