@@ -5,6 +5,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 {% extends "base/base.html" %}
+{% block navbar_toggler %}
+{% endblock %}
+{%block navbar_links %}
+{% endblock %}
+{% block searchbox %}
+<form class="form-inline my-2 my-lg-0 mx-2" action="{{url_for('.index')}}">
+  <div class="input-group group">
+  <input required class="form-control" type="search" placeholder="Search" aria-label="Search" name="q">
+  <button class="btn btn-outline-success" type="submit">Search</button>
+  </div>
+</form>
+{% endblock %}
 {% block body %}
   <!-- Page Content -->
   <div id="page-content-wrapper">
