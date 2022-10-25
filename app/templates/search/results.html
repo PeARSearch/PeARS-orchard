@@ -1,105 +1,62 @@
 <!--
-SPDX-FileCopyrightText: 2022 Aurelie Herbelot, <aurelie.herbelot@unitn.it>, 
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
 
 SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
-  <meta charset="utf-8">
-  <title>PeARS Search</title>
-  <meta name="generator" content="Bootply"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-  <!--[if lt IE 9]>
-  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="{{ url_for('static', filename='css/simple-sidebar.css')}}" rel="stylesheet">
-</head>
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{{ url_for('.index')}}"><img
-        src="{{ url_for('static', filename='pears-logo-small.png')}}" height="40px"></a>
-      </a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" value="{{query}}">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-<div id="wrapper">
-
-  <!-- Sidebar -->
-  <div id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-      <li class="sidebar-brand">
-        <b>Peers</b>
-
-      </li>
-      {% for p in pears %}
-      <li>
-        <center>
-          <img src="{{ url_for('static', filename='pi-pic.png')}}"
-          class='hover' width="50px"/>
-          <p class="text"><b>{{p}}</b></p>
-        </center>
-        <hr/>
-      </li>
-      {% endfor %}
-
-    </ul>
-
+{% extends "base/base.html" %}
+{% block navbar_toggler %}
+{% endblock %}
+{%block navbar_links %}
+{% endblock %}
+{% block searchbox %}
+<form class="form-inline my-2 my-lg-0 mx-2" action="{{url_for('.index')}}">
+  <div class="input-group group">
+  <input required class="form-control" type="search" placeholder="Search" aria-label="Search" name="q">
+  <button class="btn btn-outline-success" type="submit">Search</button>
   </div>
-  <!-- /#sidebar-wrapper -->
-
+</form>
+{% endblock %}
+{% block body %}
   <!-- Page Content -->
   <div id="page-content-wrapper">
-    <div class="container-fluid">
-      {% for result in results %}
+    <div class="container">
       <div class="row">
-        <div class="col-lg-12">
-          <h3><a href="{{result[0]}}">{{result[1]}}</a>
-          {% if result[3] == True %}<img src="{{ url_for('static', filename='cc.png')}}" width='24px'/>{% endif %} </h3>
-          {{result[2]}} ... <!-- <a href="{{result[3]}}">Cache</a>--> <br>
-	  <a href="{{result[0]}}">{{result[0]}}</a>
-	  {% if result[4] != None %}<br><img src="{{ url_for('static', filename='annot.png')}}" width='40px'/>{{result[4]}}{% endif %} <br>
-          <hr/>
+        <div class="col">
+        {% for result in results %}
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title"><a href="{{result[0]}}">{{result[1]}}</a>
+              {% if result[3] == True %}<img src="{{ url_for('static', filename='cc.png')}}" width='24px' />{% endif %}
+            </h4>
+            <p class="card-text">{{result[2]}} ...</p>
+            <a href="{{result[0]}}" class="card-link">{{result[0]}}</a>
+          </div>
+        </div>
+        {% endfor %}
+        </div>
+        <div class="col-sm-2 d-none d-md-block">
+          <div id="sidebar-wrapper">
+           
+             <h3 class="text-center">Peers</h3>
+          
+            <div class="list-group list-group-flush mx-3 mt-4">
+              {% for p in pears %}
+                <span>
+                <center>
+                  <img src="{{ url_for('static', filename='pi-pic.png')}}" class='hover' width="50px" />
+                  <p class="text"><b>{{p}}</b></p>
+                </center>
+                <hr />
+                </span>
+              {% endfor %}
+          
+            </div>
+          
+          </div>
         </div>
       </div>
-      {% endfor %}
     </div>
   </div>
   <!-- /#page-content-wrapper -->
-
-</div>
-<!-- /#wrapper -->
-
-<!-- jQuery -->
-<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-
-<!-- Menu Toggle Script -->
-
-</body>
+{% endblock %}
