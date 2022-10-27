@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-.navbar-nav > li{
-  padding-left:30px;
+
+a {
+  color: rgb(3, 139, 48);
+}
+a:hover {
+  color: rgb(1, 61, 21);
 }
