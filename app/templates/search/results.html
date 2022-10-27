@@ -12,19 +12,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 {% block searchbox %}
 <form class="form-inline my-2 my-lg-0 mx-2" action="{{url_for('.index')}}">
   <div class="input-group group">
-  <input required class="form-control" type="search" placeholder="Search" aria-label="Search" name="q">
-  <button class="btn btn-outline-success" type="submit">Search</button>
+    <input required class="form-control" type="search" placeholder="Search" aria-label="Search" name="q">
+    <button class="btn btn-outline-success" type="submit">Search</button>
   </div>
 </form>
 {% endblock %}
 {% block body %}
-  <!-- Page Content -->
-  <div id="page-content-wrapper">
-    <div class="container">
-      <div class="row">
-        <div class="col">
+<!-- Page Content -->
+<div id="page-content-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10">
         {% for result in results %}
-        <div class="card">
+        <div class="card mt-2">
           <div class="card-body">
             <h4 class="card-title"><a href="{{result[0]}}">{{result[1]}}</a>
               {% if result[3] == True %}<img src="{{ url_for('static', filename='cc.png')}}" width='24px' />{% endif %}
@@ -32,31 +32,36 @@ SPDX-License-Identifier: AGPL-3.0-only
             <p class="card-text">{{result[2]}} ...</p>
             <a href="{{result[0]}}" class="card-link">{{result[0]}}</a>
           </div>
+          {% if result[4] != None %}
+          <div class="card-footer">
+            <img src="{{ url_for('static', filename='annot.png')}}" width='40px' />{{result[4]}}
+          </div>
+          {% endif %}
         </div>
         {% endfor %}
-        </div>
-        <div class="col-sm-2 d-none d-md-block">
-          <div id="sidebar-wrapper">
-           
-             <h3 class="text-center">Peers</h3>
-          
-            <div class="list-group list-group-flush mx-3 mt-4">
-              {% for p in pears %}
-                <span>
-                <center>
-                  <img src="{{ url_for('static', filename='pi-pic.png')}}" class='hover' width="50px" />
-                  <p class="text"><b>{{p}}</b></p>
-                </center>
-                <hr />
-                </span>
-              {% endfor %}
-          
-            </div>
-          
+      </div>
+      <div class="col-sm-2 d-none d-md-block">
+        <div id="sidebar-wrapper">
+
+          <h3 class="text-center">Peers</h3>
+
+          <div class="list-group list-group-flush mx-3 mt-4">
+            {% for p in pears %}
+            <span>
+              <center>
+                <img src="{{ url_for('static', filename='pi-pic.png')}}" class='hover' width="50px" />
+                <p class="text"><b>{{p}}</b></p>
+              </center>
+              <hr />
+            </span>
+            {% endfor %}
+
           </div>
+
         </div>
       </div>
     </div>
   </div>
-  <!-- /#page-content-wrapper -->
+</div>
+<!-- /#page-content-wrapper -->
 {% endblock %}
