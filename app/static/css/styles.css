@@ -5,9 +5,61 @@
  */
 
 
+:root {
+    --primary-color: #73b4eb;
+    --secondary-color: black;
+ } 
+
 a {
-  color: rgb(3, 139, 48);
+  color: var(--primary-color);
 }
 a:hover {
-  color: rgb(1, 61, 21);
+  color: var(--secondary-color);
+}
+
+.navbar-light {
+  background-color: var(--primary-color);
+}
+
+.card {
+  --bs-card-border-width: 0px;
+  border-width: 0px 0px 1px 0px;
+}
+
+.alert-success {
+    --bs-alert-color: #636464;
+    --bs-alert-bg: #e9ecef;
+    --bs-alert-border-color: #636464;
+}
+
+.navbar {
+  background-color: var(--primary-color);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--primary-color);
+  --bs-btn-border-color: var(--primary-color);
+  --bs-btn-hover-bg: var(--secondary-color);
+  --bs-btn-hover-border-color: var(--secondary-color);
+}
+
+.submit-color-button {
+  height: 30px;
+  width: 30px;
+  margin: 10px 5px 0 0;
+  display: inline-block;
+  border-top: 15px solid var(--theme-primary);
+  border-bottom: 15px solid var(--theme-secondary);
+  border-right: 0;
+  border-left: 0;
+  padding: 0;
+  box-shadow: 0 0 3px gray;
+}
+
+.submit-color-button:hover {
+  box-shadow: 2px 2px 2px gray;
+}
+
+.submit-color-button.active {
+  box-shadow: 3px 3px 3px gray;
 }

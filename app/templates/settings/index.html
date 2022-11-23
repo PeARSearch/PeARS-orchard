@@ -1,0 +1,41 @@
+<!--
+SPDX-FileCopyrightText: 2022 PeARS Project, <community@pearsproject.org>, 
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+{% extends "base/base.html" %}
+{% block body %}
+<div class="container">
+
+  <div class="row p-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center"><b>Color scheme</b></div>
+          <div class="card-body">
+          <p>Change your color scheme.</p>
+	    <button type="button" class="submit-color-button active" style="--theme-primary:orange; --theme-secondary:green;" id="blue"></button>
+            <button type="button" class="submit-color-button" style="--theme-primary:#2196F3; --theme-secondary:black;" id="green"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center"><b>Install languages</b></div>
+        <div class="card-body">
+          <p>Install the languages you would like to use in PeARS.</p>
+
+        </div>
+        <div class="card-footer clearfix">
+          <span class="input-group-btn float-end">
+            <input id="submit_button" type="submit" class="btn btn-success" value="Install">
+          </span>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.container -->
+{% endblock %}
