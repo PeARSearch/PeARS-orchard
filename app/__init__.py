@@ -39,6 +39,7 @@ from app.search.controllers import search as search_module
 from app.pod_finder.controllers import pod_finder as pod_finder_module
 from app.orchard.controllers import orchard as orchard_module
 from app.pages.controllers import pages as pages_module
+from app.settings.controllers import settings as settings_module
 
 # Register blueprint(s)
 app.register_blueprint(indexer_module)
@@ -47,6 +48,7 @@ app.register_blueprint(search_module)
 app.register_blueprint(pod_finder_module)
 app.register_blueprint(orchard_module)
 app.register_blueprint(pages_module)
+app.register_blueprint(settings_module)
 # ..
 
 # Build the database:
