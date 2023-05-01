@@ -7,7 +7,7 @@ bs4==0.0.1
 certifi==2022.12.7
 chardet==4.0.0
 click==8.0.1
-Flask==2.0.1
+Flask==2.3.2
 Flask-Admin==1.5.8
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.0
