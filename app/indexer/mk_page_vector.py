@@ -7,8 +7,8 @@ import numpy as np
 import string
 from app import db
 from app.api.models import Urls, installed_languages, model_configs, reducers, flies, sp
-from app.indexer.htmlparser import extract_from_url
 from app.utils import convert_to_string, convert_dict_to_string, normalise
+from app.indexer.htmlparser import extract_html
 from app.indexer.apply_models import return_hash
 
 
@@ -26,12 +26,21 @@ def compute_fly_hash(lang, text):
     return hs.toarray()[0]
 
 
+def hash_from_url(url, lang):
+    title, body_str, snippet, cc, error = extract_html(url)
+    if error is None and title != "":
+        text = title + " " + body_str
+        text = tokenize_text(lang, text)
+        vector = compute_fly_hash(lang, text)
+    return vector
+
 def compute_vectors(target_url, keyword, lang):
     print("Computing vectors for", target_url, "(",keyword,")",lang)
     if not db.session.query(Urls).filter_by(url=target_url).all():
         u = Urls(url=target_url)
-        title, body_str, snippet, cc = extract_from_url(target_url)
-        if title != "":
+        title, body_str, snippet, cc, error = extract_html(target_url)
+        print(title, body_str, snippet, cc, error)
+        if error is None and title != "":
             text = title + " " + body_str
             text = tokenize_text(lang, text)
             vector = compute_fly_hash(lang, text)
@@ -52,7 +61,10 @@ def compute_vectors(target_url, keyword, lang):
             db.session.commit()
             return True
         else:
-            print("Urgh")
+            if title == "":
+                print(">> ERROR: INDEXER: compute_vectors: page title empty, ignoring page.")
+            else:
+                print(">> ERROR: INDEXER: compute_vectors:",error)
             return False
     else:
         return True

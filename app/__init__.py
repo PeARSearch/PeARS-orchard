@@ -31,6 +31,12 @@ app.config.from_object('config')
 # by modules and controllers
 db = SQLAlchemy(app)
 
+# Load static multilingual info
+from app.multilinguality import read_language_codes, read_stopwords
+
+LANGUAGE_CODES = read_language_codes()
+#STOPWORDS = read_stopwords(LANGUAGE_CODES[LANG].lower())
+
 
 # Import a module / component using its blueprint handler variable (mod_auth)
 from app.indexer.controllers import indexer as indexer_module

@@ -5,18 +5,15 @@
 # Import flask dependencies
 import logging
 
-from flask import (Blueprint,
-                   flash,
-                   request,
-                   render_template,
-                   Response)
-
+from flask import (Blueprint, flash, request, render_template, Response, make_response, jsonify)
+from app import app
 from app.api.models import Urls
 from app.indexer.neighbours import neighbour_urls
 from app.indexer import mk_page_vector, spider
-from app.utils import readUrls, readBookmarks, get_language
+from app.utils import readUrls, readBookmarks, get_language, convert_to_string
 from app.utils_db import pod_from_file
 from app.indexer.htmlparser import extract_links
+from app.indexer.access import request_url
 from os.path import dirname, join, realpath
 
 dir_path = dirname(dirname(dirname(realpath(__file__))))
@@ -89,6 +86,26 @@ def from_crawl():
         f.close()
         return render_template('indexer/progress_crawl.html')
 
+@indexer.route("/hash", methods=["GET"])
+def hash():
+    print(request)
+    url = request.args['url']
+    access, req, request_errors = request_url(url)
+    lang = 'simple' # only English for now
+    if access:
+        try:
+            url_type = req.headers['Content-Type']
+        except:
+            print('>> ERROR: INDEXER: CONTROLLERS: Content type could not be retrieved from header.')
+            return 0
+    else:
+        print(">> ERROR: INDEXER: CONTROLLERS: progress_file: access denied", request_errors)
+        return 0
+
+    vector = mk_page_vector.hash_from_url(url, lang)
+    r = app.make_response(jsonify(convert_to_string(vector)))
+    return r
+
 
 '''
 Controllers for progress pages.
@@ -131,6 +148,7 @@ def progress_file():
     logging.debug("Running progress file")
     def generate():
         urls, keywords, langs, errors = readUrls(join(dir_path, "urls_to_index.txt"))
+        print(urls)
         if errors:
             logging.error('Some URLs could not be processed')
         if not urls or not keywords or not langs:
@@ -139,6 +157,16 @@ def progress_file():
 
         c = 0
         for url, kwd, lang in zip(urls, keywords, langs):
+            access, req, request_errors = request_url(url)
+            if access:
+                try:
+                    url_type = req.headers['Content-Type']
+                except:
+                    messages.append('ERROR: Content type could not be retrieved from header.')
+                    continue
+            else:
+                print(">> INDEXER: CONTROLLERS: progress_file: access denied", request_errors)
+
             success = mk_page_vector.compute_vectors(url, kwd, lang)
             if success:
                 pod_from_file(kwd, lang)
