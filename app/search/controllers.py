@@ -3,12 +3,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 # Import flask dependencies
-from flask import Blueprint, request, render_template, send_from_directory
+from flask import Blueprint, request, render_template, send_from_directory, jsonify
 from flask import current_app
 
 # Import the database object from the main app module
+from app import app
 from app.api.models import Urls
 from app.search import score_pages
+from app.utils import get_language, convert_to_string
+from app.indexer.mk_page_vector import compute_query_vectors
 
 # Import utilities
 import re
@@ -52,3 +55,14 @@ def index():
 @search.route('/html_cache/<path:filename>')
 def custom_static(filename):
     return send_from_directory('html_cache', filename)
+
+@search.route("/hash", methods=["GET"])
+def search_hash():
+    print(request)
+    query = request.args['query']
+    query, lang = get_language(query)
+    vector = compute_query_vectors(query, lang)
+    r = app.make_response(jsonify(convert_to_string(vector)))
+
+    return r
+
