@@ -30,6 +30,6 @@ sklearn==0.0
 soupsieve==2.2.1
 SQLAlchemy==1.4.17
 threadpoolctl==3.1.0
-urllib3==1.26.5
+urllib3==1.26.18
 Werkzeug==3.0.3
 WTForms==2.3.3
